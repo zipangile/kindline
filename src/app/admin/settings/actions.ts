@@ -7,6 +7,8 @@ export async function updatePaymentSettings(formData: FormData) {
   const flutterwaveSecret = formData.get('flutterwaveSecret') as string;
   const flutterwavePublic = formData.get('flutterwavePublic') as string;
   const flutterwaveEncrypt = formData.get('flutterwaveEncrypt') as string;
+  const flutterwavePlanZMW = formData.get('flutterwavePlanZMW') as string;
+  const flutterwavePlanUSD = formData.get('flutterwavePlanUSD') as string;
   const lencoSecret = formData.get('lencoSecret') as string;
   const lencoPublic = formData.get('lencoPublic') as string;
   const lencoBaseUrl = formData.get('lencoBaseUrl') as string;
@@ -20,6 +22,8 @@ export async function updatePaymentSettings(formData: FormData) {
         flutterwaveSecret,
         flutterwavePublic,
         flutterwaveEncrypt,
+        flutterwavePlanZMW,
+        flutterwavePlanUSD,
         lencoSecret,
         lencoPublic,
         lencoBaseUrl,
@@ -31,6 +35,8 @@ export async function updatePaymentSettings(formData: FormData) {
         flutterwaveSecret,
         flutterwavePublic,
         flutterwaveEncrypt,
+        flutterwavePlanZMW,
+        flutterwavePlanUSD,
         lencoSecret,
         lencoPublic,
         lencoBaseUrl,

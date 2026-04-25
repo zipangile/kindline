@@ -27,7 +27,7 @@ declare global {
   }
 }
 
-export default function DonationForm({ settings }: { settings: { lencoPublic?: string; flutterwavePublic?: string } }) {
+export default function DonationForm({ settings }: { settings: { lencoPublic?: string; flutterwavePublic?: string; flutterwavePlanZMW?: string; flutterwavePlanUSD?: string } }) {
   const { userId } = useAuth();
   const [amount, setAmount] = useState('50');
   const [currency, setCurrency] = useState('ZMW');
@@ -37,7 +37,12 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
   const [name, setName] = useState('');
 
   const handleLenco = () => {
-    const publicKey = settings?.lencoPublic || "pub-88dd921c0ecd73590459a1dd5a9343c77db0f3c344f222b9";
+    const publicKey = settings?.lencoPublic;
+
+    if (!publicKey) {
+        alert("Lenco gateway is not configured properly.");
+        return;
+    }
 
     if (typeof window.LencoPay !== 'undefined') {
       const handler = window.LencoPay.setup({
@@ -46,10 +51,28 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
         amount: parseFloat(amount) * 100, // Lenco expects amount in kobo/cents
         currency: currency,
         reference: "KCF-L-" + Date.now(),
-        callback: function(response: LencoPayResponse) {
+        callback: async function(response: LencoPayResponse) {
           console.log("Lenco payment success", response);
-          alert("Thank you for your donation!");
-          window.location.reload();
+          // Verify with backend
+          try {
+            const verifyRes = await fetch('/api/payments/lenco', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                reference: response.reference,
+                clerkUserId: userId
+              })
+            });
+            if (verifyRes.ok) {
+              alert("Thank you for your donation!");
+              window.location.reload();
+            } else {
+              alert("Payment completed but verification failed. Please contact support.");
+            }
+          } catch (e) {
+            console.error("Lenco verification error", e);
+            alert("An error occurred during verification. Please contact support.");
+          }
         },
         onClose: function() {
           console.log("Lenco window closed");
@@ -70,12 +93,14 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
     }
 
     if (typeof window.FlutterwaveCheckout === 'function') {
+      const planId = frequency === 'monthly' ? (currency === 'ZMW' ? settings.flutterwavePlanZMW : settings.flutterwavePlanUSD) : undefined;
+
       window.FlutterwaveCheckout({
         public_key: publicKey,
         tx_ref: "KCF-" + Date.now(),
         amount: parseFloat(amount),
         currency: currency,
-        payment_plan: frequency === 'monthly' ? (currency === 'ZMW' ? '78508' : '78509') : undefined, // Example Plan IDs
+        payment_plan: planId,
         payment_options: "card, mobilemoneyzambia, ussd",
         customer: {
           email: email,
@@ -89,10 +114,28 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
           description: frequency === 'monthly' ? "Monthly subscription for Kindline Care" : "Payment for supporting orphans and widows",
           logo: "https://kindlinecare.org/logo.png",
         },
-        callback: function (data: FlutterwaveResponse) {
+        callback: async function (data: FlutterwaveResponse) {
           console.log("Payment completed!", data);
-          alert("Thank you for your donation!");
-          window.location.reload();
+          // Verify with backend
+          try {
+            const verifyRes = await fetch('/api/payments', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                transaction_id: data.transaction_id,
+                status: data.status
+              })
+            });
+            if (verifyRes.ok) {
+              alert("Thank you for your donation!");
+              window.location.reload();
+            } else {
+              alert("Payment completed but verification failed. Please contact support.");
+            }
+          } catch (e) {
+            console.error("Flutterwave verification error", e);
+            alert("An error occurred during verification. Please contact support.");
+          }
         },
         onclose: function() {
           console.log("Payment closed");
@@ -118,7 +161,7 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="John Doe"
+                placeholder="Your Name"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
               />
             </div>
@@ -128,7 +171,7 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="john@example.com"
+                placeholder="your@email.com"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
               />
             </div>

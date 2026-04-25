@@ -10,7 +10,9 @@ export default async function GetInvolvedPage() {
 
   const donationSettings = settings ? {
     lencoPublic: settings.lencoPublic || undefined,
-    flutterwavePublic: settings.flutterwavePublic || undefined
+    flutterwavePublic: settings.flutterwavePublic || undefined,
+    flutterwavePlanZMW: settings.flutterwavePlanZMW || undefined,
+    flutterwavePlanUSD: settings.flutterwavePlanUSD || undefined
   } : {};
 
   const ways = [
