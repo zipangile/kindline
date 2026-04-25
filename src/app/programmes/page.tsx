@@ -7,21 +7,21 @@ export default async function ProgramsPage() {
     orderBy: { createdAt: 'desc' },
   });
 
-  const programsToDisplay = livePrograms.length > 0 ? livePrograms : [];
+  const programmesToDisplay = livePrograms.length > 0 ? livePrograms : [];
 
   return (
     <div className="bg-white">
       {/* Header */}
       <section className="bg-blue-800 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Programs</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Programmes</h1>
           <p className="text-xl text-blue-100 max-w-3xl mx-auto">
             Empowering lives through targeted, community-based interventions.
           </p>
         </div>
       </section>
 
-      {/* Program 1: WESAP */}
+      {/* Programme 1: WESAP */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-12 items-center">
@@ -57,7 +57,7 @@ export default async function ProgramsPage() {
         </div>
       </section>
 
-      {/* Program 2: Child Support */}
+      {/* Programme 2: Child Support */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row-reverse gap-12 items-center">
@@ -104,7 +104,7 @@ export default async function ProgramsPage() {
         </div>
       </section>
 
-      {/* Program 3: Community Development */}
+      {/* Programme 3: Community Development */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-12 items-center">
@@ -140,17 +140,17 @@ export default async function ProgramsPage() {
         </div>
       </section>
 
-      {/* Dynamic Programs from CMS/Database */}
-      {programsToDisplay.length > 0 && (
+      {/* Dynamic Programmes from CMS/Database */}
+      {programmesToDisplay.length > 0 && (
         <section className="py-20 border-t border-gray-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl font-bold text-center mb-12">Latest Projects & Initiatives</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {programsToDisplay.map((program) => (
-                <div key={program.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+              {programmesToDisplay.map((programme) => (
+                <div key={programme.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                   <div className="h-48 bg-gray-100 relative">
-                    {program.image ? (
-                      <img src={program.image} alt={program.title} className="object-cover w-full h-full" />
+                    {programme.image ? (
+                      <img src={programme.image} alt={programme.title} className="object-cover w-full h-full" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-blue-200">
                         <Sprout size={48} />
@@ -158,9 +158,9 @@ export default async function ProgramsPage() {
                     )}
                   </div>
                   <div className="p-6">
-                    <span className="text-blue-600 text-xs font-bold uppercase tracking-wider">{program.category}</span>
-                    <h3 className="text-xl font-bold mt-2 mb-3">{program.title}</h3>
-                    <p className="text-gray-600 text-sm line-clamp-3">{program.description}</p>
+                    <span className="text-blue-600 text-xs font-bold uppercase tracking-wider">{programme.category}</span>
+                    <h3 className="text-xl font-bold mt-2 mb-3">{programme.title}</h3>
+                    <p className="text-gray-600 text-sm line-clamp-3">{programme.description}</p>
                   </div>
                 </div>
               ))}

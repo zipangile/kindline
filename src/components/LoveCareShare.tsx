@@ -11,7 +11,7 @@ const LoveCareShare = () => {
             <h2 className="text-blue-600 font-bold uppercase tracking-wider mb-2">Love Care Share</h2>
             <h3 className="text-4xl font-extrabold text-gray-900 mb-6">Friends of Kindline</h3>
             <p className="text-xl text-gray-700 mb-8 leading-relaxed">
-              Love Care Share is Kindline Care Foundation&apos;s giving community for individuals, families, faith-Based and organizations who commit to support widows, orphans, and vulnerable children through monthly, quarterly, or annual giving.
+              Love Care Share is Kindline Care Foundation&apos;s giving community for individuals, families, faith-Based and organisations who commit to support widows, orphans, and vulnerable children through monthly, quarterly, or annual giving.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 mb-12">
               <Button size="lg" className="bg-blue-600 hover:bg-blue-700" asChild>

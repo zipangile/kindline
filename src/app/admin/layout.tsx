@@ -13,7 +13,7 @@ export default async function AdminLayout({
     redirect('/sign-in');
   }
 
-  // Only allow members of the specific Kindline organization
+  // Only allow members of the specific Kindline organisation
   if (orgId !== 'org_3CqSUazt0GzaFAeoS5YngAZcro8') {
     redirect('/');
   }
@@ -29,8 +29,8 @@ export default async function AdminLayout({
           <Link href="/admin" className="block py-3 px-6 hover:bg-blue-800 transition-colors">
             Overview
           </Link>
-          <Link href="/admin/programs" className="block py-3 px-6 hover:bg-blue-800 transition-colors">
-            Manage Programs
+          <Link href="/admin/programmes" className="block py-3 px-6 hover:bg-blue-800 transition-colors">
+            Manage Programmes
           </Link>
           <Link href="/admin/volunteers" className="block py-3 px-6 hover:bg-blue-800 transition-colors">
             Volunteers
