@@ -7,9 +7,6 @@ const Hero = () => {
       <div className="absolute inset-0 bg-opacity-50 bg-black"></div>
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl">
-          <p className="text-blue-400 font-semibold tracking-wide uppercase mb-4">
-            My care. Your care. Our care.
-          </p>
           <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
             Restoring Dignity. Creating Opportunity.
           </h1>

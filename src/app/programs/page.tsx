@@ -1,4 +1,4 @@
-import { CheckCircle2, GraduationCap, HeartPulse, Sprout, Landmark } from "lucide-react";
+import { CheckCircle2, GraduationCap, HeartPulse, Sprout, Landmark, Droplets, Users } from "lucide-react";
 import prisma from "@/lib/prisma";
 
 export default async function ProgramsPage() {
@@ -6,39 +6,6 @@ export default async function ProgramsPage() {
     where: { status: 'live' },
     orderBy: { createdAt: 'desc' },
   });
-
-  // Default static programs to show if database is empty
-  const defaultPrograms = [
-    {
-      title: "WESAP (Widows Economic Skills Advancement Program)",
-      category: "Economic Empowerment",
-      description: "WESAP is a structured program designed to equip widows with practical and market-driven skills that enable them to generate income, become self-sufficient economically and support themselves and their families.",
-      features: ["Entrepreneurship, Farming & Business Skills", "Financial Literacy", "Enterprise Circles (Peer Support Groups)"]
-    },
-    {
-      title: "Child Support & Development",
-      category: "Child Welfare",
-      description: "We are dedicated to ensuring that every child has the chance to succeed. Our comprehensive program offers education support, literacy development, nutrition, and wellbeing for orphans and vulnerable children.",
-      subFocus: [
-        {
-          title: "Education Focus",
-          icon: <GraduationCap className="h-5 w-5" />,
-          items: ["Enrolment Support", "School uniforms and shoes", "School supplies (books, pens, bags)"]
-        },
-        {
-          title: "Healthcare Focus",
-          icon: <HeartPulse className="h-5 w-5" />,
-          items: ["Nutrition & Well-being - Meal kits", "Counselling & life skills sessions", "Health & hygiene guidance"]
-        }
-      ]
-    },
-    {
-      title: "Community Development",
-      category: "Sustainable Impact",
-      description: "True change happens when communities are empowered to lead. We collaborate with local leaders and stakeholders to build capacity and sustainable initiatives that benefit the entire community.",
-      focus: "Water and sanitation projects, community health outreach, and infrastructure improvement."
-    }
-  ];
 
   const programsToDisplay = livePrograms.length > 0 ? livePrograms : [];
 
@@ -54,151 +21,152 @@ export default async function ProgramsPage() {
         </div>
       </section>
 
-      {programsToDisplay.length > 0 ? (
-        programsToDisplay.map((program, index) => (
-          <section key={program.id} className={`py-20 ${index % 2 !== 0 ? 'bg-gray-50' : ''}`}>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className={`flex flex-col ${index % 2 !== 0 ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-12 items-center`}>
-                <div className="flex-1">
-                  <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest ${
-                    program.category === 'Economic Empowerment' ? 'bg-blue-100 text-blue-800' :
-                    program.category === 'Child Welfare' ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'
-                  }`}>
-                    {program.category}
-                  </span>
-                  <h2 className="text-3xl font-bold text-gray-900 mt-4 mb-6">{program.title}</h2>
-                  <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                    {program.description}
-                  </p>
+      {/* Program 1: WESAP */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col lg:flex-row gap-12 items-center">
+            <div className="flex-1">
+              <span className="bg-blue-100 text-blue-800 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                Economic Empowerment
+              </span>
+              <h2 className="text-3xl font-bold text-gray-900 mt-4 mb-6">WESAP (Widows Economic Skills Advancement Programme.)</h2>
+              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
+                WESAP is a structured programme designed to equip widows with practical and market- driven skills that enable them to generate income, become self-sufficient economically and support themselves and their families.
+              </p>
+              <div className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <CheckCircle2 className="h-5 w-5 text-blue-600 mt-1 shrink-0" />
+                  <span className="text-gray-700">Entrepreneurship, Farming & Business Skills</span>
                 </div>
-                <div className="flex-1 bg-gray-100 rounded-2xl h-80 w-full flex items-center justify-center relative overflow-hidden">
-                   {program.image ? (
-                     <img src={program.image} alt={program.title} className="object-cover w-full h-full" />
-                   ) : (
-                     <div className="text-blue-200">
-                        <HeartPulse size={120} strokeWidth={1} />
-                     </div>
-                   )}
+                <div className="flex items-start space-x-3">
+                  <CheckCircle2 className="h-5 w-5 text-blue-600 mt-1 shrink-0" />
+                  <span className="text-gray-700">Financial Literacy</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle2 className="h-5 w-5 text-blue-600 mt-1 shrink-0" />
+                  <span className="text-gray-700">Enterprise Circles (Peer Support Groups)</span>
                 </div>
               </div>
             </div>
-          </section>
-        ))
-      ) : (
-        /* Original static content as fallback or when empty */
-        <>
-          {/* Program 1 */}
-          <section className="py-20">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex flex-col lg:flex-row gap-12 items-center">
-                <div className="flex-1">
-                  <span className="bg-blue-100 text-blue-800 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
-                    Economic Empowerment
-                  </span>
-                  <h2 className="text-3xl font-bold text-gray-900 mt-4 mb-6">WESAP (Widows Economic Skills Advancement Program)</h2>
-                  <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                    WESAP is a structured program designed to equip widows with practical and market-driven skills that enable them to generate income, become self-sufficient economically and support themselves and their families.
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="flex items-start space-x-3">
-                      <CheckCircle2 className="h-5 w-5 text-blue-600 mt-1 shrink-0" />
-                      <span className="text-gray-700 font-medium">Entrepreneurship, Farming & Business Skills</span>
-                    </div>
-                    <div className="flex items-start space-x-3">
-                      <CheckCircle2 className="h-5 w-5 text-blue-600 mt-1 shrink-0" />
-                      <span className="text-gray-700 font-medium">Financial Literacy</span>
-                    </div>
-                    <div className="flex items-start space-x-3">
-                      <CheckCircle2 className="h-5 w-5 text-blue-600 mt-1 shrink-0" />
-                      <span className="text-gray-700 font-medium">Enterprise Circles (Peer Support Groups)</span>
-                    </div>
+            <div className="flex-1 bg-blue-50 rounded-2xl h-80 w-full flex items-center justify-center">
+               <div className="text-blue-200">
+                  <Sprout size={120} strokeWidth={1} />
+               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Program 2: Child Support */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col lg:flex-row-reverse gap-12 items-center">
+            <div className="flex-1">
+              <span className="bg-green-100 text-green-800 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                Child Welfare
+              </span>
+              <h2 className="text-3xl font-bold text-gray-900 mt-4 mb-6">Child Support & Development Programme</h2>
+              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
+                We are dedicated to ensuring that every child has the chance to succeed. Our comprehensive programme offers education support, literacy development, and wellbeing for orphans and vulnerable children, enabling them to become confident and responsible members of their communities.
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <div className="flex items-center space-x-2 text-blue-800 font-bold mb-3">
+                    <GraduationCap className="h-5 w-5" />
+                    <span>Education Focus</span>
                   </div>
+                  <ul className="space-y-2 text-gray-600 text-sm">
+                    <li>• Enrolment Support</li>
+                    <li>• School uniforms and shoes</li>
+                    <li>• School supplies (books, pens, bags)</li>
+                  </ul>
                 </div>
-                <div className="flex-1 bg-blue-50 rounded-2xl h-80 w-full flex items-center justify-center">
-                   <div className="text-blue-200">
-                      <Sprout size={120} strokeWidth={1} />
-                   </div>
+                <div>
+                  <div className="flex items-center space-x-2 text-blue-800 font-bold mb-3">
+                    <HeartPulse className="h-5 w-5" />
+                    <span>Wellbeing Focus</span>
+                  </div>
+                  <ul className="space-y-2 text-gray-600 text-sm">
+                    <li>• Nutrition & Well-being support</li>
+                    <li>• Counselling & life skills sessions</li>
+                    <li>• Literacy development initiatives</li>
+                  </ul>
                 </div>
               </div>
             </div>
-          </section>
+            <div className="flex-1 bg-white rounded-2xl h-80 w-full flex items-center justify-center shadow-sm border border-gray-100">
+              <div className="text-green-100">
+                  <HeartPulse size={120} strokeWidth={1} />
+               </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-          {/* Program 2 */}
-          <section className="py-20 bg-gray-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex flex-col lg:flex-row-reverse gap-12 items-center">
-                <div className="flex-1">
-                  <span className="bg-green-100 text-green-800 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
-                    Child Welfare
-                  </span>
-                  <h2 className="text-3xl font-bold text-gray-900 mt-4 mb-6">Child Support & Development</h2>
-                  <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                    We are dedicated to ensuring that every child has the chance to succeed. Our comprehensive program offers education support, literacy development, nutrition, and wellbeing for orphans and vulnerable children.
-                  </p>
+      {/* Program 3: Community Development */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col lg:flex-row gap-12 items-center">
+            <div className="flex-1">
+              <span className="bg-orange-100 text-orange-800 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                Sustainable Impact
+              </span>
+              <h2 className="text-3xl font-bold text-gray-900 mt-4 mb-6">Community Development</h2>
+              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
+                True change happens when communities are empowered to take ownership of the change process. We partner with communities to build capacity and implement projects for sustainable change.
+              </p>
+              <p className="text-gray-700 leading-relaxed mb-6">
+                This includes water and sanitation projects, community health outreach, and infrastructure improvement to create a safe environment for the community.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <div className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-full text-sm font-medium">
+                  <Droplets size={16} className="text-blue-500" /> Water & Sanitation
+                </div>
+                <div className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-full text-sm font-medium">
+                  <Users size={16} className="text-blue-500" /> Health Outreach
+                </div>
+                <div className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-full text-sm font-medium">
+                  <Landmark size={16} className="text-blue-500" /> Infrastructure
+                </div>
+              </div>
+            </div>
+            <div className="flex-1 bg-orange-50 rounded-2xl h-80 w-full flex items-center justify-center">
+               <div className="text-orange-200">
+                  <Landmark size={120} strokeWidth={1} />
+               </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div>
-                      <div className="flex items-center space-x-2 text-blue-800 font-bold mb-3">
-                        <GraduationCap className="h-5 w-5" />
-                        <span>Education Focus</span>
+      {/* Dynamic Programs from CMS/Database */}
+      {programsToDisplay.length > 0 && (
+        <section className="py-20 border-t border-gray-100">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl font-bold text-center mb-12">Latest Projects & Initiatives</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {programsToDisplay.map((program) => (
+                <div key={program.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                  <div className="h-48 bg-gray-100 relative">
+                    {program.image ? (
+                      <img src={program.image} alt={program.title} className="object-cover w-full h-full" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-blue-200">
+                        <Sprout size={48} />
                       </div>
-                      <ul className="space-y-2 text-gray-600 text-sm">
-                        <li>• Enrolment Support</li>
-                        <li>• School uniforms and shoes</li>
-                        <li>• School supplies (books, pens, bags)</li>
-                      </ul>
-                    </div>
-                    <div>
-                      <div className="flex items-center space-x-2 text-blue-800 font-bold mb-3">
-                        <HeartPulse className="h-5 w-5" />
-                        <span>Healthcare Focus</span>
-                      </div>
-                      <ul className="space-y-2 text-gray-600 text-sm">
-                        <li>• Nutrition & Well-being - Meal kits</li>
-                        <li>• Counselling & life skills sessions</li>
-                        <li>• Health & hygiene guidance</li>
-                      </ul>
-                    </div>
+                    )}
+                  </div>
+                  <div className="p-6">
+                    <span className="text-blue-600 text-xs font-bold uppercase tracking-wider">{program.category}</span>
+                    <h3 className="text-xl font-bold mt-2 mb-3">{program.title}</h3>
+                    <p className="text-gray-600 text-sm line-clamp-3">{program.description}</p>
                   </div>
                 </div>
-                <div className="flex-1 bg-white rounded-2xl h-80 w-full flex items-center justify-center shadow-sm border border-gray-100">
-                  <div className="text-green-100">
-                      <HeartPulse size={120} strokeWidth={1} />
-                   </div>
-                </div>
-              </div>
+              ))}
             </div>
-          </section>
-
-          {/* Program 3 */}
-          <section className="py-20">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex flex-col lg:flex-row gap-12 items-center">
-                <div className="flex-1">
-                  <span className="bg-orange-100 text-orange-800 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
-                    Sustainable Impact
-                  </span>
-                  <h2 className="text-3xl font-bold text-gray-900 mt-4 mb-6">Community Development</h2>
-                  <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                    True change happens when communities are empowered to lead. We collaborate with local leaders and stakeholders to build capacity and sustainable initiatives that benefit the entire community.
-                  </p>
-                  <div className="flex items-center space-x-2 text-blue-800 font-bold mb-4">
-                    <Sprout className="h-5 w-5" />
-                    <span>Focus Areas</span>
-                  </div>
-                  <p className="text-gray-700 leading-relaxed">
-                    Water and sanitation projects, community health outreach, and infrastructure improvement.
-                  </p>
-                </div>
-                <div className="flex-1 bg-orange-50 rounded-2xl h-80 w-full flex items-center justify-center">
-                   <div className="text-orange-200">
-                      <Landmark size={120} strokeWidth={1} />
-                   </div>
-                </div>
-              </div>
-            </div>
-          </section>
-        </>
+          </div>
+        </section>
       )}
     </div>
   );
