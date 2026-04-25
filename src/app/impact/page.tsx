@@ -90,9 +90,14 @@ export default function ImpactPage() {
           <p className="text-xl text-gray-600 mb-10 leading-relaxed">
             Your generosity fuels these stories of transformation. Join us in creating a brighter future for those who need it most.
           </p>
-          <Button size="lg" asChild>
-            <Link href="/get-involved">Donate to Support a Story</Link>
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" asChild>
+                <Link href="/get-involved">Donate Now</Link>
+            </Button>
+            <Button size="lg" variant="outline" asChild>
+                <Link href="/get-involved">Get Involved</Link>
+            </Button>
+          </div>
         </div>
       </section>
     </div>

@@ -17,7 +17,7 @@ export default async function GetInvolvedPage() {
     },
     {
       title: "Sponsor a Child or Widow",
-      description: "Make a personal impact by sponsoring a specific child or widow. Your sponsorship covers education, healthcare, or business startup costs.",
+      description: "Make a personal impact by sponsoring a specific child or widow. Your sponsorship covers education essentials and small business start-up costs.",
       icon: <Heart className="h-6 w-6 text-blue-600" />
     },
     {
@@ -43,8 +43,32 @@ export default async function GetInvolvedPage() {
 
       {/* Donation Section */}
       <section className="py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <DonationForm settings={settings} />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                <div>
+                    <h2 className="text-3xl font-bold text-gray-900 mb-6">Make a Difference</h2>
+                    <p className="text-lg text-gray-600 mb-6 leading-relaxed">
+                        Join us in our mission to restore dignity and create opportunity. Your financial contribution directly supports our community-based interventions for orphans, vulnerable children, and widows.
+                    </p>
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-3">
+                            <div className="bg-blue-100 p-2 rounded-full text-blue-600">
+                                <Heart size={20} />
+                            </div>
+                            <span className="font-medium">Direct Impact on Lives</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <div className="bg-blue-100 p-2 rounded-full text-blue-600">
+                                <Users size={20} />
+                            </div>
+                            <span className="font-medium">Community-Led Sustainable Change</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <DonationForm settings={settings} />
+                </div>
+            </div>
         </div>
       </section>
 
@@ -81,19 +105,6 @@ export default async function GetInvolvedPage() {
         </div>
        </section>
 
-      {/* Volunteer Section */}
-      <section className="py-20 bg-blue-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-blue-900 mb-4">Volunteer With Us</h2>
-            <p className="text-lg text-blue-800/80">Join our team of dedicated volunteers and make a direct impact.</p>
-          </div>
-          <div className="bg-white p-8 rounded-2xl shadow-xl border-2 border-blue-100">
-            <VolunteerForm />
-          </div>
-        </div>
-      </section>
-
       {/* Other Ways to Help */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -114,6 +125,19 @@ export default async function GetInvolvedPage() {
                 </CardContent>
               </Card>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Volunteer Section */}
+      <section className="py-20 bg-blue-900">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-white mb-4">Volunteer With Us</h2>
+            <p className="text-lg text-blue-100">Join our team of dedicated volunteers. Whether you have specific skills or just a heart to serve, we have a place for you.</p>
+          </div>
+          <div className="bg-white p-8 rounded-2xl shadow-xl">
+            <VolunteerForm />
           </div>
         </div>
       </section>
