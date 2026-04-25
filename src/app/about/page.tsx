@@ -26,9 +26,9 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="order-2 lg:order-1 bg-blue-50 rounded-2xl h-80 flex items-center justify-center">
-               <div className="text-blue-100">
-                  <Users size={160} strokeWidth={1} />
-               </div>
+              <div className="text-blue-100">
+                <Users size={160} strokeWidth={1} />
+              </div>
             </div>
             <div className="order-1 lg:order-2">
               <h2 className="text-3xl font-bold text-gray-900 mb-6">Who We Are</h2>
@@ -97,7 +97,7 @@ export default function AboutPage() {
                 Kindline Care Foundation was born out of a deep concern for the increasing number of vulnerable individuals in our communities who lack basic support systems. We recognized that while charity provides immediate relief, true restoration comes from empowerment and sustainable community integration.
               </p>
               <p className="text-lg text-blue-100 mt-4">
-                Since our inception, we have grown from a small group of concerned citizens to a registered NGO, impacting hundreds of lives through education, skills training, and community-led initiatives.
+                Since our inception, we have grown from a small group of concerned citizens to registered Non-Profit Organisation , impacting hundreds of lives through education, skills training, and community-led initiatives.
               </p>
             </div>
           </div>

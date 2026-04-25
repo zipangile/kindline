@@ -47,7 +47,7 @@ const Footer = () => {
 
         <div className="mt-12 pt-8 border-t border-gray-800 text-center text-sm text-gray-500">
           <p>&copy; {new Date().getFullYear()} Kindline Care Foundation. All rights reserved.</p>
-          <p className="mt-2">Registered NGO. My care. Your care. Our care.</p>
+          <p className="mt-2">A Registered Non-Profit Organisation . My care. Your care. Our care.</p>
         </div>
       </div>
     </footer>
