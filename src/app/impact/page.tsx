@@ -57,8 +57,8 @@ export default function ImpactPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div className="bg-white p-8 rounded-2xl shadow-sm">
-              <div className="h-48 bg-gray-100 rounded-xl mb-6 flex items-center justify-center italic text-gray-400">
-                [Success Story Image]
+              <div className="h-48 bg-blue-50 rounded-xl mb-6 flex items-center justify-center">
+                 <Briefcase size={80} className="text-blue-200" />
               </div>
               <p className="text-blue-600 font-bold mb-2 uppercase tracking-wide text-xs">Widow Empowerment</p>
               <h3 className="text-2xl font-bold mb-4 text-gray-900">Building a Future through WESAP</h3>
@@ -69,8 +69,8 @@ export default function ImpactPage() {
             </div>
 
             <div className="bg-white p-8 rounded-2xl shadow-sm">
-              <div className="h-48 bg-gray-100 rounded-xl mb-6 flex items-center justify-center italic text-gray-400">
-                [Child Education Image]
+              <div className="h-48 bg-green-50 rounded-xl mb-6 flex items-center justify-center">
+                <GraduationCap size={80} className="text-green-200" />
               </div>
               <p className="text-blue-600 font-bold mb-2 uppercase tracking-wide text-xs">Education Support</p>
               <h3 className="text-2xl font-bold mb-4 text-gray-900">A Chance to Learn and Dream</h3>

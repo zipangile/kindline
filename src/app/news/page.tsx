@@ -45,8 +45,8 @@ export default function NewsPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {posts.map((post, index) => (
               <Card key={index} className="flex flex-col h-full overflow-hidden border-none shadow-sm bg-gray-50">
-                <div className="h-48 bg-gray-200 flex items-center justify-center italic text-gray-400">
-                  [Post Image]
+                <div className="h-48 bg-blue-100 flex items-center justify-center">
+                  <Calendar size={64} className="text-blue-200" />
                 </div>
                 <CardHeader>
                   <div className="flex items-center text-xs text-blue-600 font-bold uppercase tracking-wide mb-3">

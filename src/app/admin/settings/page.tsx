@@ -1,0 +1,69 @@
+import prisma from '@/lib/prisma';
+import { updatePaymentSettings } from './actions';
+
+export default async function AdminSettingsPage() {
+  const settings = await prisma.paymentSettings.findFirst() || {
+    flutterwaveSecret: '',
+    flutterwavePublic: '',
+    flutterwaveEncrypt: '',
+    lencoSecret: '',
+    lencoPublic: '',
+    lencoBaseUrl: 'https://sandbox.lenco.co/access/v2/'
+  };
+
+  return (
+    <div className="space-y-8">
+      <h1 className="text-2xl font-bold text-gray-900">Payment Settings</h1>
+
+      <form action={updatePaymentSettings} className="space-y-8">
+        {/* Flutterwave */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+            Flutterwave Configuration
+          </h2>
+          <div className="grid grid-cols-1 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Public Key</label>
+              <input name="flutterwavePublic" type="text" defaultValue={settings.flutterwavePublic || ''} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Secret Key</label>
+              <input name="flutterwaveSecret" type="password" defaultValue={settings.flutterwaveSecret || ''} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Encryption Key</label>
+              <input name="flutterwaveEncrypt" type="text" defaultValue={settings.flutterwaveEncrypt || ''} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" />
+            </div>
+          </div>
+        </div>
+
+        {/* Lenco */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+            Lenco Configuration
+          </h2>
+          <div className="grid grid-cols-1 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Public Key</label>
+              <input name="lencoPublic" type="text" defaultValue={settings.lencoPublic || ''} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Secret Key</label>
+              <input name="lencoSecret" type="password" defaultValue={settings.lencoSecret || ''} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Base URL</label>
+              <input name="lencoBaseUrl" type="text" defaultValue={settings.lencoBaseUrl || ''} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex justify-end">
+          <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 font-bold">
+            Update Settings
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
