@@ -34,6 +34,7 @@ model PaymentSettings {
 
 model Donation {
   id            String   @id @default(cuid())
+  clerkUserId   String?  // Linked to Clerk user for "Friends of Kindline" dashboard
   donorName     String
   donorEmail    String
   amount        Float
@@ -46,12 +47,13 @@ model Donation {
 }
 
 model Volunteer {
-  id          String   @id @default(cuid())
-  name        String
-  email       String
-  phone       String?
-  skills      String?
-  interests   String?
-  status      String   @default("pending") // pending, approved, rejected
-  createdAt   DateTime @default(now())
+  id            String   @id @default(cuid())
+  clerkUserId   String?  @unique // Linked to Clerk user for dashboard access
+  name          String
+  email         String
+  phone         String?
+  skills        String?
+  interests     String?
+  status        String   @default("pending") // pending, approved, rejected
+  createdAt     DateTime @default(now())
 }
