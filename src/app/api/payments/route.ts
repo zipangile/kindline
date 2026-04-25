@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+const Flutterwave = require('flutterwave-node-v3');
 
 export async function POST(request: Request) {
   try {
@@ -8,21 +9,15 @@ export async function POST(request: Request) {
 
     const settings = await prisma.paymentSettings.findFirst();
     const secretKey = settings?.flutterwaveSecret || process.env.FLUTTERWAVE_SECRET_KEY;
+    const publicKey = settings?.flutterwavePublic || process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY;
 
     if (!secretKey) {
        return NextResponse.json({ error: 'Gateway not configured' }, { status: 500 });
     }
 
     if (status === 'successful') {
-      const response = await fetch(`https://api.flutterwave.com/v3/transactions/${transaction_id}/verify`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${secretKey}`
-        }
-      });
-
-      const verificationData = await response.json();
+      const flw = new Flutterwave(publicKey, secretKey);
+      const verificationData = await flw.Transaction.verify({ id: transaction_id });
 
       if (verificationData.status === 'success' && verificationData.data.status === 'successful') {
         // Here you would typically log the donation in the database

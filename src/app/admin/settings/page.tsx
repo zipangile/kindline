@@ -24,15 +24,36 @@ export default async function AdminSettingsPage() {
           <div className="grid grid-cols-1 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">Public Key</label>
-              <input name="flutterwavePublic" type="text" defaultValue={settings.flutterwavePublic || ''} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" />
+              <input
+                name="flutterwavePublic"
+                type="text"
+                defaultValue={settings.flutterwavePublic || ''}
+                placeholder={process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY || ""}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+              />
+              {process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY && <p className="text-xs text-green-600 mt-1">✓ Public key is set in environment</p>}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Secret Key</label>
-              <input name="flutterwaveSecret" type="password" defaultValue={settings.flutterwaveSecret || ''} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" />
+              <input
+                name="flutterwaveSecret"
+                type="password"
+                defaultValue={settings.flutterwaveSecret || ''}
+                placeholder={process.env.FLUTTERWAVE_SECRET_KEY ? "********" : ""}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+              />
+              {process.env.FLUTTERWAVE_SECRET_KEY && <p className="text-xs text-green-600 mt-1">✓ Secret key is set in environment</p>}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Encryption Key</label>
-              <input name="flutterwaveEncrypt" type="text" defaultValue={settings.flutterwaveEncrypt || ''} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" />
+              <input
+                name="flutterwaveEncrypt"
+                type="text"
+                defaultValue={settings.flutterwaveEncrypt || ''}
+                placeholder={process.env.FLUTTERWAVE_ENCRYPTION_KEY ? "********" : ""}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+              />
+              {process.env.FLUTTERWAVE_ENCRYPTION_KEY && <p className="text-xs text-green-600 mt-1">✓ Encryption key is set in environment</p>}
             </div>
           </div>
         </div>

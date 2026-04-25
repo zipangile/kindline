@@ -41,7 +41,7 @@ export default function DonationForm({ settings }: { settings: any }) {
   };
 
   const handleFlutterwave = () => {
-    const publicKey = settings?.flutterwavePublic || "4d0c9b03-92cb-40b3-800c-d7a8728078fa";
+    const publicKey = settings?.flutterwavePublic || process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY;
 
     if (!publicKey) {
         alert("Payment gateway is not configured properly.");
