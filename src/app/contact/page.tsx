@@ -108,7 +108,7 @@ export default function ContactPage() {
 
                 <div className="mt-3 text-center">
                   <p className="text-sm text-gray-500">
-                    We'll get back to you in 1-2 business days.
+                    We&apos;ll get back to you in 1-2 business days.
                   </p>
                 </div>
               </form>
