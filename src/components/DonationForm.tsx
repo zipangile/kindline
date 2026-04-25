@@ -4,8 +4,10 @@ import { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Landmark, Smartphone, CreditCard, Heart } from "lucide-react";
+import { useAuth } from '@clerk/nextjs';
 
 export default function DonationForm({ settings }: { settings: any }) {
+  const { userId } = useAuth();
   const [amount, setAmount] = useState('50');
   const [currency, setCurrency] = useState('ZMW');
   const [method, setMethod] = useState('flutterwave');
@@ -61,6 +63,9 @@ export default function DonationForm({ settings }: { settings: any }) {
         customer: {
           email: email,
           name: name,
+        },
+        meta: {
+          clerkUserId: userId || '',
         },
         customizations: {
           title: "Kindline Care Donation",

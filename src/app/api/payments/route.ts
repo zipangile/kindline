@@ -20,8 +20,22 @@ export async function POST(request: Request) {
       const verificationData = await flw.Transaction.verify({ id: transaction_id });
 
       if (verificationData.status === 'success' && verificationData.data.status === 'successful') {
-        // Here you would typically log the donation in the database
-        // For now, we'll just return success
+        const { amount, currency, customer, meta, tx_ref, id } = verificationData.data;
+
+        await prisma.donation.create({
+          data: {
+            donorName: customer.name || 'Anonymous',
+            donorEmail: customer.email,
+            amount: amount,
+            currency: currency,
+            status: 'successful',
+            gateway: 'flutterwave',
+            transactionId: String(id),
+            clerkUserId: meta?.clerkUserId || null,
+            type: tx_ref.includes('monthly') ? 'monthly' : 'one-time'
+          }
+        });
+
         return NextResponse.json({ verified: true });
       }
     }

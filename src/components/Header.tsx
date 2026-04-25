@@ -74,7 +74,7 @@ const Header = () => {
             </Show>
             <Show when="signed-in">
               <div className="flex items-center gap-x-4">
-                <Link href="/admin" className="text-gray-500 hover:text-gray-400 font-medium">Admin</Link>
+                <Link href="/dashboard" className="text-gray-500 hover:text-gray-400 font-medium">Dashboard</Link>
                 <UserButton />
               </div>
             </Show>
