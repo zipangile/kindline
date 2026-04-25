@@ -26,6 +26,8 @@ model PaymentSettings {
   flutterwaveSecret  String?
   flutterwavePublic  String?
   flutterwaveEncrypt String?
+  flutterwavePlanZMW String?
+  flutterwavePlanUSD String?
   lencoSecret        String?
   lencoPublic        String?
   lencoBaseUrl       String   @default("https://sandbox.lenco.co/access/v2/")

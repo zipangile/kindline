@@ -8,7 +8,9 @@ export default async function AdminSettingsPage() {
     flutterwaveEncrypt: '',
     lencoSecret: '',
     lencoPublic: '',
-    lencoBaseUrl: 'https://sandbox.lenco.co/access/v2/'
+    lencoBaseUrl: 'https://sandbox.lenco.co/access/v2/',
+    flutterwavePlanZMW: '',
+    flutterwavePlanUSD: '',
   };
 
   return (
@@ -54,6 +56,28 @@ export default async function AdminSettingsPage() {
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
               />
               {process.env.FLUTTERWAVE_ENCRYPTION_KEY && <p className="text-xs text-green-600 mt-1">✓ Encryption key is set in environment</p>}
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Monthly Plan ID (ZMW)</label>
+                <input
+                  name="flutterwavePlanZMW"
+                  type="text"
+                  defaultValue={settings.flutterwavePlanZMW || ''}
+                  placeholder="e.g. 78508"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Monthly Plan ID (USD/GBP/CAD/EUR)</label>
+                <input
+                  name="flutterwavePlanUSD"
+                  type="text"
+                  defaultValue={settings.flutterwavePlanUSD || ''}
+                  placeholder="e.g. 78509"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+                />
+              </div>
             </div>
           </div>
         </div>
