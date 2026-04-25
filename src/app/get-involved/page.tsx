@@ -1,8 +1,14 @@
 import { Button } from "@/components/ui/Button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Landmark, Smartphone, Users, Heart, Building2 } from "lucide-react";
+import DonationForm from "@/components/DonationForm";
+import VolunteerForm from "./VolunteerForm";
+import prisma from "@/lib/prisma";
+import Script from "next/script";
 
-export default function GetInvolvedPage() {
+export default async function GetInvolvedPage() {
+  const settings = await prisma.paymentSettings.findFirst();
+
   const ways = [
     {
       title: "Volunteer With Us",
@@ -23,6 +29,8 @@ export default function GetInvolvedPage() {
 
   return (
     <div className="bg-white">
+      <Script src="https://checkout.flutterwave.com/v3.js" />
+
       {/* Header */}
       <section className="bg-blue-800 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -36,18 +44,20 @@ export default function GetInvolvedPage() {
       {/* Donation Section */}
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Card className="border-2 border-blue-100 shadow-xl overflow-hidden">
-            <div className="bg-blue-600 text-white p-8 text-center">
-              <h2 className="text-3xl font-bold mb-2">Make an Impact</h2>
-              <p className="opacity-90">Select your contribution level and frequency. Your support helps us provide sustainable care.</p>
-            </div>
-            <CardContent className="p-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <DonationForm settings={settings} />
+        </div>
+      </section>
+
+      {/* Alternative Payment Methods */}
+       <section className="py-12 bg-gray-50 border-y border-gray-100">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-2xl font-bold text-center mb-8">Manual Payment Options</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
                   <h3 className="text-lg font-bold mb-4 flex items-center">
                     <Landmark className="mr-2 h-5 w-5 text-blue-600" /> Bank Transfer
                   </h3>
-                  <div className="bg-gray-50 p-4 rounded-lg text-sm space-y-2 font-mono">
+                  <div className="bg-white p-4 rounded-lg text-sm shadow-sm space-y-2 font-mono">
                     <p><span className="text-gray-500">Account Name:</span><br/>KINDLINE CARE FOUNDATION</p>
                     <p><span className="text-gray-500">Account No.:</span><br/>63198221946</p>
                     <p><span className="text-gray-500">Bank:</span><br/>FIRST NATIONAL BANK (FNB)</p>
@@ -59,7 +69,7 @@ export default function GetInvolvedPage() {
                   <h3 className="text-lg font-bold mb-4 flex items-center">
                     <Smartphone className="mr-2 h-5 w-5 text-blue-600" /> Mobile Money (Direct)
                   </h3>
-                  <div className="bg-gray-50 p-4 rounded-lg text-sm space-y-2">
+                  <div className="bg-white p-4 rounded-lg text-sm shadow-sm space-y-2">
                     <p className="font-medium text-gray-900">Name: Astridah Chipowe</p>
                     <p className="text-2xl font-bold text-blue-600">0973635013</p>
                     <p className="text-gray-500 text-xs mt-4 italic">
@@ -68,18 +78,29 @@ export default function GetInvolvedPage() {
                   </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+        </div>
+       </section>
+
+      {/* Volunteer Section */}
+      <section className="py-20 bg-blue-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-blue-900 mb-4">Volunteer With Us</h2>
+            <p className="text-lg text-blue-800/80">Join our team of dedicated volunteers and make a direct impact.</p>
+          </div>
+          <div className="bg-white p-8 rounded-2xl shadow-xl border-2 border-blue-100">
+            <VolunteerForm />
+          </div>
         </div>
       </section>
 
       {/* Other Ways to Help */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">Other Ways to Help</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">More Ways to Help</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {ways.map((way, index) => (
-              <Card key={index} className="h-full border-none shadow-sm">
+              <Card key={index} className="h-full border-none shadow-sm bg-gray-50">
                 <CardHeader>
                   <div className="bg-blue-50 w-12 h-12 flex items-center justify-center rounded-lg mb-4">
                     {way.icon}
@@ -91,9 +112,6 @@ export default function GetInvolvedPage() {
                     {way.description}
                   </p>
                 </CardContent>
-                <div className="px-6 pb-6 mt-auto">
-                  <Button variant="outline" className="w-full">Get Started</Button>
-                </div>
               </Card>
             ))}
           </div>

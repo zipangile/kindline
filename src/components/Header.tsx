@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { SignInButton, SignUpButton, UserButton, Show } from "@clerk/nextjs";
 
 const Header = () => {
   const pathname = usePathname();
@@ -60,6 +61,23 @@ const Header = () => {
             >
               Donate
             </Link>
+
+            <Show when="signed-out">
+              <div className="flex items-center gap-x-2">
+                <SignInButton mode="modal">
+                  <button className="text-gray-500 hover:text-gray-400 font-medium">Log in</button>
+                </SignInButton>
+                <SignUpButton mode="modal">
+                  <button className="text-gray-500 hover:text-gray-400 font-medium border border-gray-200 px-3 py-1 rounded-md">Sign up</button>
+                </SignUpButton>
+              </div>
+            </Show>
+            <Show when="signed-in">
+              <div className="flex items-center gap-x-4">
+                <Link href="/admin" className="text-gray-500 hover:text-gray-400 font-medium">Admin</Link>
+                <UserButton />
+              </div>
+            </Show>
           </div>
         </div>
       </nav>
