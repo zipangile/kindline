@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma';
 import { createProgram, updateProgramStatus, deleteProgram } from './actions';
+import { Program } from '@prisma/client';
 
 export default async function AdminProgramsPage() {
   const programs = await prisma.program.findMany({
@@ -60,7 +61,7 @@ export default async function AdminProgramsPage() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {programs.map((program) => (
+            {programs.map((program: Program) => (
               <tr key={program.id}>
                 <td className="px-6 py-4">
                   <div className="text-sm font-medium text-gray-900">{program.title}</div>
