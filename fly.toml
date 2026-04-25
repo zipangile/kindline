@@ -6,6 +6,8 @@
 app = 'kindline-care'
 primary_region = 'jnb'
 
+# Tigris storage: dry-sun-4981
+
 [deploy]
   strategy = 'immediate'
 
