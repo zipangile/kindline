@@ -6,7 +6,9 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-1">
-            <h3 className="text-xl font-bold text-blue-400 mb-4">Kindline Care</h3>
+            <div className="mb-4">
+              <img src="/logo.png" alt="Kindline Care Foundation" className="h-16 w-auto brightness-0 invert" />
+            </div>
             <p className="text-gray-400 text-sm">
               Restoring dignity and creating opportunity for orphans, vulnerable children, and widows.
             </p>

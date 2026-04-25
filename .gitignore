@@ -23,6 +23,15 @@
 # misc
 .DS_Store
 *.pem
+dev_server.log
+flyctl
+flyctl.tar.gz
+
+# database
+*.db
+*.db-journal
+/prisma/*.db
+/prisma/*.db-journal
 
 # debug
 npm-debug.log*
