@@ -3,10 +3,31 @@
 import { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { Landmark, Smartphone, CreditCard, Heart } from "lucide-react";
+import { Heart } from "lucide-react";
 import { useAuth } from '@clerk/nextjs';
 
-export default function DonationForm({ settings }: { settings: any }) {
+interface LencoPayResponse {
+  status: string;
+  reference: string;
+  [key: string]: unknown;
+}
+
+interface FlutterwaveResponse {
+  status: string;
+  tx_ref: string;
+  [key: string]: unknown;
+}
+
+declare global {
+  interface Window {
+    LencoPay: {
+      setup: (options: unknown) => { openIframe: () => void };
+    };
+    FlutterwaveCheckout: (options: unknown) => void;
+  }
+}
+
+export default function DonationForm({ settings }: { settings: { lencoPublic?: string; flutterwavePublic?: string } }) {
   const { userId } = useAuth();
   const [amount, setAmount] = useState('50');
   const [currency, setCurrency] = useState('ZMW');
@@ -18,16 +39,14 @@ export default function DonationForm({ settings }: { settings: any }) {
   const handleLenco = () => {
     const publicKey = settings?.lencoPublic || "pub-88dd921c0ecd73590459a1dd5a9343c77db0f3c344f222b9";
 
-    // @ts-ignore
-    if (typeof window.LencoPay === 'function') {
-      // @ts-ignore
+    if (typeof window.LencoPay !== 'undefined') {
       const handler = window.LencoPay.setup({
         key: publicKey,
         email: email,
         amount: parseFloat(amount) * 100, // Lenco expects amount in kobo/cents
         currency: currency,
         reference: "KCF-L-" + Date.now(),
-        callback: function(response: any) {
+        callback: function(response: LencoPayResponse) {
           console.log("Lenco payment success", response);
           alert("Thank you for your donation!");
           window.location.reload();
@@ -50,9 +69,7 @@ export default function DonationForm({ settings }: { settings: any }) {
         return;
     }
 
-    // @ts-ignore
     if (typeof window.FlutterwaveCheckout === 'function') {
-      // @ts-ignore
       window.FlutterwaveCheckout({
         public_key: publicKey,
         tx_ref: "KCF-" + Date.now(),
@@ -72,7 +89,7 @@ export default function DonationForm({ settings }: { settings: any }) {
           description: frequency === 'monthly' ? "Monthly subscription for Kindline Care" : "Payment for supporting orphans and widows",
           logo: "https://kindlinecare.org/logo.png",
         },
-        callback: function (data: any) {
+        callback: function (data: FlutterwaveResponse) {
           console.log("Payment completed!", data);
           alert("Thank you for your donation!");
           window.location.reload();

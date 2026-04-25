@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma';
+import { Donation } from '@prisma/client';
 
 export default async function AdminDonorsPage() {
   const donations = await prisma.donation.findMany({
@@ -21,7 +22,7 @@ export default async function AdminDonorsPage() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {donations.map((d: any) => (
+            {donations.map((d: Donation) => (
               <tr key={d.id}>
                 <td className="px-6 py-4">
                   <div className="text-sm font-medium text-gray-900">{d.donorName}</div>

@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-const Flutterwave = require('flutterwave-node-v3');
+// @ts-expect-error flutterwave-node-v3 does not have types
+import Flutterwave from 'flutterwave-node-v3';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { transaction_id, tx_ref, status } = body;
+    const { transaction_id, status } = body;
 
     const settings = await prisma.paymentSettings.findFirst();
     const secretKey = settings?.flutterwaveSecret || process.env.FLUTTERWAVE_SECRET_KEY;
