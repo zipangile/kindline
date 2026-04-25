@@ -9,7 +9,7 @@
 
 ## About Snapshot
 - **Headline:** My Care. Your Care. Our Care.
-- **Body:** Kindline Care Foundation is dedicated to working in the field of positive change. We focus on community-based interventions that restore dignity and promote sustainable development for those who need it most—orphans, vulnerable children, and widows. We believe that every individual deserves safety, opportunity, and the chance to thrive.
+- **Body:** Kindline Care Foundation is dedicated to working in the field of positive change. We focus on community-based interventions that restore dignity and promote sustainable development for those who need it most: orphans, vulnerable children, and widows. We believe that every individual deserves safety, opportunity, and the chance to thrive.
 
 ## Programs Overview
 ### 1. WESAP (Widows Economic Skills Advancement Program.)
