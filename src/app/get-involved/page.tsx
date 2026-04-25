@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/Button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Landmark, Smartphone, Users, Heart, Building2 } from "lucide-react";
 import DonationForm from "@/components/DonationForm";
@@ -8,6 +7,11 @@ import Script from "next/script";
 
 export default async function GetInvolvedPage() {
   const settings = await prisma.paymentSettings.findFirst();
+
+  const donationSettings = settings ? {
+    lencoPublic: settings.lencoPublic || undefined,
+    flutterwavePublic: settings.flutterwavePublic || undefined
+  } : {};
 
   const ways = [
     {
@@ -66,7 +70,7 @@ export default async function GetInvolvedPage() {
                     </div>
                 </div>
                 <div>
-                    <DonationForm settings={settings} />
+                    <DonationForm settings={donationSettings} />
                 </div>
             </div>
         </div>
