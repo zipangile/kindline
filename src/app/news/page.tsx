@@ -16,7 +16,7 @@ export default function NewsPage() {
     {
       title: "Announcing the 2024 Scholarship Recipients",
       date: "April 28, 2024",
-      excerpt: "We are proud to announce that 50 more vulnerable children have been added to our full-tuition scholarship program this year.",
+      excerpt: "We are proud to announce that 50 more vulnerable children have been added to our full-tuition scholarship programme this year.",
       category: "Announcement"
     },
     {

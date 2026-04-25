@@ -18,8 +18,8 @@ export async function createProgram(formData: FormData) {
     },
   });
 
-  revalidatePath('/admin/programs');
-  revalidatePath('/programs');
+  revalidatePath('/admin/programmes');
+  revalidatePath('/programmes');
 }
 
 export async function updateProgramStatus(id: string, status: string) {
@@ -28,8 +28,8 @@ export async function updateProgramStatus(id: string, status: string) {
     data: { status },
   });
 
-  revalidatePath('/admin/programs');
-  revalidatePath('/programs');
+  revalidatePath('/admin/programmes');
+  revalidatePath('/programmes');
 }
 
 export async function deleteProgram(id: string) {
@@ -37,6 +37,6 @@ export async function deleteProgram(id: string) {
     where: { id },
   });
 
-  revalidatePath('/admin/programs');
-  revalidatePath('/programs');
+  revalidatePath('/admin/programmes');
+  revalidatePath('/programmes');
 }

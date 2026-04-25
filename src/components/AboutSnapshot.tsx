@@ -30,7 +30,7 @@ const AboutSnapshot = () => {
               <div className="mt-12">
                 <h4 className="text-2xl font-bold text-gray-900 mb-4">Who We Are</h4>
                 <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                  Kindline Care Foundation is a non-profit organization established to work in the field of positive change in the lives of underprivileged persons, particularly orphans, vulnerable children, and widows.
+                  Kindline Care Foundation is a non-profit organisation established to work in the field of positive change in the lives of underprivileged persons, particularly orphans, vulnerable children, and widows.
                 </p>
                 <p className="text-lg text-gray-600 mb-8 leading-relaxed">
                   The foundation focuses on community-based interventions that restore dignity, create opportunity, and promote sustainable development. We believe in going beyond immediate relief to build long-term resilience and self-reliance.

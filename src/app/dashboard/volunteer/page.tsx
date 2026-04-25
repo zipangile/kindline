@@ -73,8 +73,8 @@ export default async function VolunteerDashboard() {
                   <h3 className="font-bold text-blue-800">Volunteer Handbook</h3>
                   <p className="text-sm text-gray-500 mt-1">Learn about our guidelines and expectations.</p>
                 </Link>
-                <Link href="/programs" className="block p-4 bg-white border border-gray-200 rounded-xl hover:border-blue-300 hover:shadow-md transition-all">
-                  <h3 className="font-bold text-blue-800">Explore Programs</h3>
+                <Link href="/programmes" className="block p-4 bg-white border border-gray-200 rounded-xl hover:border-blue-300 hover:shadow-md transition-all">
+                  <h3 className="font-bold text-blue-800">Explore Programmes</h3>
                   <p className="text-sm text-gray-500 mt-1">See where you can make the most impact.</p>
                 </Link>
               </div>
