@@ -7,10 +7,15 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { userId } = await auth();
+  const { userId, orgId } = await auth();
 
   if (!userId) {
     redirect('/sign-in');
+  }
+
+  // Only allow members of the specific Kindline organization
+  if (orgId !== 'org_3CqSUazt0GzaFAeoS5YngAZcro8') {
+    redirect('/');
   }
 
   return (
