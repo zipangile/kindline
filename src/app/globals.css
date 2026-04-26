@@ -6,6 +6,10 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --brand-purple: #8b438e;
+  --brand-green: #00a651;
+  --brand-blue: #0071bc;
+  --brand-orange: #f7941d;
 }
 
 @theme inline {
@@ -13,6 +17,11 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --color-brand-purple: var(--brand-purple);
+  --color-brand-green: var(--brand-green);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-orange: var(--brand-orange);
 }
 
 @media (prefers-color-scheme: dark) {

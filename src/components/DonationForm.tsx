@@ -147,63 +147,64 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
   };
 
   return (
-    <Card className="border-2 border-blue-100 shadow-xl overflow-hidden">
-      <div className="bg-blue-600 text-white p-8 text-center">
-        <h2 className="text-3xl font-bold mb-2">Make an Impact</h2>
-        <p className="opacity-90">Your support helps us provide sustainable care.</p>
+    <Card className="border-2 border-brand-blue/10 shadow-2xl overflow-hidden rounded-[2rem]">
+      <div className="bg-brand-blue text-white p-10 text-center relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
+        <h2 className="text-3xl font-extrabold mb-2 relative z-10">Make an Impact</h2>
+        <p className="text-white/90 font-medium relative z-10">Your support helps us provide sustainable care.</p>
       </div>
-      <CardContent className="p-8">
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <CardContent className="p-8 md:p-10">
+        <div className="space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Full Name</label>
+              <label className="block text-sm font-bold text-gray-900 mb-2 uppercase tracking-wide">Full Name</label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Your Name"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+                className="block w-full rounded-xl border-2 border-gray-100 shadow-sm focus:border-brand-blue focus:ring-brand-blue p-4 text-gray-900 font-medium transition-colors bg-gray-50/50"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Email Address</label>
+              <label className="block text-sm font-bold text-gray-900 mb-2 uppercase tracking-wide">Email Address</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+                className="block w-full rounded-xl border-2 border-gray-100 shadow-sm focus:border-brand-blue focus:ring-brand-blue p-4 text-gray-900 font-medium transition-colors bg-gray-50/50"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Donation Amount</label>
-            <div className="flex gap-2 flex-wrap">
+            <label className="block text-sm font-bold text-gray-900 mb-4 uppercase tracking-wide">Donation Amount</label>
+            <div className="flex gap-3 flex-wrap">
               {['20', '50', '100', '200', '500'].map((val) => (
                 <button
                   key={val}
                   onClick={() => setAmount(val)}
-                  className={`px-4 py-2 rounded-lg border ${amount === val ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-200 hover:border-blue-300'}`}
+                  className={`px-6 py-3 rounded-xl border-2 font-bold transition-all ${amount === val ? 'bg-brand-blue text-white border-brand-blue shadow-lg scale-105' : 'bg-white text-gray-700 border-gray-100 hover:border-brand-blue/30'}`}
                 >
                   {currency} {val}
                 </button>
               ))}
-              <div className="relative flex-grow">
+              <div className="relative flex-grow min-w-[120px]">
                 <input
                   type="number"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="Other"
-                  className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+                  className="w-full rounded-xl border-2 border-gray-100 shadow-sm focus:border-brand-blue focus:ring-brand-blue p-3 text-gray-900 font-bold bg-gray-50/50"
                 />
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Currency</label>
+                <label className="block text-sm font-bold text-gray-900 mb-2 uppercase tracking-wide">Currency</label>
                 <select
                 value={currency}
                 onChange={(e) => {
@@ -211,7 +212,7 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
                     setCurrency(newCurrency);
                     if (newCurrency !== 'ZMW') setMethod('flutterwave');
                 }}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+                className="block w-full rounded-xl border-2 border-gray-100 shadow-sm focus:border-brand-blue focus:ring-brand-blue p-4 text-gray-900 font-bold bg-gray-50/50"
                 >
                 <option value="ZMW">ZMW (Zambian Kwacha)</option>
                 <option value="USD">USD (US Dollar)</option>
@@ -221,12 +222,12 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
                 </select>
             </div>
             <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Payment Gateway</label>
+                <label className="block text-sm font-bold text-gray-900 mb-2 uppercase tracking-wide">Payment Gateway</label>
                 <select
                 value={method}
                 onChange={(e) => setMethod(e.target.value)}
                 disabled={currency !== 'ZMW'}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border disabled:bg-gray-50"
+                className="block w-full rounded-xl border-2 border-gray-100 shadow-sm focus:border-brand-blue focus:ring-brand-blue p-4 text-gray-900 font-bold bg-gray-50/50 disabled:bg-gray-100 disabled:cursor-not-allowed"
                 >
                 <option value="flutterwave">Flutterwave (Universal)</option>
                 {currency === 'ZMW' && <option value="lenco">Lenco Pay (Local)</option>}
@@ -234,36 +235,43 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Frequency</label>
-            <div className="flex gap-4">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="radio" name="frequency" checked={frequency === 'one-time'} onChange={() => setFrequency('one-time')} className="text-blue-600" />
-                <span>One-time</span>
+          <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+            <label className="block text-sm font-bold text-gray-900 mb-4 uppercase tracking-wide">Donation Frequency</label>
+            <div className="flex gap-8">
+              <label className="flex items-center gap-3 cursor-pointer group">
+                <div className="relative flex items-center">
+                  <input type="radio" name="frequency" checked={frequency === 'one-time'} onChange={() => setFrequency('one-time')} className="w-5 h-5 text-brand-blue border-2 border-gray-300 focus:ring-brand-blue" />
+                </div>
+                <span className="text-lg font-bold text-gray-900 group-hover:text-brand-blue transition-colors">One-time</span>
               </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="radio" name="frequency" checked={frequency === 'monthly'} onChange={() => {
-                    setFrequency('monthly');
-                    setMethod('flutterwave');
-                }} className="text-blue-600" />
-                <span>Monthly</span>
+              <label className="flex items-center gap-3 cursor-pointer group">
+                <div className="relative flex items-center">
+                  <input type="radio" name="frequency" checked={frequency === 'monthly'} onChange={() => {
+                      setFrequency('monthly');
+                      setMethod('flutterwave');
+                  }} className="w-5 h-5 text-brand-blue border-2 border-gray-300 focus:ring-brand-blue" />
+                </div>
+                <span className="text-lg font-bold text-gray-900 group-hover:text-brand-blue transition-colors">Monthly</span>
               </label>
             </div>
             {frequency === 'monthly' && (
-                <p className="text-xs text-blue-600 mt-2 font-medium">Monthly donations are processed via Flutterwave and support Kindline Friends.</p>
+                <p className="text-sm text-brand-purple mt-4 font-bold flex items-center gap-2">
+                  <Heart className="h-4 w-4 fill-current" />
+                  Monthly donations are processed via Flutterwave and support Kindline Friends.
+                </p>
             )}
           </div>
 
           <Button
             onClick={method === 'flutterwave' ? handleFlutterwave : handleLenco}
             disabled={!email || !amount || !name}
-            className="w-full bg-blue-600 hover:bg-blue-700 h-12 text-lg font-bold"
+            className="w-full bg-brand-orange hover:bg-brand-orange/90 h-16 text-xl font-extrabold rounded-xl shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
-            <Heart className="mr-2 h-5 w-5" /> {frequency === 'monthly' ? 'Subscribe' : 'Donate'} {currency} {amount}
+            <Heart className="mr-2 h-6 w-6" /> {frequency === 'monthly' ? 'Subscribe' : 'Donate'} {currency} {amount}
           </Button>
 
-          <p className="text-center text-xs text-gray-500 italic">
-            Payments are secured by {method === 'flutterwave' ? 'Flutterwave' : 'Lenco'}. You can pay via Card, Mobile Money, or Bank Transfer.
+          <p className="text-center text-sm text-gray-500 font-medium">
+            Secure payment powered by <span className="text-brand-blue font-bold">{method === 'flutterwave' ? 'Flutterwave' : 'Lenco'}</span>
           </p>
         </div>
       </CardContent>

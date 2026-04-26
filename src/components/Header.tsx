@@ -47,9 +47,9 @@ const Header = () => {
               <Link
                 key={link.name}
                 href={link.href}
-                className={`font-medium ${
-                  pathname === link.href ? 'text-blue-800' : 'text-gray-500 hover:text-gray-400'
-                } md:py-6`}
+                className={`font-semibold ${
+                  pathname === link.href ? 'text-brand-blue' : 'text-gray-700 hover:text-brand-purple'
+                } md:py-6 transition-colors`}
                 aria-current={pathname === link.href ? 'page' : undefined}
               >
                 {link.name}
@@ -57,24 +57,24 @@ const Header = () => {
             ))}
             <Link
               href="/get-involved"
-              className="flex items-center gap-x-2 font-semibold text-white bg-blue-800 hover:bg-blue-900 px-5 py-2.5 rounded-lg transition-all"
+              className="flex items-center gap-x-2 font-bold text-white bg-brand-blue hover:bg-brand-blue/90 px-6 py-2.5 rounded-full transition-all shadow-sm"
             >
               Donate
             </Link>
 
             <Show when="signed-out">
-              <div className="flex items-center gap-x-2">
+              <div className="flex items-center gap-x-3">
                 <SignInButton mode="modal">
-                  <button className="text-gray-500 hover:text-gray-400 font-medium">Log in</button>
+                  <button className="text-gray-700 hover:text-brand-purple font-semibold transition-colors">Log in</button>
                 </SignInButton>
                 <SignUpButton mode="modal">
-                  <button className="text-gray-500 hover:text-gray-400 font-medium border border-gray-200 px-3 py-1 rounded-md">Sign up</button>
+                  <button className="text-gray-700 hover:text-brand-purple font-semibold border-2 border-gray-200 px-4 py-1.5 rounded-full transition-all">Sign up</button>
                 </SignUpButton>
               </div>
             </Show>
             <Show when="signed-in">
               <div className="flex items-center gap-x-4">
-                <Link href="/dashboard" className="text-gray-500 hover:text-gray-400 font-medium">Dashboard</Link>
+                <Link href="/dashboard" className="text-gray-700 hover:text-brand-purple font-semibold transition-colors">Dashboard</Link>
                 <UserButton />
               </div>
             </Show>

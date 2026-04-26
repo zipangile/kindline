@@ -34,17 +34,19 @@ export default function Home() {
 
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gray-900 rounded-3xl p-8 md:p-16 text-center text-white relative overflow-hidden">
+          <div className="bg-brand-blue rounded-[3rem] p-8 md:p-20 text-center text-white relative overflow-hidden shadow-2xl">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-brand-orange/20 rounded-full -mr-32 -mt-32"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-purple/20 rounded-full -ml-32 -mb-32"></div>
             <div className="relative z-10">
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">Be Part of the Impact</h2>
-              <p className="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
+              <h2 className="text-3xl md:text-5xl font-extrabold mb-8">Be Part of the Impact</h2>
+              <p className="text-xl text-white/90 mb-12 max-w-2xl mx-auto font-medium">
                 Your generosity fuels these stories of transformation. Join us in creating a brighter future for those who need it most.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-blue-600 hover:bg-blue-700" asChild>
+              <div className="flex flex-col sm:flex-row gap-5 justify-center">
+                <Button size="lg" className="bg-brand-orange hover:bg-brand-orange/90 text-white border-none px-10 h-14 text-lg font-bold rounded-full" asChild>
                   <Link href="/get-involved">Donate Now</Link>
                 </Button>
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-gray-900" asChild>
+                <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-brand-blue px-10 h-14 text-lg font-bold rounded-full" asChild>
                   <Link href="/get-involved">Get Involved</Link>
                 </Button>
               </div>
@@ -55,20 +57,20 @@ export default function Home() {
 
       <LoveCareShare />
 
-      <section className="py-20 bg-gray-50 border-t border-gray-100">
+      <section className="py-24 bg-gray-50 border-t border-gray-100">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">News & Updates</h2>
-          <p className="text-gray-600 mb-8">
+          <h2 className="text-3xl md:text-4xl font-extrabold mb-6 text-gray-900">News & Updates</h2>
+          <p className="text-lg text-gray-700 mb-10 font-medium">
             Stay informed about our latest activities, events, and announcements.
           </p>
           <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto" onSubmit={(e) => e.preventDefault()}>
             <input
               type="email"
               placeholder="Your email address"
-              className="flex-grow px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
+              className="flex-grow px-6 py-3 rounded-full border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-blue bg-white text-gray-900 font-medium"
               required
             />
-            <Button type="submit">Subscribe</Button>
+            <Button type="submit" className="rounded-full px-8 h-12 font-bold shadow-md">Subscribe</Button>
           </form>
           <div className="mt-8">
             <Button variant="link" asChild>
