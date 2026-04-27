@@ -1,28 +1,40 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { registerVolunteer } from './actions';
 import { Button } from '@/components/ui/Button';
-import { SignInButton, SignUpButton, Show } from '@clerk/nextjs';
+import Link from 'next/link';
+import { createClient } from '@/utils/supabase/client';
+import { User } from '@supabase/supabase-js';
 
 export default function VolunteerForm() {
+  const [user, setUser] = useState<User | null>(null);
+  const supabase = createClient();
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    getUser();
+  }, [supabase.auth]);
+
   return (
     <div className="space-y-6">
-      <Show when="signed-out">
+      {!user ? (
         <div className="text-center p-6 border-2 border-dashed border-gray-200 rounded-xl">
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Sign in to Volunteer</h3>
           <p className="text-gray-600 mb-4">To track your application and access the volunteer dashboard, please create an account or sign in.</p>
           <div className="flex justify-center gap-4">
-            <SignInButton mode="modal">
+            <Link href="/login">
               <Button variant="outline">Sign In</Button>
-            </SignInButton>
-            <SignUpButton mode="modal">
+            </Link>
+            <Link href="/signup">
               <Button className="bg-blue-800 hover:bg-blue-900">Create Account</Button>
-            </SignUpButton>
+            </Link>
           </div>
         </div>
-      </Show>
-
-      <Show when="signed-in">
+      ) : (
         <form action={registerVolunteer} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
@@ -48,7 +60,7 @@ export default function VolunteerForm() {
       </div>
           <Button type="submit" className="w-full bg-blue-800 hover:bg-blue-900">Submit Application</Button>
         </form>
-      </Show>
+      )}
     </div>
   );
 }

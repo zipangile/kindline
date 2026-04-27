@@ -36,7 +36,7 @@ model PaymentSettings {
 
 model Donation {
   id            String   @id @default(cuid())
-  clerkUserId   String?  // Linked to Clerk user for "Friends of Kindline" dashboard
+  supabaseUserId String? // Linked to Supabase user for "Friends of Kindline" dashboard
   donorName     String
   donorEmail    String
   amount        Float
@@ -50,7 +50,7 @@ model Donation {
 
 model Volunteer {
   id            String   @id @default(cuid())
-  clerkUserId   String?  @unique // Linked to Clerk user for dashboard access
+  supabaseUserId String? @unique // Linked to Supabase user for dashboard access
   name          String
   email         String
   phone         String?

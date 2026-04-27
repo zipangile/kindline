@@ -2,10 +2,28 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { SignInButton, SignUpButton, UserButton, Show } from "@clerk/nextjs";
+import { useEffect, useState } from 'react';
+import { createClient } from '@/utils/supabase/client';
+import { User } from '@supabase/supabase-js';
 
 const Header = () => {
   const pathname = usePathname();
+  const [user, setUser] = useState<User | null>(null);
+  const supabase = createClient();
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    getUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [supabase.auth]);
 
   const navLinks = [
     { name: 'Home', href: '/' },
@@ -16,6 +34,10 @@ const Header = () => {
     { name: 'News', href: '/news' },
     { name: 'Contact', href: '/contact' },
   ];
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+  };
 
   return (
     <header className="sticky top-0 inset-x-0 flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full bg-white border-b border-gray-200 text-sm py-3 md:py-0">
@@ -62,22 +84,22 @@ const Header = () => {
               Donate
             </Link>
 
-            <Show when="signed-out">
+            {!user ? (
               <div className="flex items-center gap-x-3">
-                <SignInButton mode="modal">
-                  <button className="text-gray-700 hover:text-brand-purple font-semibold transition-colors">Log in</button>
-                </SignInButton>
-                <SignUpButton mode="modal">
-                  <button className="text-gray-700 hover:text-brand-purple font-semibold border-2 border-gray-200 px-4 py-1.5 rounded-full transition-all">Sign up</button>
-                </SignUpButton>
+                <Link href="/login" className="text-gray-700 hover:text-brand-purple font-semibold transition-colors">Log in</Link>
+                <Link href="/signup" className="text-gray-700 hover:text-brand-purple font-semibold border-2 border-gray-200 px-4 py-1.5 rounded-full transition-all">Sign up</Link>
               </div>
-            </Show>
-            <Show when="signed-in">
+            ) : (
               <div className="flex items-center gap-x-4">
                 <Link href="/dashboard" className="text-gray-700 hover:text-brand-purple font-semibold transition-colors">Dashboard</Link>
-                <UserButton />
+                <button
+                  onClick={handleSignOut}
+                  className="text-gray-700 hover:text-brand-purple font-semibold transition-colors"
+                >
+                  Log out
+                </button>
               </div>
-            </Show>
+            )}
           </div>
         </div>
       </nav>

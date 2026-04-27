@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Heart } from "lucide-react";
-import { useAuth } from '@clerk/nextjs';
+import { createClient } from '@/utils/supabase/client';
 
 interface LencoPayResponse {
   status: string;
@@ -28,13 +28,22 @@ declare global {
 }
 
 export default function DonationForm({ settings }: { settings: { lencoPublic?: string; flutterwavePublic?: string; flutterwavePlanZMW?: string; flutterwavePlanUSD?: string } }) {
-  const { userId } = useAuth();
+  const [userId, setUserId] = useState<string | null>(null);
   const [amount, setAmount] = useState('50');
   const [currency, setCurrency] = useState('ZMW');
   const [method, setMethod] = useState('flutterwave');
   const [frequency, setFrequency] = useState('one-time');
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
+  const supabase = createClient();
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUserId(user?.id || null);
+    };
+    getUser();
+  }, [supabase.auth]);
 
   const handleLenco = () => {
     const publicKey = settings?.lencoPublic;
@@ -60,7 +69,7 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 reference: response.reference,
-                clerkUserId: userId
+                supabaseUserId: userId
               })
             });
             if (verifyRes.ok) {
@@ -107,12 +116,12 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
           name: name,
         },
         meta: {
-          clerkUserId: userId || '',
+          supabaseUserId: userId || '',
         },
         customizations: {
           title: "Kindline Care Donation",
           description: frequency === 'monthly' ? "Monthly subscription for Kindline Care" : "Payment for supporting orphans and widows",
-          logo: "/logo.png",
+          logo: window.location.origin + "/logo.png",
         },
         callback: async function (data: FlutterwaveResponse) {
           console.log("Payment completed!", data);

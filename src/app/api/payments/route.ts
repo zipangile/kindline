@@ -34,7 +34,7 @@ export async function POST(request: Request) {
               status: 'successful',
               gateway: 'flutterwave',
               transactionId: String(id),
-              clerkUserId: meta?.clerkUserId || null,
+              supabaseUserId: meta?.supabaseUserId || null,
               type: tx_ref.includes('monthly') ? 'monthly' : 'one-time'
             }
           });
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
               status: 'successful',
               gateway: 'flutterwave',
               transactionId: String(id),
-              clerkUserId: meta?.clerkUserId || null,
+              supabaseUserId: meta?.supabaseUserId || null,
               type: (tx_ref && tx_ref.includes('monthly')) ? 'monthly' : 'one-time'
             }
           });

@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { reference, clerkUserId } = body;
+    const { reference, supabaseUserId } = body;
 
     const settings = await prisma.paymentSettings.findFirst();
     const secretKey = settings?.lencoSecret;
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
           status: 'successful',
           gateway: 'lenco',
           transactionId: String(transactionId),
-          clerkUserId: clerkUserId || null,
+          supabaseUserId: supabaseUserId || null,
           type: 'one-time' // Lenco integration in this app is currently for one-time Kwacha donations
         }
       });

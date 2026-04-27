@@ -1,20 +1,23 @@
-import { auth } from '@clerk/nextjs/server';
+import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import { isRedirectError } from 'next/dist/client/components/redirect-error';
 import prisma from '@/lib/prisma';
 import Link from 'next/link';
 
 export default async function VolunteerDashboard() {
-  const { userId } = await auth();
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
-  if (!userId) {
-    redirect('/sign-in');
+  if (!user) {
+    redirect('/login');
   }
+
+  const userId = user.id;
 
   let volunteer;
   try {
     volunteer = await prisma.volunteer.findUnique({
-      where: { clerkUserId: userId },
+      where: { supabaseUserId: userId },
     });
   } catch (error) {
     if (isRedirectError(error)) throw error;
