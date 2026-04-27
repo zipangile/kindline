@@ -1,5 +1,5 @@
 import { auth } from '@clerk/nextjs/server';
-import { redirect } from 'next/navigation';
+import { redirect, isRedirectError } from 'next/navigation';
 import prisma from '@/lib/prisma';
 import Link from 'next/link';
 
@@ -10,18 +10,19 @@ export default async function FriendDashboard() {
     redirect('/sign-in');
   }
 
-  let dbError = false;
-  const donations = await prisma.donation.findMany({
-    where: { clerkUserId: userId },
-    orderBy: { createdAt: 'desc' },
-  }).catch((error) => {
+  let donations;
+  try {
+    donations = await prisma.donation.findMany({
+      where: { clerkUserId: userId },
+      orderBy: { createdAt: 'desc' },
+    });
+  } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error('Database error in friend dashboard:', error);
-    dbError = true;
-    return [];
-  });
+    redirect('/get-involved');
+  }
 
-  // Redirect outside try-catch
-  if (dbError || donations.length === 0) {
+  if (!donations || donations.length === 0) {
     redirect('/get-involved');
   }
 

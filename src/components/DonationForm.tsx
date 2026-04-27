@@ -112,7 +112,7 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
         customizations: {
           title: "Kindline Care Donation",
           description: frequency === 'monthly' ? "Monthly subscription for Kindline Care" : "Payment for supporting orphans and widows",
-          logo: "https://kindlinecare.org/logo.png",
+          logo: "/logo.png",
         },
         callback: async function (data: FlutterwaveResponse) {
           console.log("Payment completed!", data);
