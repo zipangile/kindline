@@ -1,5 +1,6 @@
 import { auth } from '@clerk/nextjs/server';
-import { redirect, isRedirectError } from 'next/navigation';
+import { redirect } from 'next/navigation';
+import { isRedirectError } from 'next/dist/client/components/redirect-error';
 import prisma from '@/lib/prisma';
 import Link from 'next/link';
 
