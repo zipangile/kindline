@@ -29,7 +29,7 @@ const Header = () => {
     { name: 'Home', href: '/' },
     { name: 'About Us', href: '/about' },
     { name: 'Programmes', href: '/programmes' },
-    { name: 'Get Involved', href: '/get-involved' },
+    { name: 'Volunteer', href: '/get-involved' },
     { name: 'Impact', href: '/impact' },
     { name: 'News', href: '/news' },
     { name: 'Contact', href: '/contact' },

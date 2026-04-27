@@ -18,6 +18,9 @@ export async function registerVolunteer(formData: FormData) {
   const phone = formData.get('phone') as string;
   const skills = formData.get('skills') as string;
   const interests = formData.get('interests') as string;
+  const availability = formData.get('availability') as string;
+  const experience = formData.get('experience') as string;
+  const location = formData.get('location') as string;
 
   await prisma.volunteer.create({
     data: {
@@ -27,6 +30,9 @@ export async function registerVolunteer(formData: FormData) {
       phone,
       skills,
       interests,
+      availability,
+      experience,
+      location,
     },
   });
 

@@ -1,20 +1,82 @@
 import prisma from '@/lib/prisma';
 import { updateVolunteerStatus, deleteVolunteer } from './actions';
+import { Prisma } from '@prisma/client';
 
-export default async function AdminVolunteersPage() {
+export default async function AdminVolunteersPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ search?: string; skill?: string }>;
+}) {
+  const params = await searchParams;
+  const search = params.search || '';
+  const skill = params.skill || '';
+
+  const where: Prisma.VolunteerWhereInput = {
+    AND: [
+      search ? {
+        OR: [
+          { name: { contains: search } },
+          { email: { contains: search } },
+        ],
+      } : {},
+      skill ? {
+        skills: { contains: skill },
+      } : {},
+    ],
+  };
+
   const volunteers = await prisma.volunteer.findMany({
+    where,
     orderBy: { createdAt: 'desc' },
   });
 
   return (
     <div className="space-y-8">
-      <h1 className="text-2xl font-bold text-gray-900">Manage Volunteers</h1>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <h1 className="text-2xl font-bold text-gray-900">Manage Volunteers</h1>
+
+        <form className="flex flex-col md:flex-row gap-4 flex-1 max-w-2xl">
+          <div className="relative flex-1">
+            <input
+              type="text"
+              name="search"
+              defaultValue={search}
+              placeholder="Search by name or email..."
+              className="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-brand-blue focus:border-brand-blue"
+            />
+          </div>
+          <div className="w-full md:w-48">
+            <input
+              type="text"
+              name="skill"
+              defaultValue={skill}
+              placeholder="Filter by skill..."
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-brand-blue focus:border-brand-blue"
+            />
+          </div>
+          <button
+            type="submit"
+            className="bg-brand-blue text-white px-6 py-2 rounded-lg hover:bg-brand-blue/90 transition-colors"
+          >
+            Filter
+          </button>
+          {(search || skill) && (
+            <a
+              href="/admin/volunteers"
+              className="text-center px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              Clear
+            </a>
+          )}
+        </form>
+      </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Volunteer</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Skills & Interests</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
@@ -27,6 +89,11 @@ export default async function AdminVolunteersPage() {
                   <div className="text-sm font-medium text-gray-900">{v.name}</div>
                   <div className="text-sm text-gray-500">{v.email}</div>
                   {v.phone && <div className="text-xs text-gray-400">{v.phone}</div>}
+                  <div className="text-xs text-gray-400 mt-1">{v.location || 'No location'}</div>
+                </td>
+                <td className="px-6 py-4">
+                  <div className="text-sm text-gray-900 capitalize"><span className="font-medium">Availability:</span> {v.availability || 'N/A'}</div>
+                  <div className="text-sm text-gray-500"><span className="font-medium">Exp:</span> {v.experience || 'N/A'}</div>
                 </td>
                 <td className="px-6 py-4">
                   <div className="text-sm text-gray-900 font-medium">Skills: <span className="font-normal text-gray-600">{v.skills || 'N/A'}</span></div>
