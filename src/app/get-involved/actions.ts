@@ -2,13 +2,14 @@
 
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-import { auth } from '@clerk/nextjs/server';
+import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 
 export async function registerVolunteer(formData: FormData) {
-  const { userId } = await auth();
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
-  if (!userId) {
+  if (!user) {
     throw new Error('You must be signed in to volunteer');
   }
 
@@ -20,7 +21,7 @@ export async function registerVolunteer(formData: FormData) {
 
   await prisma.volunteer.create({
     data: {
-      clerkUserId: userId,
+      supabaseUserId: user.id,
       name,
       email,
       phone,

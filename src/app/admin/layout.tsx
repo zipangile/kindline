@@ -1,4 +1,4 @@
-import { auth } from '@clerk/nextjs/server';
+import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 
@@ -7,14 +7,18 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { userId, orgId } = await auth();
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
-  if (!userId) {
-    redirect('/sign-in');
+  if (!user) {
+    redirect('/login');
   }
 
-  // Only allow members of the specific Kindline organisation
-  if (orgId !== 'org_3CqSUazt0GzaFAeoS5YngAZcro8') {
+  const adminEmail = process.env.ADMIN_EMAIL || 'sobhuxa@gmail.com';
+  const isAdmin = user.app_metadata?.role === 'admin' || user.email === adminEmail;
+
+  // Only allow admins
+  if (!isAdmin) {
     redirect('/');
   }
 

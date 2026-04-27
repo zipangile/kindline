@@ -1,30 +1,23 @@
-import { auth } from '@clerk/nextjs/server';
+import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import prisma from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
 export default async function DashboardRedirect() {
-  let userId: string | null = null;
-  let orgId: string | null = null;
-  let authError = false;
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
-  try {
-    const authData = await auth();
-    userId = authData.userId ?? null;
-    orgId = authData.orgId ?? null;
-  } catch (error) {
-    console.error('Error during Clerk authentication in dashboard redirect:', error);
-    authError = true;
+  if (!user) {
+    redirect('/login');
   }
 
-  // Handle auth redirection outside try-catch to avoid catching NEXT_REDIRECT
-  if (authError || !userId) {
-    redirect('/sign-in');
-  }
+  const userId = user.id;
+  const adminEmail = process.env.ADMIN_EMAIL || 'sobhuxa@gmail.com';
+  const isAdmin = user.app_metadata?.role === 'admin' || user.email === adminEmail;
 
-  // Admin check - Kindline Care Organisation ID
-  if (orgId === 'org_3CqSUazt0GzaFAeoS5YngAZcro8') {
+  // Admin check
+  if (isAdmin) {
     redirect('/admin');
   }
 
@@ -35,13 +28,13 @@ export default async function DashboardRedirect() {
   try {
     // Check if user is a volunteer
     volunteer = await prisma.volunteer.findUnique({
-      where: { clerkUserId: userId },
+      where: { supabaseUserId: userId },
     });
 
     if (!volunteer) {
       // Check if user is a donor
       donation = await prisma.donation.findFirst({
-        where: { clerkUserId: userId },
+        where: { supabaseUserId: userId },
       });
     }
   } catch (error) {
