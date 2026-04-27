@@ -4,63 +4,63 @@ import { Heart, Calendar, MessageSquare } from 'lucide-react';
 
 const LoveCareShare = () => {
   return (
-    <section className="py-24 bg-blue-50">
+    <section className="py-24 bg-brand-blue/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
-            <h2 className="text-blue-600 font-bold uppercase tracking-wider mb-2">Love Care Share</h2>
-            <h3 className="text-4xl font-extrabold text-gray-900 mb-6">Friends of Kindline</h3>
-            <p className="text-xl text-gray-700 mb-8 leading-relaxed">
-              Love Care Share is Kindline Care Foundation&apos;s giving community for individuals, families, faith-Based and organisations who commit to support widows, orphans, and vulnerable children through monthly, quarterly, or annual giving.
+            <h2 className="text-brand-purple font-bold uppercase tracking-widest mb-2">Love Care Share</h2>
+            <h3 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-8">Friends of Kindline</h3>
+            <p className="text-xl text-gray-800 mb-10 leading-relaxed font-medium">
+              Love Care Share is Kindline Care Foundation&apos;s giving community for individuals, families, faith-based and organisations who commit to support widows, orphans, and vulnerable children through monthly, quarterly, or annual giving.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 mb-12">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700" asChild>
+            <div className="flex flex-col sm:flex-row gap-5 mb-14">
+              <Button size="lg" className="bg-brand-purple hover:bg-brand-purple/90 text-white rounded-full px-10 h-14 text-lg font-bold shadow-lg" asChild>
                 <Link href="/get-involved">Join Our Community</Link>
               </Button>
             </div>
 
-            <div className="space-y-6">
-              <h4 className="text-2xl font-bold text-gray-900">Why Join Love Care Share?</h4>
-              <p className="text-gray-600 leading-relaxed">
+            <div className="space-y-8">
+              <h4 className="text-2xl font-bold text-gray-900 border-b-2 border-brand-orange w-fit pb-2">Why Join Love Care Share?</h4>
+              <p className="text-lg text-gray-700 leading-relaxed">
                 Being a Friend of the Foundation means you are the backbone of our work. Your consistent commitment allows us to plan ahead, respond to emergencies, and guarantee long-term support for those who depend on us.
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
-                <div className="flex gap-4">
-                  <div className="bg-white p-3 rounded-xl shadow-sm h-fit">
-                    <Calendar className="text-blue-600 h-6 w-6" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-10">
+                <div className="flex gap-5">
+                  <div className="bg-white p-4 rounded-2xl shadow-md h-fit border border-gray-100">
+                    <Calendar className="text-brand-blue h-7 w-7" />
                   </div>
                   <div>
-                    <h5 className="font-bold text-gray-900 mb-1">Consistent Impact</h5>
-                    <p className="text-sm text-gray-600">Monthly giving ensures no child is left without school requirements and no widow without support.</p>
+                    <h5 className="font-bold text-gray-900 text-lg mb-2">Consistent Impact</h5>
+                    <p className="text-gray-600 leading-relaxed">Monthly giving ensures no child is left without school requirements and no widow without support.</p>
                   </div>
                 </div>
-                <div className="flex gap-4">
-                  <div className="bg-white p-3 rounded-xl shadow-sm h-fit">
-                    <MessageSquare className="text-blue-600 h-6 w-6" />
+                <div className="flex gap-5">
+                  <div className="bg-white p-4 rounded-2xl shadow-md h-fit border border-gray-100">
+                    <MessageSquare className="text-brand-green h-7 w-7" />
                   </div>
                   <div>
-                    <h5 className="font-bold text-gray-900 mb-1">Community Connection</h5>
-                    <p className="text-sm text-gray-600">Receive exclusive updates, field reports, and invitations to special community events.</p>
+                    <h5 className="font-bold text-gray-900 text-lg mb-2">Community Connection</h5>
+                    <p className="text-gray-600 leading-relaxed">Receive exclusive updates, field reports, and invitations to special community events.</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <div className="relative">
-            <div className="aspect-square bg-blue-600 rounded-3xl overflow-hidden relative z-10">
-               <div className="absolute inset-0 flex items-center justify-center text-blue-400">
-                  <Heart size={240} strokeWidth={1} fill="currentColor" className="opacity-20" />
+            <div className="aspect-square bg-brand-blue rounded-[3rem] overflow-hidden relative z-10 shadow-2xl">
+               <div className="absolute inset-0 flex items-center justify-center text-white">
+                  <Heart size={240} strokeWidth={1} fill="currentColor" className="opacity-10" />
                </div>
                <div className="absolute inset-0 flex items-center justify-center p-12 text-center text-white">
-                 <div>
-                    <h4 className="text-3xl font-bold mb-4">Be the backbone of our work</h4>
-                    <p className="text-blue-100 text-lg">Your recurring support creates lasting change.</p>
+                 <div className="relative z-20">
+                    <h4 className="text-4xl font-extrabold mb-6 leading-tight">Be the backbone of our work</h4>
+                    <p className="text-white/90 text-xl font-medium">Your recurring support creates lasting change and transforms lives.</p>
                  </div>
                </div>
             </div>
-            <div className="absolute -bottom-6 -right-6 w-64 h-64 bg-blue-200 rounded-3xl -z-0"></div>
-            <div className="absolute -top-6 -left-6 w-32 h-32 bg-blue-800 rounded-3xl -z-0"></div>
+            <div className="absolute -bottom-10 -right-10 w-72 h-72 bg-brand-orange/20 rounded-[3rem] -z-0"></div>
+            <div className="absolute -top-10 -left-10 w-40 h-40 bg-brand-purple/20 rounded-[3rem] -z-0"></div>
           </div>
         </div>
       </div>
