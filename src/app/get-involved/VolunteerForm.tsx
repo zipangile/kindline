@@ -50,12 +50,31 @@ export default function VolunteerForm() {
         <label className="block text-sm font-medium text-gray-700">Phone (Optional)</label>
         <input name="phone" type="text" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" />
       </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Skills / Expertise</label>
-        <textarea name="skills" rows={2} placeholder="e.g. Teaching, Healthcare, Tailoring..." className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"></textarea>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Location</label>
+          <input name="location" type="text" placeholder="City, Country" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Availability</label>
+          <select name="availability" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border">
+            <option value="part-time">Part-time</option>
+            <option value="full-time">Full-time</option>
+            <option value="weekends">Weekends Only</option>
+            <option value="remote">Remote / Occasional</option>
+          </select>
+        </div>
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700">Why do you want to volunteer?</label>
+        <label className="block text-sm font-medium text-gray-700">Years of Experience / Expertise level</label>
+        <input name="experience" type="text" placeholder="e.g. 5 years in teaching, Expert in Excel..." className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Skills / Expertise</label>
+        <textarea name="skills" rows={2} placeholder="e.g. Teaching, Healthcare, Tailoring, Social Media Marketing..." className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"></textarea>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Why do you want to volunteer? / Relevant Interests</label>
         <textarea name="interests" rows={3} required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"></textarea>
       </div>
           <Button type="submit" className="w-full bg-blue-800 hover:bg-blue-900">Submit Application</Button>

@@ -56,6 +56,9 @@ model Volunteer {
   phone         String?
   skills        String?
   interests     String?
+  availability  String?
+  experience    String?
+  location      String?
   status        String   @default("pending") // pending, approved, rejected
   createdAt     DateTime @default(now())
 }
