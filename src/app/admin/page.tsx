@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma';
+import Link from 'next/link';
 
 export default async function AdminPage() {
   const [programCount, activeCount, donorCount, volunteerCount] = await Promise.all([
@@ -32,9 +33,19 @@ export default async function AdminPage() {
 
       <div className="mt-12 bg-white p-8 rounded-xl shadow-sm border border-gray-100">
         <h2 className="text-lg font-bold mb-4">Quick Actions</h2>
-        <div className="flex gap-4">
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Add New Programme</button>
-          <button className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200">View Transactions</button>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Link href="/admin/programmes" className="flex items-center justify-center bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 font-medium transition-colors">
+            Manage Programmes
+          </Link>
+          <Link href="/admin/donors" className="flex items-center justify-center bg-purple-600 text-white px-4 py-3 rounded-lg hover:bg-purple-700 font-medium transition-colors">
+            View Transactions
+          </Link>
+          <Link href="/admin/volunteers" className="flex items-center justify-center bg-orange-600 text-white px-4 py-3 rounded-lg hover:bg-orange-700 font-medium transition-colors">
+            Manage Volunteers
+          </Link>
+          <Link href="/admin/settings" className="flex items-center justify-center bg-gray-600 text-white px-4 py-3 rounded-lg hover:bg-gray-700 font-medium transition-colors">
+            Payment Settings
+          </Link>
         </div>
       </div>
     </div>

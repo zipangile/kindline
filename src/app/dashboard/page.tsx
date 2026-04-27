@@ -33,5 +33,5 @@ export default async function DashboardRedirect() {
   }
 
   // Default redirect if no specific role found
-  redirect('/');
+  redirect('/get-involved');
 }
