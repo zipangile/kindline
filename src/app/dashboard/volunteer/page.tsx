@@ -1,5 +1,5 @@
 import { auth } from '@clerk/nextjs/server';
-import { redirect } from 'next/navigation';
+import { redirect, isRedirectError } from 'next/navigation';
 import prisma from '@/lib/prisma';
 import Link from 'next/link';
 
@@ -10,17 +10,18 @@ export default async function VolunteerDashboard() {
     redirect('/sign-in');
   }
 
-  let dbError = false;
-  const volunteer = await prisma.volunteer.findUnique({
-    where: { clerkUserId: userId },
-  }).catch((error) => {
+  let volunteer;
+  try {
+    volunteer = await prisma.volunteer.findUnique({
+      where: { clerkUserId: userId },
+    });
+  } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error('Database error in volunteer dashboard:', error);
-    dbError = true;
-    return null;
-  });
+    redirect('/get-involved');
+  }
 
-  // Redirect outside try-catch
-  if (dbError || !volunteer) {
+  if (!volunteer) {
     redirect('/get-involved');
   }
 

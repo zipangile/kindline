@@ -17,27 +17,61 @@ export async function POST(request: Request) {
     }
 
     if (status === 'successful') {
-      const flw = new Flutterwave(publicKey, secretKey);
-      const verificationData = await flw.Transaction.verify({ id: transaction_id });
+      // Try v3 verification first (library handles this)
+      try {
+        const flw = new Flutterwave(publicKey, secretKey);
+        const verificationData = await flw.Transaction.verify({ id: transaction_id });
 
-      if (verificationData.status === 'success' && verificationData.data.status === 'successful') {
-        const { amount, currency, customer, meta, tx_ref, id } = verificationData.data;
+        if (verificationData.status === 'success' && verificationData.data.status === 'successful') {
+          const { amount, currency, customer, meta, tx_ref, id } = verificationData.data;
 
-        await prisma.donation.create({
-          data: {
-            donorName: customer.name || 'Anonymous',
-            donorEmail: customer.email,
-            amount: amount,
-            currency: currency,
-            status: 'successful',
-            gateway: 'flutterwave',
-            transactionId: String(id),
-            clerkUserId: meta?.clerkUserId || null,
-            type: tx_ref.includes('monthly') ? 'monthly' : 'one-time'
+          await prisma.donation.create({
+            data: {
+              donorName: customer.name || 'Anonymous',
+              donorEmail: customer.email,
+              amount: amount,
+              currency: currency,
+              status: 'successful',
+              gateway: 'flutterwave',
+              transactionId: String(id),
+              clerkUserId: meta?.clerkUserId || null,
+              type: tx_ref.includes('monthly') ? 'monthly' : 'one-time'
+            }
+          });
+
+          return NextResponse.json({ verified: true });
+        }
+      } catch (v3Error) {
+        console.error('Flutterwave v3 verification failed, attempting direct API call:', v3Error);
+
+        // Fallback to direct API verification (useful for v4 or when SDK fails)
+        const res = await fetch(`https://api.flutterwave.com/v3/transactions/${transaction_id}/verify`, {
+          headers: {
+            Authorization: `Bearer ${secretKey}`
           }
         });
 
-        return NextResponse.json({ verified: true });
+        const verificationData = await res.json();
+
+        if (verificationData.status === 'success' && verificationData.data.status === 'successful') {
+          const { amount, currency, customer, meta, tx_ref, id } = verificationData.data;
+
+          await prisma.donation.create({
+            data: {
+              donorName: customer.name || 'Anonymous',
+              donorEmail: customer.email,
+              amount: amount,
+              currency: currency,
+              status: 'successful',
+              gateway: 'flutterwave',
+              transactionId: String(id),
+              clerkUserId: meta?.clerkUserId || null,
+              type: (tx_ref && tx_ref.includes('monthly')) ? 'monthly' : 'one-time'
+            }
+          });
+
+          return NextResponse.json({ verified: true });
+        }
       }
     }
 
