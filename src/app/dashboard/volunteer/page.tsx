@@ -10,11 +10,17 @@ export default async function VolunteerDashboard() {
     redirect('/sign-in');
   }
 
+  let dbError = false;
   const volunteer = await prisma.volunteer.findUnique({
     where: { clerkUserId: userId },
+  }).catch((error) => {
+    console.error('Database error in volunteer dashboard:', error);
+    dbError = true;
+    return null;
   });
 
-  if (!volunteer) {
+  // Redirect outside try-catch
+  if (dbError || !volunteer) {
     redirect('/get-involved');
   }
 

@@ -10,12 +10,18 @@ export default async function FriendDashboard() {
     redirect('/sign-in');
   }
 
+  let dbError = false;
   const donations = await prisma.donation.findMany({
     where: { clerkUserId: userId },
     orderBy: { createdAt: 'desc' },
+  }).catch((error) => {
+    console.error('Database error in friend dashboard:', error);
+    dbError = true;
+    return [];
   });
 
-  if (donations.length === 0) {
+  // Redirect outside try-catch
+  if (dbError || donations.length === 0) {
     redirect('/get-involved');
   }
 
