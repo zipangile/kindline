@@ -22,7 +22,11 @@ RUN npx prisma generate
 
 # During build, we use a temporary SQLite database to satisfy Next.js prerendering
 # of pages that fetch data from Prisma. This ensures static generation succeeds.
-RUN DATABASE_URL="file:./build.db" npx prisma db push --accept-data-loss && \
+RUN NEXT_PUBLIC_SUPABASE_URL="https://ellswjqkvfcgiaqjuvkn.supabase.co" \
+    NEXT_PUBLIC_SUPABASE_ANON_KEY="sb_publishable_N9I8ETunkIdn-OISr-daRA_NWAJ8Ekx" \
+    DATABASE_URL="file:./build.db" npx prisma db push --accept-data-loss && \
+    NEXT_PUBLIC_SUPABASE_URL="https://ellswjqkvfcgiaqjuvkn.supabase.co" \
+    NEXT_PUBLIC_SUPABASE_ANON_KEY="sb_publishable_N9I8ETunkIdn-OISr-daRA_NWAJ8Ekx" \
     DATABASE_URL="file:./build.db" npm run build
 
 # Production image, copy all the files and run next
