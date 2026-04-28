@@ -31,9 +31,12 @@ export default async function FriendDashboard() {
     redirect('/get-involved');
   }
 
-  const totalDonated = donations
+  const totalsByCurrency = donations
     .filter(d => d.status === 'successful')
-    .reduce((acc, d) => acc + d.amount, 0);
+    .reduce((acc, d) => {
+      acc[d.currency] = (acc[d.currency] || 0) + d.amount;
+      return acc;
+    }, {} as Record<string, number>);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -45,11 +48,19 @@ export default async function FriendDashboard() {
 
         <div className="p-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-            <div className="bg-purple-50 p-6 rounded-xl border border-purple-100">
+            <div className="bg-purple-50 p-6 rounded-xl border border-purple-100 md:col-span-2">
               <p className="text-sm font-medium text-purple-600 uppercase tracking-wider">Total Contribution</p>
-              <p className="text-3xl font-bold text-purple-900 mt-2">
-                {donations[0]?.currency} {totalDonated.toLocaleString()}
-              </p>
+              <div className="flex flex-wrap gap-4 mt-2">
+                {Object.entries(totalsByCurrency).length > 0 ? (
+                  Object.entries(totalsByCurrency).map(([curr, amt]) => (
+                    <div key={curr} className="flex flex-col">
+                      <span className="text-3xl font-bold text-purple-900">{curr} {amt.toLocaleString()}</span>
+                    </div>
+                  ))
+                ) : (
+                  <span className="text-3xl font-bold text-purple-900">0</span>
+                )}
+              </div>
             </div>
             <div className="bg-purple-50 p-6 rounded-xl border border-purple-100">
               <p className="text-sm font-medium text-purple-600 uppercase tracking-wider">Donations Made</p>

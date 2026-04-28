@@ -8,7 +8,12 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 
 export default async function GetInvolvedPage() {
-  const settings = await prisma.paymentSettings.findFirst();
+  let settings = null;
+  try {
+    settings = await prisma.paymentSettings.findFirst();
+  } catch (error) {
+    console.error("Error fetching payment settings:", error);
+  }
 
   const donationSettings = {
     lencoPublic: settings?.lencoPublic || process.env.LENCO_PUBLIC_KEY || undefined,

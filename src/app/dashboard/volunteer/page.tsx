@@ -30,6 +30,21 @@ export default async function VolunteerDashboard() {
     redirect('/volunteer');
   }
 
+  const activeProgrammes = await prisma.program.findMany({
+    where: { status: 'live' },
+  });
+
+  const matchedProgrammes = activeProgrammes.filter(p => {
+    const skills = volunteer.skills?.toLowerCase() || '';
+    const interests = volunteer.interests?.toLowerCase() || '';
+    const title = p.title.toLowerCase();
+    const category = p.category.toLowerCase();
+    const description = p.description.toLowerCase();
+
+    return skills.split(/[\s,]+/).some(s => s.length > 2 && (title.includes(s) || category.includes(s) || description.includes(s))) ||
+           interests.split(/[\s,]+/).some(i => i.length > 2 && (title.includes(i) || category.includes(i) || description.includes(i)));
+  });
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -90,6 +105,20 @@ export default async function VolunteerDashboard() {
                   <p className="text-sm text-gray-500 mt-1">See where you can make the most impact.</p>
                 </Link>
               </div>
+
+              {matchedProgrammes.length > 0 && (
+                <div className="mt-8">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4">Recommended for You</h3>
+                  <div className="space-y-3">
+                    {matchedProgrammes.slice(0, 3).map(p => (
+                      <div key={p.id} className="p-4 bg-blue-50 border border-blue-100 rounded-xl">
+                        <h4 className="font-bold text-blue-900 text-sm">{p.title}</h4>
+                        <p className="text-xs text-blue-700 mt-1">{p.category}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

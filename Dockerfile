@@ -35,8 +35,10 @@ RUN export DATABASE_URL="file:./build.db" && \
     npx prisma generate && \
     npx prisma db push --accept-data-loss && \
     npm run build && \
-    mv prisma/schema.prisma.original prisma/schema.prisma && \
-    npx prisma generate
+    cp prisma/schema.prisma.original prisma/schema.prisma && \
+    sed -i 's/url      = env("DATABASE_URL")/url      = "file:.\/build.db"/' prisma/schema.prisma && \
+    npx prisma generate && \
+    cp prisma/schema.prisma.original prisma/schema.prisma
 
 # Production image, copy all the files and run next
 FROM base AS runner

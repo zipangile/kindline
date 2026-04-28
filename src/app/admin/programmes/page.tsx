@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 import prisma from '@/lib/prisma';
 import { createProgram, updateProgramStatus, deleteProgram } from './actions';
 import { Program } from '@prisma/client';
+import Link from 'next/link';
 
 export default async function AdminProgramsPage() {
   const programmes = await prisma.program.findMany({
@@ -76,9 +77,12 @@ export default async function AdminProgramsPage() {
                     {programme.status}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-right text-sm font-medium space-x-2">
+                <td className="px-6 py-4 text-right text-sm font-medium space-x-4">
+                  <Link href={`/admin/programmes/${programme.id}`} className="text-blue-600 hover:text-blue-900">
+                    Edit
+                  </Link>
                   <form action={updateProgramStatus.bind(null, programme.id, programme.status === 'live' ? 'archived' : 'live')} className="inline">
-                    <button type="submit" className="text-blue-600 hover:text-blue-900">
+                    <button type="submit" className="text-gray-600 hover:text-gray-900">
                       {programme.status === 'live' ? 'Archive' : 'Make Live'}
                     </button>
                   </form>
