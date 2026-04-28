@@ -2,8 +2,8 @@ export const dynamic = "force-dynamic";
 import prisma from '@/lib/prisma';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { sendNewsletter } from './actions';
-import { Send, Users } from 'lucide-react';
+import { sendNewsletter, deleteSubscriber } from './actions';
+import { Send, Users, Trash2 } from 'lucide-react';
 
 export default async function AdminNewsletterPage() {
   const subscribers = await prisma.subscriber.findMany({
@@ -62,12 +62,13 @@ export default async function AdminNewsletterPage() {
                   <th className="py-2 px-4">Email</th>
                   <th className="py-2 px-4">Status</th>
                   <th className="py-2 px-4">Joined</th>
+                  <th className="py-2 px-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {subscribers.map((sub) => (
-                  <tr key={sub.id} className="border-b">
-                    <td className="py-2 px-4">{sub.email}</td>
+                  <tr key={sub.id} className="border-b hover:bg-gray-50 transition-colors">
+                    <td className="py-2 px-4 font-medium">{sub.email}</td>
                     <td className="py-2 px-4">
                       <span className={`px-2 py-1 rounded-full text-xs font-bold ${sub.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}>
                         {sub.status}
@@ -75,6 +76,22 @@ export default async function AdminNewsletterPage() {
                     </td>
                     <td className="py-2 px-4 text-gray-500">
                       {new Date(sub.createdAt).toLocaleDateString()}
+                    </td>
+                    <td className="py-2 px-4 text-right">
+                      <form action={deleteSubscriber.bind(null, sub.id)} className="inline">
+                        <button
+                          type="submit"
+                          className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          title="Delete Subscriber"
+                          onClick={(e) => {
+                            if (!confirm('Are you sure you want to delete this subscriber?')) {
+                              e.preventDefault();
+                            }
+                          }}
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </form>
                     </td>
                   </tr>
                 ))}
