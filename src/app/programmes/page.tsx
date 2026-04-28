@@ -1,6 +1,8 @@
 import { CheckCircle2, GraduationCap, HeartPulse, Sprout, Landmark, Droplets, Users } from "lucide-react";
 import prisma from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 export default async function ProgramsPage() {
   const livePrograms = await prisma.program.findMany({
     where: { status: 'live' },

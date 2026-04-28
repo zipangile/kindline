@@ -29,7 +29,7 @@ export default function VolunteerForm() {
             <Link href="/login">
               <Button variant="outline">Sign In</Button>
             </Link>
-            <Link href="/signup">
+            <Link href="/signup?role=volunteer">
               <Button className="bg-blue-800 hover:bg-blue-900">Create Account</Button>
             </Link>
           </div>
