@@ -95,7 +95,7 @@ export default function ImpactPage() {
                 <Link href="/get-involved">Donate Now</Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
-                <Link href="/get-involved">Get Involved</Link>
+                <Link href="/volunteer">Volunteer</Link>
             </Button>
           </div>
         </div>

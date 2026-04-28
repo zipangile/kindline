@@ -22,8 +22,12 @@ RUN npx prisma generate
 
 # During build, we use a temporary SQLite database to satisfy Next.js prerendering
 # of pages that fetch data from Prisma. This ensures static generation succeeds.
+# We also provide dummy Supabase keys to satisfy client initialization during build.
 RUN DATABASE_URL="file:./build.db" npx prisma db push --accept-data-loss && \
-    DATABASE_URL="file:./build.db" npm run build
+    DATABASE_URL="file:./build.db" \
+    NEXT_PUBLIC_SUPABASE_URL="https://example.supabase.co" \
+    NEXT_PUBLIC_SUPABASE_ANON_KEY="dummy" \
+    npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner

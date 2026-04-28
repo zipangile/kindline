@@ -8,17 +8,20 @@ const GetInvolvedSnapshot = () => {
     {
       title: "Volunteer With Us",
       description: "Join our team of dedicated volunteers. Whether you have specific skills or just a heart to serve, we have a place for you.",
-      icon: <Users className="h-6 w-6 text-blue-600" />
+      icon: <Users className="h-6 w-6 text-blue-600" />,
+      href: "/volunteer"
     },
     {
       title: "Sponsor a Child or Widow",
       description: "Make a personal impact by sponsoring a specific child or widow. Your sponsorship covers education essentials and small business start-up costs.",
-      icon: <Heart className="h-6 w-6 text-blue-600" />
+      icon: <Heart className="h-6 w-6 text-blue-600" />,
+      href: "/contact"
     },
     {
       title: "Partner With Us",
       description: "We partner with companies, churches, and other organisations to amplify our impact. Let's work together for sustainable change.",
-      icon: <Building2 className="h-6 w-6 text-blue-600" />
+      icon: <Building2 className="h-6 w-6 text-blue-600" />,
+      href: "/contact"
     }
   ];
 
@@ -34,19 +37,21 @@ const GetInvolvedSnapshot = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           {ways.map((way, index) => (
-            <Card key={index} className="h-full border-none shadow-sm bg-gray-50">
-              <CardHeader>
-                <div className="bg-blue-50 w-12 h-12 flex items-center justify-center rounded-lg mb-4">
-                  {way.icon}
-                </div>
-                <CardTitle className="text-xl">{way.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 leading-relaxed text-sm">
-                  {way.description}
-                </p>
-              </CardContent>
-            </Card>
+            <Link key={index} href={way.href}>
+              <Card className="h-full border-none shadow-sm bg-gray-50 hover:bg-gray-100 transition-colors">
+                <CardHeader>
+                  <div className="bg-blue-50 w-12 h-12 flex items-center justify-center rounded-lg mb-4">
+                    {way.icon}
+                  </div>
+                  <CardTitle className="text-xl">{way.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 leading-relaxed text-sm">
+                    {way.description}
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </div>
 
