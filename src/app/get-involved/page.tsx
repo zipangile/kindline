@@ -67,27 +67,27 @@ export default async function GetInvolvedPage() {
                 <div>
                     <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-8">Your Gift, Their Future.</h2>
                     <p className="text-xl text-gray-600 dark:text-gray-300 mb-10 leading-relaxed font-medium">
-                        Every kwacha donated is an investment in a child&apos;s education or a widow&apos;s economic independence. We pride ourselves on total transparency—here is exactly what your support provides.
+                        Every kwacha you give helps a child access education and empowers a widow to rebuild her life with dignity, hope, and independence. Here is exactly what your support provides:
                     </p>
 
                     <div className="space-y-6 mb-12">
                         <div className="p-6 bg-brand-blue/5 rounded-2xl border-l-4 border-brand-blue">
                             <h3 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                                <span className="text-brand-blue">K50 / $2.50</span> — Essential Supplies
+                                <span className="text-brand-blue">K750 / $40</span> — School Supplies for a Child
                             </h3>
-                            <p className="text-gray-600 dark:text-gray-400">Provides books, stationery, and learning materials for one child for a month.</p>
-                        </div>
-                        <div className="p-6 bg-brand-green/5 rounded-2xl border-l-4 border-brand-green">
-                            <h3 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                                <span className="text-brand-green">K200 / $10</span> — Uniform & Shoes
-                            </h3>
-                            <p className="text-gray-600 dark:text-gray-400">Ensures a child has a complete school uniform and sturdy shoes for the academic year.</p>
+                            <p className="text-gray-600 dark:text-gray-400">Provide essential school supplies including books, uniform, shoes, and a school bag; giving a child the chance to learn with confidence.</p>
                         </div>
                         <div className="p-6 bg-brand-purple/5 rounded-2xl border-l-4 border-brand-purple">
                             <h3 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                                <span className="text-brand-purple">K500 / $25</span> — Business Starter Kit
+                                <span className="text-brand-purple">K1000 / $50</span> — Skills Training Support
                             </h3>
-                            <p className="text-gray-600 dark:text-gray-400">Empowers a widow with the initial tools and training to launch a sustainable small business.</p>
+                            <p className="text-gray-600 dark:text-gray-400">Support our widows’ meetings within the community, where women receive skills training, encouragement, and practical support to rebuild their lives and support their families.</p>
+                        </div>
+                        <div className="p-6 bg-brand-green/5 rounded-2xl border-l-4 border-brand-green">
+                            <h3 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                                <span className="text-brand-green">K1500 / $80</span> — Business Starter Kit
+                            </h3>
+                            <p className="text-gray-600 dark:text-gray-400">Empower a widow with the tools, resources, and basic training needed to start a small, sustainable business.</p>
                         </div>
                     </div>
 

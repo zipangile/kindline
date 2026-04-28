@@ -190,7 +190,7 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
           <div>
             <label className="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-4 uppercase tracking-wide">Donation Amount</label>
             <div className="flex gap-3 flex-wrap">
-              {['20', '50', '100', '200', '500'].map((val) => (
+              {['250', '750', '1000', '1500', '2500'].map((val) => (
                 <button
                   key={val}
                   onClick={() => setAmount(val)}
