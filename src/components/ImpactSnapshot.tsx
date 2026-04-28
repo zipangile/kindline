@@ -56,18 +56,7 @@ const ImpactSnapshot = ({ stats, stories }: { stats: Stat[], stories: Story[] })
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
-          <div className="bg-gradient-to-br from-brand-blue to-brand-purple p-8 md:p-16 rounded-[3rem] shadow-2xl text-white relative overflow-hidden group flex flex-col justify-center">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-48 -mt-48 blur-3xl group-hover:bg-white/20 transition-colors duration-700"></div>
-            <div className="relative z-10">
-              <h3 className="text-3xl md:text-4xl font-extrabold mb-6">Transparency & Trust</h3>
-              <p className="text-xl text-white/90 mb-10 leading-relaxed font-medium">
-                Our mission is built on accountability. We share our progress, our challenges, and our successes openly with the community that makes it all possible.
-              </p>
-              <Button variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-brand-blue font-bold rounded-full px-10 h-14 text-lg shadow-lg" asChild>
-                <Link href="/impact">View All Impact Stories</Link>
-              </Button>
-            </div>
-          </div>
+
 
           <div className="space-y-6">
             <h3 className="text-2xl font-bold text-gray-900 px-4">Changed Lives Journal</h3>
