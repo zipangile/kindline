@@ -1,9 +1,9 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
-import { Landmark, Smartphone, Users, Heart, Building2 } from "lucide-react";
+import { Landmark, Smartphone, Users, Heart, Building2, ArrowRight } from "lucide-react";
 import DonationForm from "@/components/DonationForm";
-import VolunteerForm from "./VolunteerForm";
 import prisma from "@/lib/prisma";
 import Script from "next/script";
+import Link from "next/link";
 
 export default async function GetInvolvedPage() {
   const settings = await prisma.paymentSettings.findFirst();
@@ -19,17 +19,23 @@ export default async function GetInvolvedPage() {
     {
       title: "Volunteer With Us",
       description: "Join our team of dedicated volunteers. Whether you have specific skills or just a heart to serve, we have a place for you.",
-      icon: <Users className="h-6 w-6 text-blue-600" />
+      icon: <Users className="h-6 w-6 text-blue-600" />,
+      href: "/volunteer",
+      action: "Learn More"
     },
     {
       title: "Sponsor a Child or Widow",
       description: "Make a personal impact by sponsoring a specific child or widow. Your sponsorship covers education essentials and small business start-up costs.",
-      icon: <Heart className="h-6 w-6 text-blue-600" />
+      icon: <Heart className="h-6 w-6 text-blue-600" />,
+      href: "/contact",
+      action: "Contact Us"
     },
     {
       title: "Partner With Us",
       description: "We partner with companies, churches, and other organisations to amplify our impact. Let's work together for sustainable change.",
-      icon: <Building2 className="h-6 w-6 text-blue-600" />
+      icon: <Building2 className="h-6 w-6 text-blue-600" />,
+      href: "/contact",
+      action: "Partner Today"
     }
   ];
 
@@ -117,17 +123,23 @@ export default async function GetInvolvedPage() {
           <h2 className="text-3xl font-bold text-center mb-12 dark:text-white">More Ways to Help</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {ways.map((way, index) => (
-              <Card key={index} className="h-full border-none shadow-sm bg-gray-50 dark:bg-gray-900">
+              <Card key={index} className="h-full border-none shadow-sm bg-gray-50 dark:bg-gray-900 flex flex-col">
                 <CardHeader>
                   <div className="bg-blue-50 dark:bg-blue-900/30 w-12 h-12 flex items-center justify-center rounded-lg mb-4">
                     {way.icon}
                   </div>
                   <CardTitle className="text-xl dark:text-white">{way.title}</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                <CardContent className="flex-grow">
+                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
                     {way.description}
                   </p>
+                  <Link
+                    href={way.href}
+                    className="inline-flex items-center text-blue-600 dark:text-blue-400 font-semibold hover:gap-2 transition-all"
+                  >
+                    {way.action} <ArrowRight className="ml-1 h-4 w-4" />
+                  </Link>
                 </CardContent>
               </Card>
             ))}
@@ -135,18 +147,6 @@ export default async function GetInvolvedPage() {
         </div>
       </section>
 
-      {/* Volunteer Section */}
-      <section className="py-20 bg-blue-900">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white mb-4">Volunteer With Us</h2>
-            <p className="text-lg text-blue-100">Join our team of dedicated volunteers. Whether you have specific skills or just a heart to serve, we have a place for you.</p>
-          </div>
-          <div className="bg-white p-8 rounded-2xl shadow-xl">
-            <VolunteerForm />
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

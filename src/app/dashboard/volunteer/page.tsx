@@ -22,11 +22,11 @@ export default async function VolunteerDashboard() {
   } catch (error) {
     if (isRedirectError(error)) throw error;
     console.error('Database error in volunteer dashboard:', error);
-    redirect('/get-involved');
+    redirect('/volunteer');
   }
 
   if (!volunteer) {
-    redirect('/get-involved');
+    redirect('/volunteer');
   }
 
   return (

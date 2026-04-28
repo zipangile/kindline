@@ -46,4 +46,5 @@ export async function updatePaymentSettings(formData: FormData) {
 
   revalidatePath('/admin/settings');
   revalidatePath('/get-involved');
+  revalidatePath('/volunteer');
 }

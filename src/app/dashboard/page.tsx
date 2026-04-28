@@ -44,7 +44,7 @@ export default async function DashboardRedirect() {
 
   // Handle role-based redirection outside try-catch
   if (dbError) {
-    redirect('/get-involved');
+    redirect('/volunteer');
   }
 
   if (volunteer) {
@@ -56,5 +56,5 @@ export default async function DashboardRedirect() {
   }
 
   // Default redirect if no specific role found
-  redirect('/get-involved');
+  redirect('/volunteer');
 }
