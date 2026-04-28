@@ -24,8 +24,8 @@ export default async function GetInvolvedPage() {
 
   const ways = [
     {
-      title: "Volunteer With Us",
-      description: "Join our team of dedicated volunteers. Whether you have specific skills or just a heart to serve, we have a place for you.",
+      title: "Partner with Us",
+      description: "Join our team of dedicated volunteers and partners. Whether you have specific skills or just a heart to serve, we have a place for you.",
       icon: <Users className="h-6 w-6 text-blue-600" />,
       href: "/volunteer",
       action: "Learn More"
@@ -38,7 +38,7 @@ export default async function GetInvolvedPage() {
       action: "Contact Us"
     },
     {
-      title: "Partner With Us",
+      title: "Partner with Us",
       description: "We partner with companies, churches, and other organizations to amplify our impact. Let's work together for sustainable change.",
       icon: <Building2 className="h-6 w-6 text-blue-600" />,
       href: "/contact",

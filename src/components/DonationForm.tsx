@@ -267,7 +267,7 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
             {frequency === 'monthly' && (
                 <p className="text-sm text-brand-purple mt-4 font-bold flex items-center gap-2">
                   <Heart className="h-4 w-4 fill-current" />
-                  Monthly donations are processed via Flutterwave and support Kindline Friends.
+                  Monthly donations make the donor friends of Kindline.
                 </p>
             )}
           </div>

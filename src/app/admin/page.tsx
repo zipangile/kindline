@@ -9,6 +9,7 @@ import {
   BarChart3,
   Image as ImageIcon,
   Mail,
+  Newspaper,
   Settings,
   PlusCircle,
   ArrowRight
@@ -109,8 +110,21 @@ export default async function AdminPage() {
                   <Users size={20} />
                 </div>
                 <div>
-                  <p className="font-bold text-gray-900">Volunteers</p>
+                  <p className="font-bold text-gray-900">Partner with Us</p>
                   <p className="text-xs text-gray-500">Review applications</p>
+                </div>
+              </div>
+              <ArrowRight size={18} className="text-gray-300 group-hover:text-orange-500 transition-colors" />
+            </Link>
+
+            <Link href="/admin/news" className="group flex items-center justify-between p-4 rounded-xl border border-gray-100 hover:border-orange-200 hover:bg-orange-50 transition-all">
+              <div className="flex items-center gap-4">
+                <div className="bg-orange-100 p-2.5 rounded-lg text-orange-600">
+                  <Newspaper size={20} />
+                </div>
+                <div>
+                  <p className="font-bold text-gray-900">News & Blog</p>
+                  <p className="text-xs text-gray-500">Write updates</p>
                 </div>
               </div>
               <ArrowRight size={18} className="text-gray-300 group-hover:text-orange-500 transition-colors" />
