@@ -47,3 +47,11 @@ export async function sendNewsletter(formData: FormData) {
     console.error('Email sending error:', error);
   }
 }
+
+export async function deleteSubscriber(id: string) {
+  await checkAdmin();
+  await prisma.subscriber.delete({
+    where: { id },
+  });
+  revalidatePath('/admin/newsletter');
+}
