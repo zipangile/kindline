@@ -1,5 +1,3 @@
-'use client';
-
 import Hero from '@/components/Hero';
 import AboutSnapshot from '@/components/AboutSnapshot';
 import VisionMission from '@/components/VisionMission';
@@ -10,27 +8,33 @@ import ImpactSnapshot from '@/components/ImpactSnapshot';
 import LoveCareShare from '@/components/LoveCareShare';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
+import prisma from '@/lib/prisma';
+import { subscribe } from '@/app/admin/newsletter/actions';
 
-export default function Home() {
+export const dynamic = "force-dynamic";
 
+export default async function Home() {
+  const images = await prisma.siteImage.findMany();
+  const stats = await prisma.impactStat.findMany({ orderBy: { order: 'asc' }, take: 4 });
+  const stories = await prisma.impactStory.findMany({ orderBy: { createdAt: 'desc' }, take: 2 });
+
+  const getImage = (key: string) => images.find(img => img.key === key)?.url;
 
   return (
     <div>
-      <Hero />
+      <Hero imageUrl={getImage('homepage_hero') || '/images/child-development.jpg'} />
 
-      <AboutSnapshot />
+      <AboutSnapshot imageUrl={getImage('about_snapshot') || '/images/volunteers.jpg'} />
 
+      <ProgramsOverview />
 
+      <ImpactSnapshot stats={stats} stories={stories} />
 
       <VisionMission />
 
       <CoreValues />
 
-      <ProgramsOverview />
-
       <GetInvolvedSnapshot />
-
-      <ImpactSnapshot />
 
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -59,12 +63,13 @@ export default function Home() {
 
       <section className="py-24 bg-gray-50 border-t border-gray-100">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-extrabold mb-6 text-gray-900">News & Updates</h2>
+          <h2 className="text-3xl md:text-4xl font-extrabold mb-6 text-gray-900">Join the Mission</h2>
           <p className="text-lg text-gray-700 mb-10 font-medium">
-            Stay informed about our latest activities, events, and announcements.
+            Subscribe to our newsletter for real-time impact stories and updates from the field.
           </p>
-          <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto" onSubmit={(e) => e.preventDefault()}>
+          <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto" action={subscribe}>
             <input
+              name="email"
               type="email"
               placeholder="Your email address"
               className="flex-grow px-6 py-3 rounded-full border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-blue bg-white text-gray-900 font-medium"
@@ -74,7 +79,7 @@ export default function Home() {
           </form>
           <div className="mt-8">
             <Button variant="link" asChild>
-              <Link href="/news">View All News &rarr;</Link>
+              <Link href="/news">View Recent Updates &rarr;</Link>
             </Button>
           </div>
         </div>

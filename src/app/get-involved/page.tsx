@@ -61,30 +61,52 @@ export default async function GetInvolvedPage() {
       </section>
 
       {/* Donation Section */}
-      <section className="py-20 dark:bg-black">
+      <section className="py-24 dark:bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
                 <div>
-                    <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Make a Difference</h2>
-                    <p className="text-lg text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
-                        Join us in our mission to restore dignity and create opportunity. Your financial contribution directly supports our community-based interventions for orphans, vulnerable children, and widows.
+                    <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-8">Your Gift, Their Future.</h2>
+                    <p className="text-xl text-gray-600 dark:text-gray-300 mb-10 leading-relaxed font-medium">
+                        Every kwacha donated is an investment in a child&apos;s education or a widow&apos;s economic independence. We pride ourselves on total transparency—here is exactly what your support provides.
                     </p>
+
+                    <div className="space-y-6 mb-12">
+                        <div className="p-6 bg-brand-blue/5 rounded-2xl border-l-4 border-brand-blue">
+                            <h3 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                                <span className="text-brand-blue">K50 / $2.50</span> — Essential Supplies
+                            </h3>
+                            <p className="text-gray-600 dark:text-gray-400">Provides books, stationery, and learning materials for one child for a month.</p>
+                        </div>
+                        <div className="p-6 bg-brand-green/5 rounded-2xl border-l-4 border-brand-green">
+                            <h3 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                                <span className="text-brand-green">K200 / $10</span> — Uniform & Shoes
+                            </h3>
+                            <p className="text-gray-600 dark:text-gray-400">Ensures a child has a complete school uniform and sturdy shoes for the academic year.</p>
+                        </div>
+                        <div className="p-6 bg-brand-purple/5 rounded-2xl border-l-4 border-brand-purple">
+                            <h3 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                                <span className="text-brand-purple">K500 / $25</span> — Business Starter Kit
+                            </h3>
+                            <p className="text-gray-600 dark:text-gray-400">Empowers a widow with the initial tools and training to launch a sustainable small business.</p>
+                        </div>
+                    </div>
+
                     <div className="space-y-4">
                         <div className="flex items-center gap-3">
-                            <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-full text-blue-600 dark:text-blue-400">
+                            <div className="bg-brand-blue/10 p-2 rounded-full text-brand-blue">
                                 <Heart size={20} />
                             </div>
-                            <span className="font-medium dark:text-gray-200">Direct Impact on Lives</span>
+                            <span className="font-bold text-gray-800 dark:text-gray-200">100% Direct Program Impact</span>
                         </div>
                         <div className="flex items-center gap-3">
-                            <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-full text-blue-600 dark:text-blue-400">
+                            <div className="bg-brand-green/10 p-2 rounded-full text-brand-green">
                                 <Users size={20} />
                             </div>
-                            <span className="font-medium dark:text-gray-200">Community-Led Sustainable Change</span>
+                            <span className="font-bold text-gray-800 dark:text-gray-200">Community-Verified Interventions</span>
                         </div>
                     </div>
                 </div>
-                <div>
+                <div className="lg:sticky lg:top-8">
                     <DonationForm settings={donationSettings} />
                 </div>
             </div>
