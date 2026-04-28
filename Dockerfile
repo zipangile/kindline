@@ -19,9 +19,10 @@ COPY . .
 ARG NEXT_PUBLIC_SUPABASE_URL
 ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-ENV NEXT_TELEMETRY_DISABLED 1
+# Ensure build arguments are available as environment variables for the build
 ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
 ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
+ENV NEXT_TELEMETRY_DISABLED 1
 
 # During build, we use a temporary SQLite database to satisfy Next.js prerendering
 # of pages that fetch data from Prisma. This ensures static generation succeeds.

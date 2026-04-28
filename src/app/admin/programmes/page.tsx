@@ -16,7 +16,7 @@ export default async function AdminProgramsPage() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Programmes Management</h1>
-          <p className="text-gray-500 text-sm">Create and manage your organization's core initiatives.</p>
+          <p className="text-gray-500 text-sm">Create and manage your organization&apos;s core initiatives.</p>
         </div>
       </div>
 
