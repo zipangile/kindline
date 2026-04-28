@@ -9,10 +9,10 @@ const AboutSnapshot = ({ imageUrl }: { imageUrl?: string }) => {
           <div className="max-w-3xl">
             <h2 className="text-brand-purple font-bold uppercase tracking-widest mb-6 border-l-4 border-brand-orange pl-4">My Care. Your Care. Our Care.</h2>
             <p className="text-xl text-gray-800 mb-6 leading-relaxed font-medium">
-              Kindline Care Foundation works at the heart of community transformation in Zambia. We provide a lifeline to those often forgotten, ensuring that orphans, vulnerable children, and widows have the resources they need to thrive.
+              Kindline Care Foundation is dedicated to working in the field of positive change. We focus on community-based interventions that restore dignity and promote sustainable development for those who need it most; orphans, vulnerable children, and widows.
             </p>
             <p className="text-xl text-gray-800 mb-8 leading-relaxed font-medium">
-              By focusing on education and economic empowerment, we don&apos;t just provide temporary relief—we build the foundations for lifelong independence.
+              We believe that every individual deserves safety, opportunity, and the chance to thrive.
             </p>
           </div>
         </div>
@@ -22,18 +22,18 @@ const AboutSnapshot = ({ imageUrl }: { imageUrl?: string }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-brand-blue font-bold uppercase tracking-wider mb-2 font-mono">Our Commitment</h2>
+              <h2 className="text-brand-blue font-bold uppercase tracking-wider mb-2 font-mono">About Kindline Care</h2>
               <h3 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-8 leading-tight">
-                Practical Support for <span className="text-brand-purple">Real People</span>
+                Dedicated to restoring dignity and creating opportunities for the most vulnerable in our society.
               </h3>
 
               <div className="mt-12 bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
                 <h4 className="text-2xl font-bold text-gray-900 mb-4">Who We Are</h4>
                 <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-                  Kindline Care Foundation is a registered non-profit organisation dedicated to lifting underprivileged individuals through sustainable, community-led initiatives.
+                  Kindline Care Foundation is a non-profit organization established to work in the field of positive change in the lives of underprivileged persons, particularly orphans, vulnerable children, and widows.
                 </p>
                 <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-                  We believe that empowerment starts with listening to the community. From drilling wells to funding small businesses, our work is defined by the specific needs of the people we serve.
+                  The foundation focuses on community-based interventions that restore dignity, create opportunity, and promote sustainable development. We believe in going beyond immediate relief to build long-term resilience and self-reliance.
                 </p>
                 <Button variant="outline" className="border-brand-blue text-brand-blue hover:bg-brand-blue hover:text-white font-bold rounded-full px-8" asChild>
                   <Link href="/about">Read Our Full Story</Link>

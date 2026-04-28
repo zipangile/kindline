@@ -24,9 +24,9 @@ const ImpactSnapshot = ({ stats, stories }: { stats: Stat[], stories: Story[] })
     <section className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-20">
-          <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-6 tracking-tight">Measurable Impact</h2>
+          <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-6 tracking-tight">Our Impact</h2>
           <p className="text-lg text-gray-700 max-w-2xl mx-auto font-medium">
-            We track every kwacha to ensure your support creates tangible, lasting change for those who need it most.
+            See the tangible difference your support makes in real lives.
           </p>
         </div>
 
@@ -70,7 +70,8 @@ const ImpactSnapshot = ({ stats, stories }: { stats: Stat[], stories: Story[] })
           </div>
 
           <div className="space-y-6">
-            <h3 className="text-2xl font-bold text-gray-900 px-4">Stories of Transformation</h3>
+            <h3 className="text-2xl font-bold text-gray-900 px-4">Changed Lives Journal</h3>
+            <p className="text-gray-600 px-4 mb-4">Behind every number is a story of resilience, hope, and transformation.</p>
             {stories.length > 0 ? (
               stories.map((story) => (
                 <div key={story.id} className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
