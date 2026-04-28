@@ -16,18 +16,27 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-ENV NEXT_TELEMETRY_DISABLED 1
+ARG NEXT_PUBLIC_SUPABASE_URL
+ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-RUN npx prisma generate
+ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
+ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 # During build, we use a temporary SQLite database to satisfy Next.js prerendering
 # of pages that fetch data from Prisma. This ensures static generation succeeds.
-RUN NEXT_PUBLIC_SUPABASE_URL="https://ellswjqkvfcgiaqjuvkn.supabase.co" \
-    NEXT_PUBLIC_SUPABASE_ANON_KEY="sb_publishable_N9I8ETunkIdn-OISr-daRA_NWAJ8Ekx" \
-    DATABASE_URL="file:./build.db" npx prisma db push --accept-data-loss && \
-    NEXT_PUBLIC_SUPABASE_URL="https://ellswjqkvfcgiaqjuvkn.supabase.co" \
-    NEXT_PUBLIC_SUPABASE_ANON_KEY="sb_publishable_N9I8ETunkIdn-OISr-daRA_NWAJ8Ekx" \
-    DATABASE_URL="file:./build.db" npm run build
+# Since we now use PostgreSQL in schema.prisma, we must override the provider
+# during build to use SQLite for this temporary step.
+RUN export DATABASE_URL="file:./build.db" && \
+    export DIRECT_URL="file:./build.db" && \
+    cp prisma/schema.prisma prisma/schema.prisma.original && \
+    sed -i 's/provider = "postgresql"/provider = "sqlite"/' prisma/schema.prisma && \
+    sed -i '/directUrl = env("DIRECT_URL")/d' prisma/schema.prisma && \
+    npx prisma generate && \
+    npx prisma db push --accept-data-loss && \
+    npm run build && \
+    mv prisma/schema.prisma.original prisma/schema.prisma && \
+    npx prisma generate
 
 # Production image, copy all the files and run next
 FROM base AS runner
