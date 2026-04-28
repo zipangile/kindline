@@ -16,8 +16,8 @@ primary_region = 'jnb'
 
 [build]
   [build.args]
-    NEXT_PUBLIC_SUPABASE_URL = ""
-    NEXT_PUBLIC_SUPABASE_ANON_KEY = ""
+    NEXT_PUBLIC_SUPABASE_URL = "https://ellswjqkvfcgiaqjuvkn.supabase.co"
+    NEXT_PUBLIC_SUPABASE_ANON_KEY = "sb_publishable_N9I8ETunkIdn-OISr-daRA_NWAJ8Ekx"
 
 [http_service]
   internal_port = 3000
