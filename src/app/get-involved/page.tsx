@@ -39,7 +39,7 @@ export default async function GetInvolvedPage() {
     },
     {
       title: "Partner With Us",
-      description: "We partner with companies, churches, and other organisations to amplify our impact. Let's work together for sustainable change.",
+      description: "We partner with companies, churches, and other organizations to amplify our impact. Let's work together for sustainable change.",
       icon: <Building2 className="h-6 w-6 text-blue-600" />,
       href: "/contact",
       action: "Partner Today"

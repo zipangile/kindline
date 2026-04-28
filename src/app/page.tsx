@@ -51,7 +51,7 @@ export default async function Home() {
                   <Link href="/get-involved">Donate Now</Link>
                 </Button>
                 <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-brand-blue px-10 h-14 text-lg font-bold rounded-full" asChild>
-                  <Link href="/volunteer">Volunteer</Link>
+                  <Link href="/get-involved">Get Involved</Link>
                 </Button>
               </div>
             </div>
@@ -63,9 +63,9 @@ export default async function Home() {
 
       <section className="py-24 bg-gray-50 border-t border-gray-100">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-extrabold mb-6 text-gray-900">Join the Mission</h2>
+          <h2 className="text-3xl md:text-4xl font-extrabold mb-6 text-gray-900">News & Updates</h2>
           <p className="text-lg text-gray-700 mb-10 font-medium">
-            Subscribe to our newsletter for real-time impact stories and updates from the field.
+            Stay informed about our latest activities, events, and announcements.
           </p>
           <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto" action={subscribe}>
             <input
