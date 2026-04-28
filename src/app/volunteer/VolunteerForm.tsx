@@ -7,9 +7,10 @@ import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js';
 
+const supabase = createClient();
+
 export default function VolunteerForm() {
   const [user, setUser] = useState<User | null>(null);
-  const supabase = createClient();
 
   useEffect(() => {
     const getUser = async () => {
@@ -77,7 +78,7 @@ export default function VolunteerForm() {
         <label className="block text-sm font-medium text-gray-700">Why do you want to volunteer? / Relevant Interests</label>
         <textarea name="interests" rows={3} required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"></textarea>
       </div>
-          <Button type="submit" className="w-full bg-blue-800 hover:bg-blue-900">Submit Application</Button>
+          <Button type="submit" className="w-full bg-brand-blue hover:bg-brand-blue/90">Submit Application</Button>
         </form>
       )}
     </div>
