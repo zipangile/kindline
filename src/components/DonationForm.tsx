@@ -109,8 +109,8 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
         tx_ref: "KCF-" + Date.now(),
         amount: parseFloat(amount),
         currency: currency,
-        payment_plan: planId,
-        payment_options: "card, mobilemoneyzambia, ussd",
+        payment_plan: planId || undefined,
+        payment_options: currency === 'ZMW' ? "card,mobilemoneyzambia" : "card",
         customer: {
           email: email,
           name: name,
@@ -123,28 +123,29 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
           description: frequency === 'monthly' ? "Monthly subscription for Kindline Care" : "Payment for supporting orphans and widows",
           logo: window.location.origin + "/logo.png",
         },
-        callback: async function (data: FlutterwaveResponse) {
+        callback: function (data: FlutterwaveResponse) {
           console.log("Payment completed!", data);
           // Verify with backend
-          try {
-            const verifyRes = await fetch('/api/payments', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                transaction_id: data.transaction_id,
-                status: data.status
-              })
-            });
+          fetch('/api/payments', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              transaction_id: data.transaction_id,
+              status: data.status
+            })
+          })
+          .then(verifyRes => {
             if (verifyRes.ok) {
               alert("Thank you for your donation!");
               window.location.reload();
             } else {
               alert("Payment completed but verification failed. Please contact support.");
             }
-          } catch (e) {
+          })
+          .catch(e => {
             console.error("Flutterwave verification error", e);
             alert("An error occurred during verification. Please contact support.");
-          }
+          });
         },
         onclose: function() {
           console.log("Payment closed");
