@@ -55,12 +55,7 @@ const GetInvolvedSnapshot = () => {
           ))}
         </div>
 
-        <div className="bg-blue-600 rounded-2xl p-8 text-center text-white">
-           <p className="text-xl font-medium mb-6">This is the part where we add the donation details</p>
-           <Button variant="outline" className="text-white border-white hover:bg-white hover:text-blue-600" asChild>
-             <Link href="/get-involved">View Donation Options</Link>
-           </Button>
-        </div>
+
       </div>
     </section>
   );

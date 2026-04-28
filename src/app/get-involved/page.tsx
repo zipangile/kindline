@@ -63,88 +63,77 @@ export default async function GetInvolvedPage() {
       {/* Donation Section */}
       <section className="py-24 dark:bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-                <div>
-                    <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-8">Your Gift, Their Future.</h2>
-                    <p className="text-xl text-gray-600 dark:text-gray-300 mb-10 leading-relaxed font-medium">
-                        Every kwacha you give helps a child access education and empowers a widow to rebuild her life with dignity, hope, and independence. Here is exactly what your support provides:
-                    </p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+            <div>
+              <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-8">Your Gift, Their Future.</h2>
+              <p className="text-xl text-gray-600 dark:text-gray-300 mb-10 leading-relaxed font-medium">
+                Every kwacha you give helps a child access education and empowers a widow to rebuild her life with dignity, hope, and independence. Here is exactly what your support provides:
+              </p>
 
-                    <div className="space-y-6 mb-12">
-                        <div className="p-6 bg-brand-blue/5 rounded-2xl border-l-4 border-brand-blue">
-                            <h3 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                                <span className="text-brand-blue">K750 / $40</span> — School Supplies for a Child
-                            </h3>
-                            <p className="text-gray-600 dark:text-gray-400">Provide essential school supplies including books, uniform, shoes, and a school bag; giving a child the chance to learn with confidence.</p>
-                        </div>
-                        <div className="p-6 bg-brand-purple/5 rounded-2xl border-l-4 border-brand-purple">
-                            <h3 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                                <span className="text-brand-purple">K1000 / $50</span> — Skills Training Support
-                            </h3>
-                            <p className="text-gray-600 dark:text-gray-400">Support our widows’ meetings within the community, where women receive skills training, encouragement, and practical support to rebuild their lives and support their families.</p>
-                        </div>
-                        <div className="p-6 bg-brand-green/5 rounded-2xl border-l-4 border-brand-green">
-                            <h3 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                                <span className="text-brand-green">K1500 / $80</span> — Business Starter Kit
-                            </h3>
-                            <p className="text-gray-600 dark:text-gray-400">Empower a widow with the tools, resources, and basic training needed to start a small, sustainable business.</p>
-                        </div>
-                    </div>
+              <div className="space-y-6 mb-12">
+                <div className="p-6 bg-brand-blue/5 rounded-2xl border-l-4 border-brand-blue">
+                  <h3 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                    <span className="text-brand-blue">K750 / $40</span> — School Supplies for a Child
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400">Provide essential school supplies including books, uniform, shoes, and a school bag; giving a child the chance to learn with confidence.</p>
+                </div>
+                <div className="p-6 bg-brand-purple/5 rounded-2xl border-l-4 border-brand-purple">
+                  <h3 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                    <span className="text-brand-purple">K1000 / $50</span> — Skills Training Support
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400">Support our widows’ meetings within the community, where women receive skills training, encouragement, and practical support to rebuild their lives and support their families.</p>
+                </div>
+                <div className="p-6 bg-brand-green/5 rounded-2xl border-l-4 border-brand-green">
+                  <h3 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                    <span className="text-brand-green">K1500 / $80</span> — Business Starter Kit
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400">Empower a widow with the tools, resources, and basic training needed to start a small, sustainable business.</p>
+                </div>
+              </div>
 
-                    <div className="space-y-4">
-                        <div className="flex items-center gap-3">
-                            <div className="bg-brand-blue/10 p-2 rounded-full text-brand-blue">
-                                <Heart size={20} />
-                            </div>
-                            <span className="font-bold text-gray-800 dark:text-gray-200">100% Direct Program Impact</span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <div className="bg-brand-green/10 p-2 rounded-full text-brand-green">
-                                <Users size={20} />
-                            </div>
-                            <span className="font-bold text-gray-800 dark:text-gray-200">Community-Verified Interventions</span>
-                        </div>
-                    </div>
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="bg-brand-blue/10 p-2 rounded-full text-brand-blue">
+                    <Heart size={20} />
+                  </div>
+                  <span className="font-bold text-gray-800 dark:text-gray-200">100% Direct Program Impact</span>
                 </div>
-                <div className="lg:sticky lg:top-8">
-                    <DonationForm settings={donationSettings} />
+                <div className="flex items-center gap-3">
+                  <div className="bg-brand-green/10 p-2 rounded-full text-brand-green">
+                    <Users size={20} />
+                  </div>
+                  <span className="font-bold text-gray-800 dark:text-gray-200">Community-Verified Interventions</span>
                 </div>
+              </div>
             </div>
+            <div className="lg:sticky lg:top-8">
+              <DonationForm settings={donationSettings} />
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Alternative Payment Methods */}
-       <section className="py-12 bg-gray-50 dark:bg-gray-950 border-y border-gray-100 dark:border-gray-800">
+      <section className="py-12 bg-gray-50 dark:bg-gray-950 border-y border-gray-100 dark:border-gray-800">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-center mb-8 dark:text-white">Manual Payment Options</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                  <h3 className="text-lg font-bold mb-4 flex items-center dark:text-white">
-                    <Landmark className="mr-2 h-5 w-5 text-blue-600" /> Bank Transfer
-                  </h3>
-                  <div className="bg-white dark:bg-gray-900 p-4 rounded-lg text-sm shadow-sm space-y-2 font-mono border border-transparent dark:border-gray-800">
-                    <p><span className="text-gray-500 dark:text-gray-400">Account Name:</span><br/><span className="dark:text-gray-200">KINDLINE CARE FOUNDATION</span></p>
-                    <p><span className="text-gray-500 dark:text-gray-400">Account No.:</span><br/><span className="dark:text-gray-200">63198221946</span></p>
-                    <p><span className="text-gray-500 dark:text-gray-400">Bank:</span><br/><span className="dark:text-gray-200">FIRST NATIONAL BANK (FNB)</span></p>
-                    <p><span className="text-gray-500 dark:text-gray-400">Branch:</span><br/><span className="dark:text-gray-200">CAIRO ROAD 260050</span></p>
-                    <p><span className="text-gray-500 dark:text-gray-400">Swift Code:</span><br/><span className="dark:text-gray-200">FIRNZMLX</span></p>
-                  </div>
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold mb-4 flex items-center dark:text-white">
-                    <Smartphone className="mr-2 h-5 w-5 text-blue-600" /> Mobile Money (Direct)
-                  </h3>
-                  <div className="bg-white dark:bg-gray-900 p-4 rounded-lg text-sm shadow-sm space-y-2 border border-transparent dark:border-gray-800">
-                    <p className="font-medium text-gray-900 dark:text-gray-100">Name: Astridah Chipowe</p>
-                    <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">0973635013</p>
-                    <p className="text-gray-500 dark:text-gray-400 text-xs mt-4 italic">
-                      Please use your name as the reference. Supported currencies: ZMW, USD.
-                    </p>
-                  </div>
-                </div>
+          <h2 className="text-2xl font-bold text-center mb-8 dark:text-white">Manual Payment Options</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <h3 className="text-lg font-bold mb-4 flex items-center dark:text-white">
+                <Landmark className="mr-2 h-5 w-5 text-blue-600" /> Bank Transfer
+              </h3>
+              <div className="bg-white dark:bg-gray-900 p-4 rounded-lg text-sm shadow-sm space-y-2 font-mono border border-transparent dark:border-gray-800">
+                <p><span className="text-gray-500 dark:text-gray-400">Account Name:</span><br /><span className="dark:text-gray-200">KINDLINE CARE FOUNDATION</span></p>
+                <p><span className="text-gray-500 dark:text-gray-400">Account No.:</span><br /><span className="dark:text-gray-200">63198221946</span></p>
+                <p><span className="text-gray-500 dark:text-gray-400">Bank:</span><br /><span className="dark:text-gray-200">FIRST NATIONAL BANK (FNB)</span></p>
+                <p><span className="text-gray-500 dark:text-gray-400">Branch:</span><br /><span className="dark:text-gray-200">CAIRO ROAD 260050</span></p>
+                <p><span className="text-gray-500 dark:text-gray-400">Swift Code:</span><br /><span className="dark:text-gray-200">FIRNZMLX</span></p>
               </div>
+            </div>
+
+          </div>
         </div>
-       </section>
+      </section>
 
       {/* Other Ways to Help */}
       <section className="py-20 dark:bg-black">
