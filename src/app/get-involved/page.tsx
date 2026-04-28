@@ -5,6 +5,8 @@ import prisma from "@/lib/prisma";
 import Script from "next/script";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export default async function GetInvolvedPage() {
   const settings = await prisma.paymentSettings.findFirst();
 

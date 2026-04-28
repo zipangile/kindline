@@ -3,12 +3,24 @@ import prisma from '@/lib/prisma';
 import Link from 'next/link';
 
 export default async function AdminPage() {
-  const [programCount, activeCount, donorCount, volunteerCount] = await Promise.all([
-    prisma.program.count(),
-    prisma.program.count({ where: { status: 'live' } }),
-    prisma.donation.count({ where: { status: 'successful' } }),
-    prisma.volunteer.count({ where: { status: 'pending' } }),
-  ]);
+  let stats = {
+    programCount: 0,
+    activeCount: 0,
+    donorCount: 0,
+    volunteerCount: 0,
+  };
+
+  try {
+    const [programCount, activeCount, donorCount, volunteerCount] = await Promise.all([
+      prisma.program.count(),
+      prisma.program.count({ where: { status: 'live' } }),
+      prisma.donation.count({ where: { status: 'successful' } }),
+      prisma.volunteer.count({ where: { status: 'pending' } }),
+    ]);
+    stats = { programCount, activeCount, donorCount, volunteerCount };
+  } catch (error) {
+    console.error('Error fetching admin stats:', error);
+  }
 
   return (
     <div>
@@ -16,19 +28,19 @@ export default async function AdminPage() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
           <p className="text-sm font-medium text-gray-500 uppercase tracking-wider">Total Programmes</p>
-          <p className="text-3xl font-bold text-blue-800 mt-2">{programCount}</p>
+          <p className="text-3xl font-bold text-blue-800 mt-2">{stats.programCount}</p>
         </div>
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
           <p className="text-sm font-medium text-gray-500 uppercase tracking-wider">Active Programmes</p>
-          <p className="text-3xl font-bold text-green-600 mt-2">{activeCount}</p>
+          <p className="text-3xl font-bold text-green-600 mt-2">{stats.activeCount}</p>
         </div>
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
           <p className="text-sm font-medium text-gray-500 uppercase tracking-wider">Friends (Donors)</p>
-          <p className="text-3xl font-bold text-purple-600 mt-2">{donorCount}</p>
+          <p className="text-3xl font-bold text-purple-600 mt-2">{stats.donorCount}</p>
         </div>
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
           <p className="text-sm font-medium text-gray-500 uppercase tracking-wider">Pending Volunteers</p>
-          <p className="text-3xl font-bold text-orange-600 mt-2">{volunteerCount}</p>
+          <p className="text-3xl font-bold text-orange-600 mt-2">{stats.volunteerCount}</p>
         </div>
       </div>
 
