@@ -16,11 +16,25 @@ export default async function NewsPostDetailPage({
 }) {
   const { slug } = await params;
   await searchParams;
-  const post = await prisma.newsPost.findUnique({
-    where: { slug },
+
+  console.log(`[NewsPostDetailPage] Fetching post with slug: ${slug}`);
+
+  const post = await prisma.newsPost.findFirst({
+    where: {
+      slug: {
+        equals: slug,
+        mode: 'insensitive'
+      }
+    },
   });
 
-  if (!post || (!post.published && process.env.NODE_ENV === 'production')) {
+  if (!post) {
+    console.log(`[NewsPostDetailPage] Post not found for slug: ${slug}`);
+    notFound();
+  }
+
+  if (!post.published && process.env.NODE_ENV === 'production') {
+    console.log(`[NewsPostDetailPage] Post not published: ${slug}`);
     notFound();
   }
 
