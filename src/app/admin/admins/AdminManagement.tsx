@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
-import { addAdmin, updateAdminRole, removeAdmin } from './actions';
-import { AdminRole, ManagedAdmin } from '@prisma/client';
+import { addAdmin, updateAdminRole, removeAdmin, AdminRole } from './actions';
+import { ManagedAdmin } from '@prisma/client';
 import { Trash2, Shield, UserPlus, Loader2 } from 'lucide-react';
 
 export default function AdminManagement({ initialAdmins }: { initialAdmins: ManagedAdmin[] }) {

@@ -10,6 +10,7 @@ export async function createProgram(formData: FormData) {
   const description = formData.get('description') as string;
   const category = formData.get('category') as string;
   const status = formData.get('status') as string;
+  const image = formData.get('image') as string;
 
   await prisma.program.create({
     data: {
@@ -17,6 +18,7 @@ export async function createProgram(formData: FormData) {
       description,
       category,
       status,
+      image,
     },
   });
 
@@ -30,6 +32,7 @@ export async function updateProgram(id: string, formData: FormData) {
   const description = formData.get('description') as string;
   const category = formData.get('category') as string;
   const status = formData.get('status') as string;
+  const image = formData.get('image') as string;
 
   await prisma.program.update({
     where: { id },
@@ -38,6 +41,7 @@ export async function updateProgram(id: string, formData: FormData) {
       description,
       category,
       status,
+      image,
     },
   });
 

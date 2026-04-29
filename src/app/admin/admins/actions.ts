@@ -3,9 +3,9 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
-import { createClient } from '@/utils/supabase/server';
-import { AdminRole } from '@prisma/client';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+
+export type AdminRole = 'SUPER_ADMIN' | 'CONTENT_EDITOR' | 'FINANCIAL_ADMIN' | 'VOLUNTEER_COORD';
 
 // Helper to get Supabase Admin client
 const getSupabaseAdmin = () => {
