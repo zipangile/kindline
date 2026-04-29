@@ -6,7 +6,12 @@ import Link from 'next/link';
 import AddProgramForm from './AddProgramForm';
 import { Edit2, Trash2, Globe, Archive } from 'lucide-react';
 
-export default async function AdminProgramsPage() {
+export default async function AdminProgramsPage(props: {
+  params: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  await props.params;
+  await props.searchParams;
   const programmes = await prisma.program.findMany({
     orderBy: { createdAt: 'desc' },
   });
