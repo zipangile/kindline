@@ -18,11 +18,14 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-bold mb-6 text-brand-blue">Quick Links</h4>
             <ul className="space-y-3 text-sm text-gray-300">
+              <li><Link href="/" className="hover:text-brand-blue transition-colors">Home</Link></li>
               <li><Link href="/about" className="hover:text-brand-blue transition-colors">About Us</Link></li>
-              <li><Link href="/programmes" className="hover:text-brand-blue transition-colors">Our Programmes</Link></li>
-              <li><Link href="/impact" className="hover:text-brand-blue transition-colors">Impact & Stories</Link></li>
-              <li><Link href="/get-involved" className="hover:text-brand-blue transition-colors">Donate</Link></li>
-              <li><Link href="/volunteer" className="hover:text-brand-blue transition-colors">Partner with Us</Link></li>
+              <li><Link href="/programmes" className="hover:text-brand-blue transition-colors">Programmes</Link></li>
+              <li><Link href="/impact" className="hover:text-brand-blue transition-colors">Impact</Link></li>
+              <li><Link href="/get-involved" className="hover:text-brand-blue transition-colors">Friends</Link></li>
+              <li><Link href="/news" className="hover:text-brand-blue transition-colors">News</Link></li>
+              <li><Link href="/volunteer" className="hover:text-brand-blue transition-colors">Volunteer</Link></li>
+              <li><Link href="/contact" className="hover:text-brand-blue transition-colors">Contact</Link></li>
             </ul>
           </div>
 
@@ -42,7 +45,7 @@ const Footer = () => {
               href="/get-involved"
               className="inline-block bg-brand-blue text-white px-8 py-3 rounded-full text-sm font-bold hover:bg-brand-blue/90 transition-all shadow-lg"
             >
-              Donate Now
+              Become a Friend
             </Link>
           </div>
         </div>

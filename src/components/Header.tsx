@@ -30,9 +30,10 @@ const Header = () => {
     { name: 'Home', href: '/' },
     { name: 'About Us', href: '/about' },
     { name: 'Programmes', href: '/programmes' },
-    { name: 'Partner with Us', href: '/volunteer' },
     { name: 'Impact', href: '/impact' },
+    { name: 'Friends', href: '/get-involved' },
     { name: 'News', href: '/news' },
+    { name: 'Volunteer', href: '/volunteer' },
     { name: 'Contact', href: '/contact' },
   ];
 
@@ -78,12 +79,6 @@ const Header = () => {
                 {link.name}
               </Link>
             ))}
-            <Link
-              href="/get-involved"
-              className="flex items-center gap-x-2 font-bold text-white bg-brand-blue hover:scale-105 px-6 py-2.5 rounded-full transition-all shadow-sm"
-            >
-              Donate
-            </Link>
 
             {!user ? (
               <div className="flex items-center gap-x-3">
