@@ -2,6 +2,7 @@ import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import ProgramForm from '../ProgramForm';
+import { checkAdmin } from '@/lib/auth-utils';
 
 export const dynamic = "force-dynamic";
 
@@ -14,9 +15,17 @@ export default async function EditProgramPage({
 }) {
   const { id } = await params;
   await searchParams;
-  const program = await prisma.program.findUnique({
-    where: { id },
-  });
+  await checkAdmin('CONTENT_EDITOR');
+
+  let program;
+  try {
+    program = await prisma.program.findUnique({
+      where: { id },
+    });
+  } catch (error) {
+    console.error('[EditProgramPage] Error fetching programme:', error);
+    throw error;
+  }
 
   if (!program) {
     notFound();

@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 import prisma from '@/lib/prisma';
 import { updatePaymentSettings } from './actions';
+import { checkAdmin } from '@/lib/auth-utils';
 
 export default async function AdminSettingsPage(props: {
   params: Promise<Record<string, string | string[] | undefined>>;
@@ -8,6 +9,7 @@ export default async function AdminSettingsPage(props: {
 }) {
   await props.params;
   await props.searchParams;
+  await checkAdmin('SUPER_ADMIN');
 
   let settings;
   try {
