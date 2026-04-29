@@ -33,7 +33,11 @@ export default function NewsForm({ post }: { post?: NewsPost }) {
       setImage(url);
     } catch (error) {
       console.error(error);
-      alert('Failed to upload image');
+      if (error instanceof Error) {
+        alert(error.message);
+      } else {
+        alert('Failed to upload image');
+      }
     } finally {
       setUploading(false);
     }
