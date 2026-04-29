@@ -109,7 +109,11 @@ export default function ImageManager({ initialImages }: { initialImages: SiteIma
       alert('Image updated successfully!');
     } catch (error) {
       console.error(error);
-      alert('Failed to update image.');
+      if (error instanceof Error) {
+        alert(error.message);
+      } else {
+        alert('Failed to update image.');
+      }
     } finally {
       setUploading(null);
     }

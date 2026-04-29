@@ -35,6 +35,9 @@ export async function uploadImage(formData: FormData) {
 
   if (error) {
     console.error('[uploadImage] Supabase storage error:', error);
+    if (error.message === 'Bucket not found') {
+      throw new Error('The Supabase storage bucket "images" was not found. Please ensure it is created in your Supabase project.');
+    }
     throw new Error(`Failed to upload image to Supabase: ${error.message}`);
   }
 
