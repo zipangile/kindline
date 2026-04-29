@@ -7,16 +7,25 @@ import { deleteNewsPost } from './actions';
 
 export const dynamic = "force-dynamic";
 
+import { checkAdmin } from '@/lib/auth-utils';
+
 export default async function AdminNewsPage(props: {
   params: Promise<Record<string, string | string[] | undefined>>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   await props.params;
   await props.searchParams;
+  await checkAdmin('CONTENT_EDITOR');
 
-  const posts = await prisma.newsPost.findMany({
-    orderBy: { createdAt: 'desc' },
-  });
+  let posts = [];
+  try {
+    posts = await prisma.newsPost.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+  } catch (error) {
+    console.error('[AdminNewsPage] Error fetching news posts:', error);
+    throw error;
+  }
 
   return (
     <div className="space-y-8">

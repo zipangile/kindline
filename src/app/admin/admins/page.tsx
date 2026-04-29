@@ -10,10 +10,17 @@ export default async function AdminsPage(props: {
 }) {
   await props.params;
   await props.searchParams;
-  await checkAdmin();
-  const admins = await prisma.managedAdmin.findMany({
-    orderBy: { createdAt: 'desc' },
-  });
+  await checkAdmin('SUPER_ADMIN');
+
+  let admins = [];
+  try {
+    admins = await prisma.managedAdmin.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+  } catch (error) {
+    console.error('[AdminsPage] Error fetching admins:', error);
+    throw error;
+  }
 
   return (
     <div className="space-y-8">

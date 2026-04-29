@@ -7,9 +7,14 @@ export type PermissionLevel = 'SUPER_ADMIN' | 'CONTENT_EDITOR' | 'FINANCIAL_ADMI
 
 export async function checkAdmin(requiredLevel: PermissionLevel = 'CONTENT_EDITOR') {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+  if (authError) {
+    console.error('[checkAdmin] Auth error:', authError);
+  }
 
   if (!user) {
+    console.warn('[checkAdmin] No user found, redirecting to login');
     redirect('/login');
   }
 
@@ -33,6 +38,7 @@ export async function checkAdmin(requiredLevel: PermissionLevel = 'CONTENT_EDITO
   const hasPermission = permissions[requiredLevel].includes(userRole);
 
   if (!hasPermission) {
+    console.warn(`[checkAdmin] User ${user.email} with role ${userRole} does not have required permission: ${requiredLevel}`);
     // If they have any admin role, send to admin dashboard but maybe with limited view
     // For now, if they don't have the specific permission, redirect to overview
     if (userRole !== 'USER') {
@@ -48,11 +54,17 @@ export async function checkAdmin(requiredLevel: PermissionLevel = 'CONTENT_EDITO
 
 export async function getUserRole() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+  if (authError) {
+    console.error('[getUserRole] Auth error:', authError);
+  }
+
   if (!user) return 'USER';
 
   const adminEmail = process.env.ADMIN_EMAIL || 'sobhuxa@gmail.com';
   if (user.email === adminEmail) return 'SUPER_ADMIN';
 
-  return user.app_metadata?.role as PermissionLevel || 'USER';
+  const role = user.app_metadata?.role as PermissionLevel || 'USER';
+  return role;
 }
