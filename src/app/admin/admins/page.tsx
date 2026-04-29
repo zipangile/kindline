@@ -20,7 +20,8 @@ export default async function AdminsPage(props: {
     });
   } catch (error) {
     console.error('[AdminsPage] Error fetching admins:', error);
-    throw error;
+    // Rethrow to trigger the error boundary with a helpful message
+    throw new Error('Failed to load admins. This may be due to a missing database table. Please check server logs.');
   }
 
   return (
