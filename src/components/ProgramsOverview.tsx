@@ -9,9 +9,9 @@ const ProgramsOverview = () => {
       title: "WESAP (Widows Economic Skills Advancement Programme.)",
       subtitle: "Economic Empowerment",
       description: "WESAP is a structured programme designed to equip widows with practical and market- driven skills that enable them to generate income, become self-sufficient economically and support themselves and their families.",
-      icon: <Heart className="h-8 w-8 text-brand-purple" />,
+      icon: <Heart className="h-8 w-8 text-brand-blue" />,
       link: "/programmes",
-      color: "border-brand-purple"
+      color: "border-brand-blue"
     },
     {
       title: "Child Support & Development Programme",
@@ -25,9 +25,9 @@ const ProgramsOverview = () => {
       title: "Community Development",
       subtitle: "Empowering communities to lead",
       description: "True change happens when communities are empowered to take ownership of the change process. We partner with communities to build capacity and implement projects for sustainable change. This includes water and sanitation projects, community health outreach, and infrastructure improvement to create a safe environment for the community.",
-      icon: <Users className="h-8 w-8 text-brand-green" />,
+      icon: <Users className="h-8 w-8 text-brand-blue" />,
       link: "/programmes",
-      color: "border-brand-green"
+      color: "border-brand-blue"
     }
   ];
 
@@ -45,7 +45,7 @@ const ProgramsOverview = () => {
               <CardHeader className="pb-4">
                 <div className="mb-6 p-4 rounded-2xl bg-gray-50 w-fit group-hover:scale-110 transition-transform duration-300">{programme.icon}</div>
                 <CardTitle className="text-2xl font-bold mb-3 group-hover:text-brand-blue transition-colors">{programme.title}</CardTitle>
-                <p className="text-sm font-bold text-brand-orange uppercase tracking-wider">{programme.subtitle}</p>
+                <p className="text-sm font-bold text-brand-blue uppercase tracking-wider">{programme.subtitle}</p>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-700 leading-relaxed font-medium">

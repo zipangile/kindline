@@ -8,19 +8,19 @@ const LoveCareShare = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
-            <h2 className="text-brand-purple font-bold uppercase tracking-widest mb-2">Love Care Share</h2>
+            <h2 className="text-brand-blue font-bold uppercase tracking-widest mb-2">Love Care Share</h2>
             <h3 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-8">Friends of Kindline</h3>
             <p className="text-xl text-gray-800 mb-10 leading-relaxed font-medium">
               Love Care Share is Kindline Care Foundation&apos;s giving community for individuals, families, faith-Based and organizations who commit to support widows, orphans, and vulnerable children through monthly, quarterly, or annual giving.
             </p>
             <div className="flex flex-col sm:flex-row gap-5 mb-14">
-              <Button size="lg" className="bg-brand-purple hover:bg-brand-purple/90 text-white rounded-full px-10 h-14 text-lg font-bold shadow-lg" asChild>
+              <Button size="lg" className="bg-brand-blue hover:bg-brand-blue/90 text-white rounded-full px-10 h-14 text-lg font-bold shadow-lg" asChild>
                 <Link href="/get-involved">Join Our Community</Link>
               </Button>
             </div>
 
             <div className="space-y-8">
-              <h4 className="text-2xl font-bold text-gray-900 border-b-2 border-brand-orange w-fit pb-2">Why Join Love Care Share?</h4>
+              <h4 className="text-2xl font-bold text-gray-900 border-b-2 border-brand-blue w-fit pb-2">Why Join Love Care Share?</h4>
               <p className="text-lg text-gray-700 leading-relaxed">
                 Being a Friend of the Foundation means you are the backbone of our work. Your consistent commitment allows us to plan ahead, respond to emergencies, and guarantee long-term support for those who depend on us.
               </p>
@@ -32,16 +32,16 @@ const LoveCareShare = () => {
                   </div>
                   <div>
                     <h5 className="font-bold text-gray-900 text-lg mb-2">Consistent Impact</h5>
-                    <p className="text-gray-600 leading-relaxed">Monthly giving ensures no child is left without school requirements and no widow without support.</p>
+                    <p className="text-gray-600 leading-relaxed text-sm">Monthly giving ensures no child is left without school requirements and no widow without support.</p>
                   </div>
                 </div>
                 <div className="flex gap-5">
                   <div className="bg-white p-4 rounded-2xl shadow-md h-fit border border-gray-100">
-                    <MessageSquare className="text-brand-green h-7 w-7" />
+                    <MessageSquare className="text-brand-blue h-7 w-7" />
                   </div>
                   <div>
                     <h5 className="font-bold text-gray-900 text-lg mb-2">Community Connection</h5>
-                    <p className="text-gray-600 leading-relaxed">Receive exclusive updates, field reports, and invitations to special community events.</p>
+                    <p className="text-gray-600 leading-relaxed text-sm">Receive exclusive updates, field reports, and invitations to special community events.</p>
                   </div>
                 </div>
               </div>
