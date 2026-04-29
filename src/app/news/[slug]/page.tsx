@@ -7,8 +7,15 @@ import { Button } from '@/components/ui/Button';
 
 export const dynamic = "force-dynamic";
 
-export default async function NewsPostDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function NewsPostDetailPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const { slug } = await params;
+  await searchParams;
   const post = await prisma.newsPost.findUnique({
     where: { slug },
   });

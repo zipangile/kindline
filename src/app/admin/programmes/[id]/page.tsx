@@ -7,10 +7,13 @@ export const dynamic = "force-dynamic";
 
 export default async function EditProgramPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { id } = await params;
+  await searchParams;
   const program = await prisma.program.findUnique({
     where: { id },
   });

@@ -4,13 +4,16 @@ import { updateVolunteerStatus, deleteVolunteer } from './actions';
 import { Prisma } from '@prisma/client';
 
 export default async function AdminVolunteersPage({
+  params,
   searchParams,
 }: {
+  params: Promise<Record<string, string | string[] | undefined>>;
   searchParams: Promise<{ search?: string; skill?: string }>;
 }) {
-  const params = await searchParams;
-  const search = params.search || '';
-  const skill = params.skill || '';
+  await params;
+  const p = await searchParams;
+  const search = p.search || '';
+  const skill = p.skill || '';
 
   const where: Prisma.VolunteerWhereInput = {
     AND: [
@@ -26,10 +29,15 @@ export default async function AdminVolunteersPage({
     ],
   };
 
-  const volunteers = await prisma.volunteer.findMany({
-    where,
-    orderBy: { createdAt: 'desc' },
-  });
+  let volunteers: Awaited<ReturnType<typeof prisma.volunteer.findMany>> = [];
+  try {
+    volunteers = await prisma.volunteer.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+    });
+  } catch (error) {
+    console.error('[AdminVolunteersPage] Error fetching volunteers:', error);
+  }
 
   return (
     <div className="space-y-8">

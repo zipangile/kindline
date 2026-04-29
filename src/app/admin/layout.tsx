@@ -17,9 +17,12 @@ import {
 
 export default async function AdminLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<Record<string, string | string[] | undefined>>;
 }) {
+  await params;
   const role = await getUserRole();
 
   if (role === 'USER') {

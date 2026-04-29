@@ -4,7 +4,12 @@ import Image from 'next/image';
 
 export const dynamic = "force-dynamic";
 
-export default async function ProgramsPage() {
+export default async function ProgramsPage(props: {
+  params: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  await props.params;
+  await props.searchParams;
   const livePrograms = await prisma.program.findMany({
     where: { status: 'live' },
     orderBy: { createdAt: 'asc' },

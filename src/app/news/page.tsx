@@ -7,7 +7,12 @@ import { Button } from "@/components/ui/Button";
 
 export const dynamic = "force-dynamic";
 
-export default async function NewsPage() {
+export default async function NewsPage(props: {
+  params: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  await props.params;
+  await props.searchParams;
   const posts = await prisma.newsPost.findMany({
     where: { published: true },
     orderBy: { publishedAt: 'desc' },
