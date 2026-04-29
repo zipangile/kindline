@@ -2,17 +2,32 @@ export const dynamic = "force-dynamic";
 import prisma from '@/lib/prisma';
 import { updatePaymentSettings } from './actions';
 
-export default async function AdminSettingsPage() {
-  const settings = await prisma.paymentSettings.findFirst() || {
-    flutterwaveSecret: '',
-    flutterwavePublic: '',
-    flutterwaveEncrypt: '',
-    lencoSecret: '',
-    lencoPublic: '',
-    lencoBaseUrl: 'https://sandbox.lenco.co/access/v2/',
-    flutterwavePlanZMW: '',
-    flutterwavePlanUSD: '',
-  };
+export default async function AdminSettingsPage(props: {
+  params: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  await props.params;
+  await props.searchParams;
+
+  let settings;
+  try {
+    settings = await prisma.paymentSettings.findFirst();
+  } catch (error) {
+    console.error('[AdminSettingsPage] Error fetching payment settings:', error);
+  }
+
+  if (!settings) {
+    settings = {
+      flutterwaveSecret: '',
+      flutterwavePublic: '',
+      flutterwaveEncrypt: '',
+      lencoSecret: '',
+      lencoPublic: '',
+      lencoBaseUrl: 'https://sandbox.lenco.co/access/v2/',
+      flutterwavePlanZMW: '',
+      flutterwavePlanUSD: '',
+    };
+  }
 
   return (
     <div className="space-y-8">

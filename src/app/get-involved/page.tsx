@@ -7,7 +7,12 @@ import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
-export default async function GetInvolvedPage() {
+export default async function GetInvolvedPage(props: {
+  params: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  await props.params;
+  await props.searchParams;
   let settings = null;
   try {
     settings = await prisma.paymentSettings.findFirst();

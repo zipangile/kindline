@@ -2,12 +2,15 @@ import { signup } from '../login/actions'
 import Link from 'next/link'
 
 export default async function SignupPage({
+  params,
   searchParams,
 }: {
+  params: Promise<Record<string, string | string[] | undefined>>;
   searchParams: Promise<{ error?: string; role?: string }>
 }) {
-  const params = await searchParams;
-  const isVolunteer = params.role === 'volunteer';
+  await params;
+  const p = await searchParams;
+  const isVolunteer = p.role === 'volunteer';
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 p-10 bg-white rounded-xl shadow-lg border border-gray-100">
@@ -18,14 +21,14 @@ export default async function SignupPage({
           <p className="mt-2 text-center text-sm text-gray-600">
             Join Kindline Care Foundation today
           </p>
-          {params.error && (
+          {p.error && (
             <div className="mt-2 text-center text-sm text-red-600">
-              {params.error}
+              {p.error}
             </div>
           )}
         </div>
         <form className="mt-8 space-y-6">
-          <input type="hidden" name="role" value={params.role || ''} />
+          <input type="hidden" name="role" value={p.role || ''} />
           <div className="rounded-md shadow-sm space-y-4">
             {isVolunteer && (
               <>

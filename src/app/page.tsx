@@ -13,7 +13,12 @@ import { subscribe } from '@/app/admin/newsletter/actions';
 
 export const dynamic = "force-dynamic";
 
-export default async function Home() {
+export default async function Home(props: {
+  params: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  await props.params;
+  await props.searchParams;
   const images = await prisma.siteImage.findMany();
   const stats = await prisma.impactStat.findMany({ orderBy: { order: 'asc' }, take: 4 });
   const stories = await prisma.impactStory.findMany({ orderBy: { createdAt: 'desc' }, take: 2 });

@@ -4,7 +4,12 @@ import prisma from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
-export default async function DashboardRedirect() {
+export default async function DashboardRedirect(props: {
+  params: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  await props.params;
+  await props.searchParams;
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 

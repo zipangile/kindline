@@ -2,11 +2,14 @@ import { login } from './actions'
 import Link from 'next/link'
 
 export default async function LoginPage({
+  params,
   searchParams,
 }: {
+  params: Promise<Record<string, string | string[] | undefined>>;
   searchParams: Promise<{ error?: string }>
 }) {
-  const params = await searchParams;
+  await params;
+  const p = await searchParams;
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 p-10 bg-white rounded-xl shadow-lg border border-gray-100">
@@ -14,9 +17,9 @@ export default async function LoginPage({
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Log in to your account
           </h2>
-          {params.error && (
+          {p.error && (
             <div className="mt-2 text-center text-sm text-red-600">
-              {params.error}
+              {p.error}
             </div>
           )}
         </div>

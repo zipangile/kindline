@@ -5,7 +5,12 @@ import { isRedirectError } from 'next/dist/client/components/redirect-error';
 import prisma from '@/lib/prisma';
 import Link from 'next/link';
 
-export default async function FriendDashboard() {
+export default async function FriendDashboard(props: {
+  params: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  await props.params;
+  await props.searchParams;
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 

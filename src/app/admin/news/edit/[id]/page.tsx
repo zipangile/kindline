@@ -2,8 +2,15 @@ import prisma from '@/lib/prisma';
 import NewsForm from '../../NewsForm';
 import { notFound } from 'next/navigation';
 
-export default async function EditNewsPostPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function EditNewsPostPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const { id } = await params;
+  await searchParams;
   const post = await prisma.newsPost.findUnique({
     where: { id },
   });
