@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { updateSiteImage, uploadImage } from './actions';
-import { Loader2, Upload } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
 interface SiteImage {
   id: string;
@@ -13,7 +13,7 @@ interface SiteImage {
   alt: string | null;
 }
 
-export default function AdminImagesPage({ initialImages }: { initialImages: SiteImage[] }) {
+export default function ImageManager({ initialImages }: { initialImages: SiteImage[] }) {
   const [images, setImages] = useState<SiteImage[]>(initialImages);
   const [uploading, setUploading] = useState<string | null>(null);
 
@@ -58,6 +58,8 @@ export default function AdminImagesPage({ initialImages }: { initialImages: Site
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {imageKeys.map((item) => {
           const existing = images.find(img => img.key === item.key);
+          const [alt, setAlt] = useState(existing?.alt || '');
+
           return (
             <Card key={item.key}>
               <CardHeader>
@@ -75,8 +77,7 @@ export default function AdminImagesPage({ initialImages }: { initialImages: Site
                         onChange={async (e) => {
                           const file = e.target.files?.[0];
                           if (file) {
-                            const altInput = (e.target.closest('div.space-y-4')?.querySelector('input[name="alt"]') as HTMLInputElement);
-                            await handleUpload(item.key, file, altInput.value);
+                            await handleUpload(item.key, file, alt);
                           }
                         }}
                         disabled={uploading === item.key}
@@ -88,8 +89,8 @@ export default function AdminImagesPage({ initialImages }: { initialImages: Site
                   <div>
                     <label className="block text-sm font-medium">Alt Text</label>
                     <input
-                      name="alt"
-                      defaultValue={existing?.alt || ''}
+                      value={alt}
+                      onChange={(e) => setAlt(e.target.value)}
                       placeholder="Description for accessibility"
                       className="w-full p-2 border rounded mt-1"
                     />

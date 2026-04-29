@@ -21,6 +21,7 @@ export default function NewsForm({ post }: { post?: NewsPost }) {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [image, setImage] = useState(post?.image || '');
+  const [slug, setSlug] = useState(post?.slug || '');
 
   const handleImageUpload = async (file: File) => {
     try {
@@ -58,7 +59,12 @@ export default function NewsForm({ post }: { post?: NewsPost }) {
       } else {
         await createNewsPost(data);
       }
-    } catch (error) {
+    } catch (error: any) {
+      // Server-side redirects in Next.js result in an error on the client side
+      // with a specific digest or message. If it's a redirect, we don't want to alert error.
+      if (error.message === 'NEXT_REDIRECT') {
+          return;
+      }
       console.error(error);
       alert('Failed to save post');
     } finally {
@@ -77,10 +83,8 @@ export default function NewsForm({ post }: { post?: NewsPost }) {
             required
             className="w-full p-3 border rounded-xl"
             onChange={(e) => {
-               // Simple slug generator
-               const slugInput = (e.target.closest('form')?.querySelector('input[name="slug"]') as HTMLInputElement);
-               if (slugInput && !post?.id) {
-                 slugInput.value = e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+               if (!post?.id) {
+                 setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''));
                }
             }}
           />
@@ -89,7 +93,8 @@ export default function NewsForm({ post }: { post?: NewsPost }) {
           <label className="block text-sm font-bold text-gray-700 mb-2">Slug</label>
           <input
             name="slug"
-            defaultValue={post?.slug}
+            value={slug}
+            onChange={(e) => setSlug(e.target.value)}
             required
             className="w-full p-3 border rounded-xl"
           />

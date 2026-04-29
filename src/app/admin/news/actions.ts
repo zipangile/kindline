@@ -14,7 +14,7 @@ export async function createNewsPost(data: {
   image?: string;
   published: boolean;
 }) {
-  await checkAdmin();
+  await checkAdmin('CONTENT_EDITOR');
 
   await prisma.newsPost.create({
     data: {
@@ -37,7 +37,7 @@ export async function updateNewsPost(id: string, data: {
   image?: string;
   published: boolean;
 }) {
-  await checkAdmin();
+  await checkAdmin('CONTENT_EDITOR');
 
   const existing = await prisma.newsPost.findUnique({ where: { id } });
 
@@ -62,7 +62,7 @@ export async function updateNewsPost(id: string, data: {
 }
 
 export async function deleteNewsPost(id: string) {
-  await checkAdmin();
+  await checkAdmin('CONTENT_EDITOR');
 
   await prisma.newsPost.delete({
     where: { id },

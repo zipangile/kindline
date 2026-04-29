@@ -23,7 +23,7 @@ export async function subscribe(formData: FormData) {
 }
 
 export async function sendNewsletter(formData: FormData) {
-  await checkAdmin();
+  await checkAdmin('CONTENT_EDITOR');
   const subject = formData.get('subject') as string;
   const content = formData.get('content') as string;
 
@@ -49,7 +49,7 @@ export async function sendNewsletter(formData: FormData) {
 }
 
 export async function deleteSubscriber(id: string) {
-  await checkAdmin();
+  await checkAdmin('CONTENT_EDITOR');
   await prisma.subscriber.delete({
     where: { id },
   });
