@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import prisma from '@/lib/prisma';
+import { sendDonationEmails } from '@/lib/email';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,25 +42,27 @@ export async function POST(request: Request) {
     console.log(`[Lenco Webhook] Received event: ${event}`);
 
     if (event === 'collection.successful') {
-      const { amount, currency, reference, lencoReference, mobileMoneyDetails, cardDetails, customer } = data;
+      const { amount, currency, reference, mobileMoneyDetails, customer } = data;
 
       // Check if donation already exists to avoid duplicates
       const existingDonation = await prisma.donation.findUnique({
         where: { transactionId: String(reference) },
       });
 
+      let finalDonation = existingDonation;
+
       if (!existingDonation) {
         let donorName = 'Anonymous';
         let donorEmail = 'unknown@email.com';
 
         if (customer) {
-          donorName = customer.fullName || `${customer.firstName || ''} ${customer.lastName || ''}`.trim() || 'Anonymous';
+          donorName = (customer.fullName || `${customer.firstName || ''} ${customer.lastName || ''}`).trim() || 'Anonymous';
           donorEmail = customer.email || donorEmail;
         } else if (mobileMoneyDetails?.accountName) {
             donorName = mobileMoneyDetails.accountName;
         }
 
-        await prisma.donation.create({
+        finalDonation = await prisma.donation.create({
           data: {
             donorName,
             donorEmail,
@@ -73,6 +76,26 @@ export async function POST(request: Request) {
           },
         });
         console.log(`[Lenco Webhook] Donation created for reference: ${reference}`);
+
+        // Send transactional emails only for NEW donations
+        if (finalDonation && finalDonation.donorEmail !== 'unknown@email.com') {
+          sendDonationEmails({
+            donorName: finalDonation.donorName,
+            donorEmail: finalDonation.donorEmail,
+            amount: finalDonation.amount,
+            currency: finalDonation.currency,
+            transactionId: finalDonation.transactionId!,
+            gateway: 'lenco',
+            supabaseUserId: finalDonation.supabaseUserId
+          }).catch(e => console.error('[Lenco Webhook] Email sending failed:', e));
+
+          // Add to subscribers
+          await prisma.subscriber.upsert({
+            where: { email: finalDonation.donorEmail },
+            update: { status: 'active', name: finalDonation.donorName },
+            create: { email: finalDonation.donorEmail, name: finalDonation.donorName },
+          }).catch(e => console.error('[Lenco Webhook] Subscriber upsert failed:', e));
+        }
       } else {
         console.log(`[Lenco Webhook] Donation already exists for reference: ${reference}`);
       }

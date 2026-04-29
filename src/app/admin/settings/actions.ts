@@ -15,6 +15,7 @@ export async function updatePaymentSettings(formData: FormData) {
   const lencoPublic = formData.get('lencoPublic') as string;
   const lencoSignatureKey = formData.get('lencoSignatureKey') as string;
   const lencoBaseUrl = formData.get('lencoBaseUrl') as string;
+  const notificationEmail = formData.get('notificationEmail') as string;
 
   const settings = await prisma.paymentSettings.findFirst();
 
@@ -31,6 +32,7 @@ export async function updatePaymentSettings(formData: FormData) {
         lencoPublic,
         lencoSignatureKey,
         lencoBaseUrl,
+        notificationEmail,
       },
     });
   } else {
@@ -45,6 +47,7 @@ export async function updatePaymentSettings(formData: FormData) {
         lencoPublic,
         lencoSignatureKey,
         lencoBaseUrl,
+        notificationEmail,
       },
     });
   }

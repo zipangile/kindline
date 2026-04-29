@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { sendDonationEmails } from '@/lib/email';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,22 +9,28 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { reference, supabaseUserId, phone } = body;
 
+    if (!reference) {
+      return NextResponse.json({ error: 'Missing reference' }, { status: 400 });
+    }
+
     const settings = await prisma.paymentSettings.findFirst();
     const secretKey = process.env.LENCO_SECRET_KEY || settings?.lencoSecret;
     let baseUrl = process.env.LENCO_BASE_URL || settings?.lencoBaseUrl || 'https://api.lenco.co/access/v2/';
     if (!baseUrl.endsWith('/')) baseUrl += '/';
 
     if (!secretKey) {
+       console.error('[Lenco API] Secret key not configured');
        return NextResponse.json({ error: 'Lenco gateway not configured' }, { status: 500 });
     }
 
     // Verify transaction with Lenco using the collections status endpoint
-    console.log(`[Lenco API] Verifying reference: ${reference}`);
+    console.log(`[Lenco API] Verifying reference: ${reference} against ${baseUrl}`);
     const response = await fetch(`${baseUrl}collections/status/${reference}`, {
       headers: {
         'Authorization': `Bearer ${secretKey}`,
         'Accept': 'application/json'
-      }
+      },
+      cache: 'no-store'
     });
 
     if (!response.ok) {
@@ -33,9 +40,9 @@ export async function POST(request: Request) {
     }
 
     const verificationData = await response.json();
-    console.log(`[Lenco API] Verification data:`, JSON.stringify(verificationData));
+    console.log(`[Lenco API] Verification data received`);
 
-    if (verificationData.status === true && verificationData.data.status === 'successful') {
+    if (verificationData.status === true && verificationData.data && verificationData.data.status === 'successful') {
       const { amount, currency, customer, reference: transactionId, mobileMoneyDetails } = verificationData.data;
 
       // Check for existing donation to avoid duplicates (could have been handled by webhook)
@@ -43,18 +50,20 @@ export async function POST(request: Request) {
         where: { transactionId: String(transactionId) },
       });
 
+      let finalDonation = existingDonation;
+
       if (!existingDonation) {
         let donorName = 'Anonymous';
         let donorEmail = 'unknown@email.com';
 
         if (customer) {
-          donorName = customer.fullName || `${customer.firstName || ''} ${customer.lastName || ''}`.trim() || 'Anonymous';
+          donorName = (customer.fullName || `${customer.firstName || ''} ${customer.lastName || ''}`).trim() || 'Anonymous';
           donorEmail = customer.email || donorEmail;
         } else if (mobileMoneyDetails?.accountName) {
             donorName = mobileMoneyDetails.accountName;
         }
 
-        await prisma.donation.create({
+        finalDonation = await prisma.donation.create({
           data: {
             donorName,
             donorEmail,
@@ -68,9 +77,31 @@ export async function POST(request: Request) {
             type: 'one-time'
           }
         });
+        console.log(`[Lenco API] Donation record created: ${finalDonation.id}`);
+
+        // Send transactional emails only for new donations
+        if (finalDonation && finalDonation.donorEmail !== 'unknown@email.com') {
+          // Trigger emails asynchronously
+          sendDonationEmails({
+            donorName: finalDonation.donorName,
+            donorEmail: finalDonation.donorEmail,
+            amount: finalDonation.amount,
+            currency: finalDonation.currency,
+            transactionId: finalDonation.transactionId!,
+            gateway: 'lenco',
+            supabaseUserId: finalDonation.supabaseUserId
+          }).catch(e => console.error('[Lenco API] Email sending failed:', e));
+
+          // Add to subscribers
+          await prisma.subscriber.upsert({
+            where: { email: finalDonation.donorEmail },
+            update: { status: 'active', name: finalDonation.donorName },
+            create: { email: finalDonation.donorEmail, name: finalDonation.donorName },
+          }).catch(e => console.error('[Lenco API] Subscriber upsert failed:', e));
+        }
       } else {
         // Update existing donation with user ID or phone if missing
-        const updateData: any = {};
+        const updateData: Record<string, string> = {};
         if (supabaseUserId && !existingDonation.supabaseUserId) {
           updateData.supabaseUserId = supabaseUserId;
         }
@@ -79,19 +110,21 @@ export async function POST(request: Request) {
         }
 
         if (Object.keys(updateData).length > 0) {
-          await prisma.donation.update({
+          finalDonation = await prisma.donation.update({
             where: { id: existingDonation.id },
             data: updateData
           });
+          console.log(`[Lenco API] Donation record updated: ${finalDonation.id}`);
         }
       }
 
       return NextResponse.json({ verified: true });
     }
 
-    return NextResponse.json({ verified: false }, { status: 400 });
+    console.warn(`[Lenco API] Verification failed or status not successful:`, JSON.stringify(verificationData));
+    return NextResponse.json({ verified: false, data: verificationData }, { status: 400 });
   } catch (error) {
     console.error('Lenco payment verification error:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json({ error: 'Internal Server Error', details: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }
