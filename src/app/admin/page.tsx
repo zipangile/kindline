@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 import prisma from '@/lib/prisma';
 import Link from 'next/link';
+import { checkAdmin } from '@/lib/auth-utils';
 import {
   Briefcase,
   Heart,
@@ -20,6 +21,8 @@ export default async function AdminPage(props: {
 }) {
   await props.params;
   await props.searchParams;
+  await checkAdmin('USER'); // Any admin role can see the dashboard
+
   let stats = {
     programCount: 0,
     activeCount: 0,

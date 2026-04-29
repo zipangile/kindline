@@ -5,6 +5,7 @@ import { Program } from '@prisma/client';
 import Link from 'next/link';
 import AddProgramForm from './AddProgramForm';
 import { Edit2, Trash2, Globe, Archive } from 'lucide-react';
+import { checkAdmin } from '@/lib/auth-utils';
 
 export default async function AdminProgramsPage(props: {
   params: Promise<Record<string, string | string[] | undefined>>;
@@ -12,9 +13,16 @@ export default async function AdminProgramsPage(props: {
 }) {
   await props.params;
   await props.searchParams;
-  const programmes = await prisma.program.findMany({
-    orderBy: { createdAt: 'desc' },
-  });
+  await checkAdmin('CONTENT_EDITOR');
+
+  let programmes: Program[] = [];
+  try {
+    programmes = await prisma.program.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+  } catch (error) {
+    console.error('[AdminProgramsPage] Error fetching programmes:', error);
+  }
 
   return (
     <div className="space-y-8">

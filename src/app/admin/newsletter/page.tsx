@@ -4,6 +4,8 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { sendNewsletter, deleteSubscriber } from './actions';
 import { Send, Users, Trash2 } from 'lucide-react';
+import { checkAdmin } from '@/lib/auth-utils';
+import { Subscriber } from '@prisma/client';
 
 export default async function AdminNewsletterPage(props: {
   params: Promise<Record<string, string | string[] | undefined>>;
@@ -11,9 +13,16 @@ export default async function AdminNewsletterPage(props: {
 }) {
   await props.params;
   await props.searchParams;
-  const subscribers = await prisma.subscriber.findMany({
-    orderBy: { createdAt: 'desc' }
-  });
+  await checkAdmin('CONTENT_EDITOR');
+
+  let subscribers: Subscriber[] = [];
+  try {
+    subscribers = await prisma.subscriber.findMany({
+      orderBy: { createdAt: 'desc' }
+    });
+  } catch (error) {
+    console.error('[AdminNewsletterPage] Error fetching subscribers:', error);
+  }
 
   const activeCount = subscribers.filter(s => s.status === 'active').length;
 

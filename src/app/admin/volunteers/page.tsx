@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 import prisma from '@/lib/prisma';
 import { updateVolunteerStatus, deleteVolunteer } from './actions';
 import { Prisma } from '@prisma/client';
+import { checkAdmin } from '@/lib/auth-utils';
 
 export default async function AdminVolunteersPage({
   params,
@@ -12,6 +13,8 @@ export default async function AdminVolunteersPage({
 }) {
   await params;
   const p = await searchParams;
+  await checkAdmin('VOLUNTEER_COORD');
+
   const search = p.search || '';
   const skill = p.skill || '';
 

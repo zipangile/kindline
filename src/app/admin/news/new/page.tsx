@@ -1,6 +1,14 @@
 import NewsForm from '../NewsForm';
+import { checkAdmin } from '@/lib/auth-utils';
 
-export default function NewNewsPostPage() {
+export default async function NewNewsPostPage(props: {
+  params: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  await props.params;
+  await props.searchParams;
+  await checkAdmin('CONTENT_EDITOR');
+
   return (
     <div className="space-y-8">
       <div>

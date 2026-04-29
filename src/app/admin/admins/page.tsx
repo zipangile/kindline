@@ -1,6 +1,7 @@
 import prisma from '@/lib/prisma';
 import AdminManagement from './AdminManagement';
 import { checkAdmin } from '@/lib/auth-utils';
+import { ManagedAdmin } from '@prisma/client';
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +13,7 @@ export default async function AdminsPage(props: {
   await props.searchParams;
   await checkAdmin('SUPER_ADMIN');
 
-  let admins = [];
+  let admins: ManagedAdmin[] = [];
   try {
     admins = await prisma.managedAdmin.findMany({
       orderBy: { createdAt: 'desc' },

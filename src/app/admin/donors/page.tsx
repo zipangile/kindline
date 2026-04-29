@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 import prisma from '@/lib/prisma';
 import { Donation } from '@prisma/client';
 import { verifyDonation, deleteDonation } from './actions';
+import { checkAdmin } from '@/lib/auth-utils';
 
 export default async function AdminDonorsPage(props: {
   params: Promise<Record<string, string | string[] | undefined>>;
@@ -9,9 +10,16 @@ export default async function AdminDonorsPage(props: {
 }) {
   await props.params;
   await props.searchParams;
-  const donations = await prisma.donation.findMany({
-    orderBy: { createdAt: 'desc' },
-  });
+  await checkAdmin('FINANCIAL_ADMIN');
+
+  let donations: Donation[] = [];
+  try {
+    donations = await prisma.donation.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+  } catch (error) {
+    console.error('[AdminDonorsPage] Error fetching donations:', error);
+  }
 
   return (
     <div className="space-y-8">

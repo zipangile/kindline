@@ -4,6 +4,8 @@ import { createImpactStat, deleteImpactStat, createImpactStory, deleteImpactStor
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Trash2 } from 'lucide-react';
+import { checkAdmin } from '@/lib/auth-utils';
+import { ImpactStat, ImpactStory } from '@prisma/client';
 
 export default async function AdminImpactPage(props: {
   params: Promise<Record<string, string | string[] | undefined>>;
@@ -11,8 +13,21 @@ export default async function AdminImpactPage(props: {
 }) {
   await props.params;
   await props.searchParams;
-  const stats = await prisma.impactStat.findMany({ orderBy: { order: 'asc' } });
-  const stories = await prisma.impactStory.findMany({ orderBy: { createdAt: 'desc' } });
+  await checkAdmin('CONTENT_EDITOR');
+
+  let stats: ImpactStat[] = [];
+  let stories: ImpactStory[] = [];
+
+  try {
+    const [s, st] = await Promise.all([
+      prisma.impactStat.findMany({ orderBy: { order: 'asc' } }),
+      prisma.impactStory.findMany({ orderBy: { createdAt: 'desc' } })
+    ]);
+    stats = s;
+    stories = st;
+  } catch (error) {
+    console.error('[AdminImpactPage] Error fetching impact data:', error);
+  }
 
   return (
     <div className="space-y-12">

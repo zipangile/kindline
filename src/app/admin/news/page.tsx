@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { Plus, Edit, Trash2, Calendar } from 'lucide-react';
 import { deleteNewsPost } from './actions';
+import { NewsPost } from '@prisma/client';
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +18,7 @@ export default async function AdminNewsPage(props: {
   await props.searchParams;
   await checkAdmin('CONTENT_EDITOR');
 
-  let posts = [];
+  let posts: NewsPost[] = [];
   try {
     posts = await prisma.newsPost.findMany({
       orderBy: { createdAt: 'desc' },

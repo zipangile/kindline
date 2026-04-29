@@ -1,6 +1,7 @@
 import prisma from '@/lib/prisma';
 import NewsForm from '../../NewsForm';
 import { notFound } from 'next/navigation';
+import { checkAdmin } from '@/lib/auth-utils';
 
 export default async function EditNewsPostPage({
   params,
@@ -11,9 +12,17 @@ export default async function EditNewsPostPage({
 }) {
   const { id } = await params;
   await searchParams;
-  const post = await prisma.newsPost.findUnique({
-    where: { id },
-  });
+  await checkAdmin('CONTENT_EDITOR');
+
+  let post;
+  try {
+    post = await prisma.newsPost.findUnique({
+      where: { id },
+    });
+  } catch (error) {
+    console.error('[EditNewsPostPage] Error fetching post:', error);
+    throw error;
+  }
 
   if (!post) {
     notFound();
