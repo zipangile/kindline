@@ -1,6 +1,11 @@
 import { Heart, Shield, Users, Star, HandHeart } from "lucide-react";
 
-export default function AboutPage() {
+export default async function AboutPage(props: {
+  params: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  await props.params;
+  await props.searchParams;
   const values = [
     { name: "Integrity", description: "Upholding honesty, accountability, and transparency in all we do.", icon: <Shield className="h-6 w-6" /> },
     { name: "Compassion", description: "Serving others with empathy, love, and kindness.", icon: <Heart className="h-6 w-6" /> },

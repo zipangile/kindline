@@ -3,7 +3,12 @@ import Image from 'next/image';
 
 export const dynamic = "force-dynamic";
 
-export default function VolunteerPage() {
+export default async function VolunteerPage(props: {
+  params: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  await props.params;
+  await props.searchParams;
   return (
     <div className="bg-white">
       {/* Header */}

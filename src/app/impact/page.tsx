@@ -3,7 +3,12 @@ import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 import { Users, GraduationCap, Briefcase, Droplets } from "lucide-react";
 
-export default function ImpactPage() {
+export default async function ImpactPage(props: {
+  params: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  await props.params;
+  await props.searchParams;
   const metrics = [
     { label: "Families Supported", value: "450+", description: "Provided with food, shelter, or financial aid.", icon: <Users className="h-8 w-8 text-blue-600" /> },
     { label: "Children in School", value: "1,200", description: "Tuition paid and uniforms provided.", icon: <GraduationCap className="h-8 w-8 text-blue-600" /> },

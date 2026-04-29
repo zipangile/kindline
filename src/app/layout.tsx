@@ -20,11 +20,12 @@ export const metadata: Metadata = {
   description: "Restoring dignity and creating opportunity for orphans, vulnerable children, and widows.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
+export default async function RootLayout(props: {
   children: React.ReactNode;
-}>) {
+  params: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const { children, params } = props;
+  await params;
   return (
     <html lang="en">
       <body
