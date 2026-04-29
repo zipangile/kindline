@@ -13,6 +13,7 @@ export async function updatePaymentSettings(formData: FormData) {
   const flutterwavePlanUSD = formData.get('flutterwavePlanUSD') as string;
   const lencoSecret = formData.get('lencoSecret') as string;
   const lencoPublic = formData.get('lencoPublic') as string;
+  const lencoSignatureKey = formData.get('lencoSignatureKey') as string;
   const lencoBaseUrl = formData.get('lencoBaseUrl') as string;
 
   const settings = await prisma.paymentSettings.findFirst();
@@ -28,6 +29,7 @@ export async function updatePaymentSettings(formData: FormData) {
         flutterwavePlanUSD,
         lencoSecret,
         lencoPublic,
+        lencoSignatureKey,
         lencoBaseUrl,
       },
     });
@@ -41,6 +43,7 @@ export async function updatePaymentSettings(formData: FormData) {
         flutterwavePlanUSD,
         lencoSecret,
         lencoPublic,
+        lencoSignatureKey,
         lencoBaseUrl,
       },
     });

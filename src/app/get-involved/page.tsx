@@ -54,6 +54,7 @@ export default async function GetInvolvedPage(props: {
   return (
     <div className="bg-white">
       <Script src="https://checkout.flutterwave.com/v3.js" />
+      <Script src="https://pay.lenco.co/js/v1/inline.js" />
 
       {/* Header */}
       <section className="bg-blue-800 text-white py-20">
