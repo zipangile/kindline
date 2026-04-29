@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma';
 import Link from "next/link";
+import Image from 'next/image';
 import { Calendar, ChevronRight } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -37,9 +38,9 @@ export default async function NewsPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {posts.map((post) => (
                 <Card key={post.id} className="flex flex-col h-full overflow-hidden border-none shadow-sm bg-gray-50">
-                  <div className="h-48 bg-blue-100 overflow-hidden">
+                  <div className="h-48 relative bg-blue-100 overflow-hidden">
                     {post.image ? (
-                      <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
+                      <Image src={post.image} alt={post.title} fill className="object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
                         <Calendar size={64} className="text-blue-200" />

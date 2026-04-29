@@ -1,4 +1,5 @@
 import VolunteerForm from "./VolunteerForm";
+import Image from 'next/image';
 
 export const dynamic = "force-dynamic";
 
@@ -46,11 +47,12 @@ export default function VolunteerPage() {
                 </div>
               </div>
             </div>
-            <div className="relative">
-              <img
+            <div className="relative h-96 w-full">
+              <Image
                 src="https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&q=80"
                 alt="Volunteers working together"
-                className="rounded-2xl shadow-lg"
+                fill
+                className="rounded-2xl shadow-lg object-cover"
               />
             </div>
           </div>

@@ -2,6 +2,7 @@ import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import { Calendar, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 
 export const dynamic = "force-dynamic";
@@ -40,8 +41,8 @@ export default async function NewsPostDetailPage({ params }: { params: Promise<{
         </header>
 
         {post?.image && (
-          <div className="mb-12 aspect-video rounded-3xl overflow-hidden shadow-lg border">
-            <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
+          <div className="mb-12 aspect-video relative rounded-3xl overflow-hidden shadow-lg border">
+            <Image src={post.image} alt={post.title} fill className="object-cover" />
           </div>
         )}
 

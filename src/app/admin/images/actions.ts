@@ -29,7 +29,7 @@ export async function uploadImage(formData: FormData) {
   const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
   const filePath = `site-images/${fileName}`;
 
-  const { data, error } = await supabase.storage
+  const { error } = await supabase.storage
     .from('images')
     .upload(filePath, file);
 

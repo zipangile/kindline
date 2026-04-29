@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { Button } from '@/components/ui/Button';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Users, Heart, Building2 } from "lucide-react";
 

@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { Plus, Edit, Trash2, Calendar } from 'lucide-react';
 import { deleteNewsPost } from './actions';
@@ -49,7 +50,9 @@ export default async function AdminNewsPage() {
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-4">
                       {post.image ? (
-                        <img src={post.image} className="w-12 h-12 rounded-lg object-cover" alt="" />
+                        <div className="relative w-12 h-12 rounded-lg overflow-hidden">
+                          <Image src={post.image} fill className="object-cover" alt="" />
+                        </div>
                       ) : (
                         <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">
                           <Calendar size={20} />

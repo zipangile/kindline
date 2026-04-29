@@ -1,6 +1,4 @@
-import { Button } from '@/components/ui/Button';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
-import Link from 'next/link';
 import * as LucideIcons from "lucide-react";
 
 interface Stat {

@@ -4,8 +4,9 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { createProgram, updateProgram } from './actions';
 import { uploadImage } from '../images/actions';
-import { Loader2, Plus, X } from 'lucide-react';
+import { Loader2, X } from 'lucide-react';
 import { Program } from '@prisma/client';
+import Image from 'next/image';
 
 export default function ProgramForm({ program, onComplete }: { program?: Program, onComplete?: () => void }) {
   const [loading, setLoading] = useState(false);
@@ -40,8 +41,8 @@ export default function ProgramForm({ program, onComplete }: { program?: Program
         await createProgram(formData);
       }
       if (onComplete) onComplete();
-    } catch (error: any) {
-      if (error.message === 'NEXT_REDIRECT') {
+    } catch (error) {
+      if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
           if (onComplete) onComplete();
           return;
       }
@@ -107,7 +108,7 @@ export default function ProgramForm({ program, onComplete }: { program?: Program
         </div>
         {image && (
           <div className="mt-4 h-32 w-full max-w-xs relative rounded-xl overflow-hidden border">
-            <img src={image} alt="Preview" className="object-cover w-full h-full" />
+            <Image src={image} alt="Preview" fill className="object-cover" />
             <button
               type="button"
               onClick={() => setImage('')}

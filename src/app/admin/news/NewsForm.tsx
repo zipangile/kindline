@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { createNewsPost, updateNewsPost } from './actions';
 import { uploadImage } from '../images/actions';
 import { Loader2 } from 'lucide-react';
+import Image from 'next/image';
 
 interface NewsPost {
   id?: string;
@@ -59,10 +60,10 @@ export default function NewsForm({ post }: { post?: NewsPost }) {
       } else {
         await createNewsPost(data);
       }
-    } catch (error: any) {
+    } catch (error) {
       // Server-side redirects in Next.js result in an error on the client side
       // with a specific digest or message. If it's a redirect, we don't want to alert error.
-      if (error.message === 'NEXT_REDIRECT') {
+      if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
           return;
       }
       console.error(error);
@@ -163,7 +164,7 @@ export default function NewsForm({ post }: { post?: NewsPost }) {
         </div>
         {image && (
           <div className="mt-4 h-48 w-full max-w-md relative rounded-xl overflow-hidden border">
-            <img src={image} alt="Preview" className="object-cover w-full h-full" />
+            <Image src={image} alt="Preview" fill className="object-cover" />
             <button
               type="button"
               onClick={() => setImage('')}

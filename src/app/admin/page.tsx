@@ -7,7 +7,6 @@ import {
   Users,
   Clock,
   BarChart3,
-  Image as ImageIcon,
   Mail,
   Newspaper,
   Settings,
