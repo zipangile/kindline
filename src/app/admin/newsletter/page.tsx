@@ -5,7 +5,12 @@ import { Button } from '@/components/ui/Button';
 import { sendNewsletter, deleteSubscriber } from './actions';
 import { Send, Users, Trash2 } from 'lucide-react';
 
-export default async function AdminNewsletterPage() {
+export default async function AdminNewsletterPage(props: {
+  params: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  await props.params;
+  await props.searchParams;
   const subscribers = await prisma.subscriber.findMany({
     orderBy: { createdAt: 'desc' }
   });

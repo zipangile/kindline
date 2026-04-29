@@ -3,7 +3,12 @@ import prisma from '@/lib/prisma';
 import { Donation } from '@prisma/client';
 import { verifyDonation, deleteDonation } from './actions';
 
-export default async function AdminDonorsPage() {
+export default async function AdminDonorsPage(props: {
+  params: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  await props.params;
+  await props.searchParams;
   const donations = await prisma.donation.findMany({
     orderBy: { createdAt: 'desc' },
   });

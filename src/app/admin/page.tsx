@@ -14,7 +14,12 @@ import {
   ArrowRight
 } from 'lucide-react';
 
-export default async function AdminPage() {
+export default async function AdminPage(props: {
+  params: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  await props.params;
+  await props.searchParams;
   let stats = {
     programCount: 0,
     activeCount: 0,

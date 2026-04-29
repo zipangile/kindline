@@ -4,7 +4,12 @@ import { checkAdmin } from '@/lib/auth-utils';
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminsPage() {
+export default async function AdminsPage(props: {
+  params: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  await props.params;
+  await props.searchParams;
   await checkAdmin();
   const admins = await prisma.managedAdmin.findMany({
     orderBy: { createdAt: 'desc' },

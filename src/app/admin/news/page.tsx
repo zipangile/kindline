@@ -7,7 +7,13 @@ import { deleteNewsPost } from './actions';
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminNewsPage() {
+export default async function AdminNewsPage(props: {
+  params: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  await props.params;
+  await props.searchParams;
+
   const posts = await prisma.newsPost.findMany({
     orderBy: { createdAt: 'desc' },
   });
@@ -92,10 +98,7 @@ export default async function AdminNewsPage() {
                           <Edit size={16} />
                         </Link>
                       </Button>
-                      <form action={async () => {
-                        'use server';
-                        await deleteNewsPost(post.id);
-                      }}>
+                      <form action={deleteNewsPost.bind(null, post.id)}>
                         <Button variant="outline" size="sm" className="text-red-500 hover:text-red-600">
                           <Trash2 size={16} />
                         </Button>

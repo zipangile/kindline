@@ -5,7 +5,12 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Trash2 } from 'lucide-react';
 
-export default async function AdminImpactPage() {
+export default async function AdminImpactPage(props: {
+  params: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  await props.params;
+  await props.searchParams;
   const stats = await prisma.impactStat.findMany({ orderBy: { order: 'asc' } });
   const stories = await prisma.impactStory.findMany({ orderBy: { createdAt: 'desc' } });
 
