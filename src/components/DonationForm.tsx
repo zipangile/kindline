@@ -28,7 +28,7 @@ declare global {
   }
 }
 
-export default function DonationForm({ settings }: { settings: { lencoPublic?: string; lencoBaseUrl?: string; flutterwavePublic?: string; flutterwavePlanZMW?: string; flutterwavePlanUSD?: string } }) {
+export default function DonationForm({ settings }: { settings: { lencoPublic?: string; lencoBaseUrl?: string; lencoName?: string; flutterwavePublic?: string; flutterwavePlanZMW?: string; flutterwavePlanUSD?: string } }) {
   const [userId, setUserId] = useState<string | null>(null);
   const [amount, setAmount] = useState('50');
   const [currency, setCurrency] = useState('ZMW');
@@ -65,6 +65,7 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
         amount: parseFloat(amount), // Lenco v2 expects amount in decimal
         currency: currency,
         reference: reference,
+        label: settings.lencoName,
         channels: ["card", "mobile-money"],
         customer: {
           firstName: name.split(' ')[0] || '',

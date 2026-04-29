@@ -9,8 +9,8 @@ export async function POST(request: Request) {
     const { reference, supabaseUserId, phone } = body;
 
     const settings = await prisma.paymentSettings.findFirst();
-    const secretKey = settings?.lencoSecret || process.env.LENCO_SECRET_KEY;
-    let baseUrl = settings?.lencoBaseUrl || process.env.LENCO_BASE_URL || 'https://api.lenco.co/access/v2/';
+    const secretKey = process.env.LENCO_SECRET_KEY || settings?.lencoSecret;
+    let baseUrl = process.env.LENCO_BASE_URL || settings?.lencoBaseUrl || 'https://api.lenco.co/access/v2/';
     if (!baseUrl.endsWith('/')) baseUrl += '/';
 
     if (!secretKey) {
