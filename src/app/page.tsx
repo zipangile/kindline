@@ -125,7 +125,7 @@ export default async function Home(props: {
               <h4 className="text-2xl font-bold text-gray-900 mb-4">Our Location</h4>
               <div className="space-y-6">
                 <div>
-                  <p className="text-brand-blue font-bold mb-1">Service Areas</p>
+
                   <p className="text-gray-700 font-medium flex items-start gap-3">
                     <svg className="w-5 h-5 text-brand-blue shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
