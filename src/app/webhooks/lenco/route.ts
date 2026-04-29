@@ -28,6 +28,8 @@ export async function POST(request: Request) {
       .update(bodyText)
       .digest('hex');
 
+    console.log(`[Lenco Webhook] Signature verification: derived=${hash}, header=${signature}`);
+
     if (hash !== signature) {
       console.error('[Lenco Webhook] Invalid signature');
       return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
@@ -61,6 +63,7 @@ export async function POST(request: Request) {
           data: {
             donorName,
             donorEmail,
+            donorPhone: customer?.phone || mobileMoneyDetails?.phone || null,
             amount: parseFloat(amount),
             currency: currency,
             status: 'successful',

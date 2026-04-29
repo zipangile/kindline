@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { reference, supabaseUserId } = body;
+    const { reference, supabaseUserId, phone } = body;
 
     const settings = await prisma.paymentSettings.findFirst();
     const secretKey = settings?.lencoSecret || process.env.LENCO_SECRET_KEY;
@@ -18,6 +18,7 @@ export async function POST(request: Request) {
     }
 
     // Verify transaction with Lenco using the collections status endpoint
+    console.log(`[Lenco API] Verifying reference: ${reference}`);
     const response = await fetch(`${baseUrl}collections/status/${reference}`, {
       headers: {
         'Authorization': `Bearer ${secretKey}`,
@@ -25,7 +26,14 @@ export async function POST(request: Request) {
       }
     });
 
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[Lenco API] Verification request failed: ${response.status}`, errorText);
+      return NextResponse.json({ verified: false, error: 'Lenco verification request failed' }, { status: response.status });
+    }
+
     const verificationData = await response.json();
+    console.log(`[Lenco API] Verification data:`, JSON.stringify(verificationData));
 
     if (verificationData.status === true && verificationData.data.status === 'successful') {
       const { amount, currency, customer, reference: transactionId, mobileMoneyDetails } = verificationData.data;
@@ -50,6 +58,7 @@ export async function POST(request: Request) {
           data: {
             donorName,
             donorEmail,
+            donorPhone: phone || customer?.phone || mobileMoneyDetails?.phone || null,
             amount: parseFloat(amount),
             currency: currency,
             status: 'successful',
@@ -59,12 +68,22 @@ export async function POST(request: Request) {
             type: 'one-time'
           }
         });
-      } else if (supabaseUserId && !existingDonation.supabaseUserId) {
-        // Link existing donation to user if it wasn't linked (e.g. webhook arrived first)
-        await prisma.donation.update({
-          where: { id: existingDonation.id },
-          data: { supabaseUserId }
-        });
+      } else {
+        // Update existing donation with user ID or phone if missing
+        const updateData: any = {};
+        if (supabaseUserId && !existingDonation.supabaseUserId) {
+          updateData.supabaseUserId = supabaseUserId;
+        }
+        if ((phone || customer?.phone || mobileMoneyDetails?.phone) && !existingDonation.donorPhone) {
+          updateData.donorPhone = phone || customer?.phone || mobileMoneyDetails?.phone;
+        }
+
+        if (Object.keys(updateData).length > 0) {
+          await prisma.donation.update({
+            where: { id: existingDonation.id },
+            data: updateData
+          });
+        }
       }
 
       return NextResponse.json({ verified: true });
