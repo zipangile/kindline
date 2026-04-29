@@ -4,21 +4,10 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 // @ts-expect-error flutterwave-node-v3 does not have types
 import Flutterwave from 'flutterwave-node-v3';
-import { createClient } from '@/utils/supabase/server';
-import { redirect } from 'next/navigation';
-
-async function checkAdmin() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  const adminEmail = process.env.ADMIN_EMAIL || 'sobhuxa@gmail.com';
-  const isAdmin = user?.app_metadata?.role === 'admin' || user?.email === adminEmail;
-  if (!isAdmin) {
-    redirect('/login');
-  }
-}
+import { checkAdmin } from '@/lib/auth-utils';
 
 export async function verifyDonation(id: string) {
-  await checkAdmin();
+  await checkAdmin('FINANCIAL_ADMIN');
   const donation = await prisma.donation.findUnique({
     where: { id },
   });
@@ -92,7 +81,7 @@ export async function verifyDonation(id: string) {
 }
 
 export async function deleteDonation(id: string) {
-    await checkAdmin();
+    await checkAdmin('FINANCIAL_ADMIN');
     await prisma.donation.delete({
         where: { id }
     });
