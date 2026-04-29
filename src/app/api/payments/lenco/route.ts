@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     }
 
     // Verify transaction with Lenco
-    const response = await fetch(`${baseUrl}transactions/verify/${reference}`, {
+    const response = await fetch(`${baseUrl}collections/status/${reference}`, {
       headers: {
         'Authorization': `Bearer ${secretKey}`,
         'Accept': 'application/json'

@@ -58,7 +58,7 @@ export async function verifyDonation(id: string) {
     if (!secretKey) throw new Error('Lenco not configured');
 
     try {
-      const response = await fetch(`${baseUrl}transactions/verify/${donation.transactionId}`, {
+      const response = await fetch(`${baseUrl}collections/status/${donation.transactionId}`, {
         headers: {
           'Authorization': `Bearer ${secretKey}`,
           'Accept': 'application/json'

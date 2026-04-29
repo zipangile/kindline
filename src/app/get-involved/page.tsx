@@ -51,9 +51,14 @@ export default async function GetInvolvedPage(props: {
     }
   ];
 
+  const lencoScriptUrl = settings?.lencoBaseUrl?.includes('sandbox')
+    ? "https://pay.sandbox.lenco.co/js/v1/inline.js"
+    : "https://pay.lenco.co/js/v1/inline.js";
+
   return (
     <div className="bg-white">
       <Script src="https://checkout.flutterwave.com/v3.js" />
+      <Script src={lencoScriptUrl} />
 
       {/* Header */}
       <section className="bg-blue-800 text-white py-20">
