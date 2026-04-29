@@ -15,6 +15,7 @@ interface LencoPayResponse {
 interface FlutterwaveResponse {
   status: string;
   tx_ref: string;
+  transaction_id?: string;
   [key: string]: unknown;
 }
 
@@ -60,28 +61,29 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
         amount: parseFloat(amount) * 100, // Lenco expects amount in kobo/cents
         currency: currency,
         reference: "KCF-L-" + Date.now(),
-        callback: async function(response: LencoPayResponse) {
+        callback: function(response: LencoPayResponse) {
           console.log("Lenco payment success", response);
           // Verify with backend
-          try {
-            const verifyRes = await fetch('/api/payments/lenco', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                reference: response.reference,
-                supabaseUserId: userId
-              })
-            });
+          fetch('/api/payments/lenco', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              reference: response.reference,
+              supabaseUserId: userId
+            })
+          })
+          .then(verifyRes => {
             if (verifyRes.ok) {
               alert("Thank you for your donation!");
               window.location.reload();
             } else {
               alert("Payment completed but verification failed. Please contact support.");
             }
-          } catch (e) {
+          })
+          .catch(e => {
             console.error("Lenco verification error", e);
             alert("An error occurred during verification. Please contact support.");
-          }
+          });
         },
         onClose: function() {
           console.log("Lenco window closed");

@@ -24,6 +24,7 @@ export async function createNewsPost(data: {
   });
 
   revalidatePath('/news');
+  revalidatePath(`/news/${data.slug}`);
   revalidatePath('/admin/news');
   redirect('/admin/news');
 }
@@ -57,6 +58,10 @@ export async function updateNewsPost(id: string, data: {
   });
 
   revalidatePath('/news');
+  revalidatePath(`/news/${data.slug}`);
+  if (existing && existing.slug !== data.slug) {
+    revalidatePath(`/news/${existing.slug}`);
+  }
   revalidatePath('/admin/news');
   redirect('/admin/news');
 }
@@ -64,10 +69,15 @@ export async function updateNewsPost(id: string, data: {
 export async function deleteNewsPost(id: string) {
   await checkAdmin('CONTENT_EDITOR');
 
+  const post = await prisma.newsPost.findUnique({ where: { id } });
+
   await prisma.newsPost.delete({
     where: { id },
   });
 
   revalidatePath('/news');
+  if (post) {
+    revalidatePath(`/news/${post.slug}`);
+  }
   revalidatePath('/admin/news');
 }
