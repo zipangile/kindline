@@ -109,20 +109,48 @@ export default async function AdminSettingsPage(props: {
           <div className="grid grid-cols-1 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">Public Key</label>
-              <input name="lencoPublic" type="text" defaultValue={settings.lencoPublic || ''} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" />
+              <input
+                name="lencoPublic"
+                type="text"
+                defaultValue={settings.lencoPublic || ''}
+                placeholder={process.env.LENCO_PUBLIC_KEY || ""}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+              />
+              {process.env.LENCO_PUBLIC_KEY && <p className="text-xs text-green-600 mt-1">✓ Public key is set in environment</p>}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Secret Key</label>
-              <input name="lencoSecret" type="password" defaultValue={settings.lencoSecret || ''} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" />
+              <input
+                name="lencoSecret"
+                type="password"
+                defaultValue={settings.lencoSecret || ''}
+                placeholder={process.env.LENCO_SECRET_KEY ? "********" : ""}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+              />
+              {process.env.LENCO_SECRET_KEY && <p className="text-xs text-green-600 mt-1">✓ Secret key is set in environment</p>}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Signature Key / Webhook Secret</label>
-              <input name="lencoSignatureKey" type="password" defaultValue={settings.lencoSignatureKey || ''} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" />
+              <input
+                name="lencoSignatureKey"
+                type="password"
+                defaultValue={settings.lencoSignatureKey || ''}
+                placeholder={process.env.LENCO_SIGNATURE_KEY ? "********" : ""}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+              />
+              {process.env.LENCO_SIGNATURE_KEY && <p className="text-xs text-green-600 mt-1">✓ Signature key is set in environment</p>}
               <p className="text-xs text-gray-500 mt-1">This should be the SHA256 hash of your Lenco API Token.</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Base URL</label>
-              <input name="lencoBaseUrl" type="text" defaultValue={settings.lencoBaseUrl || ''} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" />
+              <input
+                name="lencoBaseUrl"
+                type="text"
+                defaultValue={settings.lencoBaseUrl || ''}
+                placeholder={process.env.LENCO_BASE_URL || 'https://api.lenco.co/access/v2/'}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+              />
+              {process.env.LENCO_BASE_URL && <p className="text-xs text-green-600 mt-1">✓ Base URL is set in environment</p>}
               <p className="text-xs text-gray-500 mt-1">Use https://sandbox.lenco.co/access/v2/ for testing or https://api.lenco.co/access/v2/ for production.</p>
             </div>
           </div>

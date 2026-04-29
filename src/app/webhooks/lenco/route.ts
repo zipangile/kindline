@@ -10,7 +10,7 @@ export async function POST(request: Request) {
     const signature = request.headers.get('x-lenco-signature');
 
     const settings = await prisma.paymentSettings.findFirst();
-    const signatureKey = settings?.lencoSignatureKey || process.env.LENCO_SIGNATURE_KEY;
+    const signatureKey = process.env.LENCO_SIGNATURE_KEY || settings?.lencoSignatureKey;
 
     if (!signatureKey) {
       console.error('[Lenco Webhook] Lenco signature key not configured');

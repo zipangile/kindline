@@ -52,8 +52,8 @@ export async function verifyDonation(id: string) {
       console.error('Manual Flutterwave verification failed:', error);
     }
   } else if (donation.gateway === 'lenco') {
-    const secretKey = settings?.lencoSecret || process.env.LENCO_SECRET_KEY;
-    let baseUrl = settings?.lencoBaseUrl || process.env.LENCO_BASE_URL || 'https://api.lenco.co/access/v2/';
+    const secretKey = process.env.LENCO_SECRET_KEY || settings?.lencoSecret;
+    let baseUrl = process.env.LENCO_BASE_URL || settings?.lencoBaseUrl || 'https://api.lenco.co/access/v2/';
     if (!baseUrl.endsWith('/')) baseUrl += '/';
 
     if (!secretKey) throw new Error('Lenco not configured');

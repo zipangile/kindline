@@ -21,9 +21,10 @@ export default async function GetInvolvedPage(props: {
   }
 
   const donationSettings = {
-    lencoPublic: settings?.lencoPublic || process.env.LENCO_PUBLIC_KEY || undefined,
-    lencoBaseUrl: settings?.lencoBaseUrl || process.env.LENCO_BASE_URL || 'https://sandbox.lenco.co/access/v2/',
-    flutterwavePublic: settings?.flutterwavePublic || process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY || undefined,
+    lencoPublic: process.env.LENCO_PUBLIC_KEY || settings?.lencoPublic || undefined,
+    lencoBaseUrl: process.env.LENCO_BASE_URL || settings?.lencoBaseUrl || 'https://api.lenco.co/access/v2/',
+    lencoName: "Kindline Website",
+    flutterwavePublic: process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY || settings?.flutterwavePublic || undefined,
     flutterwavePlanZMW: settings?.flutterwavePlanZMW || process.env.FLUTTERWAVE_PLAN_ZMW || undefined,
     flutterwavePlanUSD: settings?.flutterwavePlanUSD || process.env.FLUTTERWAVE_PLAN_USD || undefined
   };
