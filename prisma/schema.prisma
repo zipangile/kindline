@@ -54,6 +54,7 @@ model PaymentSettings {
   flutterwavePlanUSD String?
   lencoSecret        String?
   lencoPublic        String?
+  lencoSignatureKey  String?
   lencoBaseUrl       String   @default("https://sandbox.lenco.co/access/v2/")
   updatedAt          DateTime @updatedAt
 }

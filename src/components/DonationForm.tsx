@@ -22,7 +22,7 @@ interface FlutterwaveResponse {
 declare global {
   interface Window {
     LencoPay: {
-      setup: (options: unknown) => { openIframe: () => void };
+      getPaid: (options: unknown) => void;
     };
     FlutterwaveCheckout: (options: unknown) => void;
   }
@@ -54,14 +54,19 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
         return;
     }
 
-    if (typeof window.LencoPay !== 'undefined') {
-      const handler = window.LencoPay.setup({
+    if (typeof window.LencoPay !== 'undefined' && typeof window.LencoPay.getPaid === 'function') {
+      window.LencoPay.getPaid({
         key: publicKey,
         email: email,
-        amount: parseFloat(amount) * 100, // Lenco expects amount in kobo/cents
+        amount: parseFloat(amount), // Lenco v2 expects amount in decimal
         currency: currency,
         reference: "KCF-L-" + Date.now(),
-        callback: function(response: LencoPayResponse) {
+        channels: ["card", "mobile-money"],
+        customer: {
+          firstName: name.split(' ')[0] || '',
+          lastName: name.split(' ').slice(1).join(' ') || '',
+        },
+        onSuccess: function(response: LencoPayResponse) {
           console.log("Lenco payment success", response);
           // Verify with backend
           fetch('/api/payments/lenco', {
@@ -87,9 +92,12 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
         },
         onClose: function() {
           console.log("Lenco window closed");
+        },
+        onConfirmationPending: function() {
+          alert("Your donation is pending confirmation. We will update your record once it's successful.");
+          window.location.reload();
         }
       });
-      handler.openIframe();
     } else {
       alert("Lenco gateway is loading. Please try again.");
     }

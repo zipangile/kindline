@@ -48,6 +48,7 @@ export async function updateSession(request: NextRequest) {
     !request.nextUrl.pathname.startsWith('/news') &&
     !request.nextUrl.pathname.startsWith('/get-involved') &&
     !request.nextUrl.pathname.startsWith('/volunteer') &&
+    !request.nextUrl.pathname.startsWith('/webhooks') &&
     !request.nextUrl.pathname.startsWith('/api') &&
     !request.nextUrl.pathname.startsWith('/_next')
   ) {
