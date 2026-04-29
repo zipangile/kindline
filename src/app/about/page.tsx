@@ -1,4 +1,4 @@
-import { Heart, Shield, Users, Star, HandHeart, ChevronDown } from "lucide-react";
+import { Heart, Shield, Users, Star, HandHeart } from "lucide-react";
 
 export default function AboutPage() {
   const values = [

@@ -1,5 +1,6 @@
 import { Sprout, Landmark, HeartPulse, GraduationCap, Droplets, Users, CheckCircle2 } from "lucide-react";
 import prisma from "@/lib/prisma";
+import Image from 'next/image';
 
 export const dynamic = "force-dynamic";
 
@@ -122,9 +123,9 @@ export default async function ProgramsPage() {
                   )}
                 </div>
 
-                <div className={`flex-1 rounded-2xl h-80 w-full flex items-center justify-center overflow-hidden shadow-sm border border-gray-100 ${getBgColor(programme.category)}`}>
+                <div className={`flex-1 relative rounded-2xl h-80 w-full flex items-center justify-center overflow-hidden shadow-sm border border-gray-100 ${getBgColor(programme.category)}`}>
                    {programme.image ? (
-                      <img src={programme.image} alt={programme.title} className="object-cover w-full h-full" />
+                      <Image src={programme.image} alt={programme.title} fill className="object-cover" />
                    ) : (
                       <div className={`${programme.category === 'Economic Empowerment' ? 'text-blue-200' : programme.category === 'Child Welfare' ? 'text-green-200' : 'text-orange-200'}`}>
                         {getIcon(programme.category)}

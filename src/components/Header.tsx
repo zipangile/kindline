@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
@@ -43,8 +44,8 @@ const Header = () => {
     <header className="sticky top-0 inset-x-0 flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full bg-white border-b border-gray-200 text-sm py-3 md:py-0">
       <nav className="max-w-7xl w-full mx-auto px-4 md:flex md:items-center md:justify-between" aria-label="Global">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex-none" aria-label="Kindline Care">
-            <img src="/logo.png" alt="Kindline Care Foundation" className="h-12 w-auto" />
+          <Link href="/" className="flex-none relative h-12 w-32" aria-label="Kindline Care">
+            <Image src="/logo.png" alt="Kindline Care Foundation" fill className="object-contain" />
           </Link>
           <div className="md:hidden">
             <button

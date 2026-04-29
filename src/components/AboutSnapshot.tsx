@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 
 const AboutSnapshot = ({ imageUrl }: { imageUrl?: string }) => {
@@ -42,7 +43,7 @@ const AboutSnapshot = ({ imageUrl }: { imageUrl?: string }) => {
             </div>
             <div className="rounded-3xl h-[600px] relative overflow-hidden shadow-2xl border-4 border-white">
               {imageUrl ? (
-                <img src={imageUrl} alt="Kindline Care Community" className="w-full h-full object-cover" />
+                <Image src={imageUrl} alt="Kindline Care Community" fill className="object-cover" />
               ) : (
                 <div className="bg-brand-blue/5 h-full w-full flex items-center justify-center border-2 border-dashed border-brand-blue/20">
                   <p className="text-brand-blue/40 font-semibold italic">[Community Impact Photo]</p>

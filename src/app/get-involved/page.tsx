@@ -1,5 +1,5 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
-import { Landmark, Smartphone, Users, Heart, Building2, ArrowRight } from "lucide-react";
+import { Landmark, Users, Heart, Building2, ArrowRight } from "lucide-react";
 import DonationForm from "@/components/DonationForm";
 import prisma from "@/lib/prisma";
 import Script from "next/script";

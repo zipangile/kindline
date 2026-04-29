@@ -18,7 +18,7 @@ export default function VolunteerForm() {
       setUser(user);
     };
     getUser();
-  }, [supabase.auth]);
+  }, []);
 
   return (
     <div className="space-y-6">
