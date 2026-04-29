@@ -9,6 +9,7 @@ import {
   BarChart3,
   Image as ImageIcon,
   Mail,
+  Newspaper,
   Settings,
   ExternalLink
 } from 'lucide-react';
@@ -60,7 +61,7 @@ export default async function AdminLayout({
 
           <Link href="/admin/volunteers" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
             <Users size={20} className="text-blue-400 group-hover:scale-110 transition-transform" />
-            <span className="font-medium">Volunteers</span>
+            <span className="font-medium">Partner with Us</span>
           </Link>
 
           <Link href="/admin/donors" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
@@ -80,6 +81,11 @@ export default async function AdminLayout({
           <Link href="/admin/images" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
             <ImageIcon size={20} className="text-green-400 group-hover:scale-110 transition-transform" />
             <span className="font-medium">Site Images</span>
+          </Link>
+
+          <Link href="/admin/news" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
+            <Newspaper size={20} className="text-orange-400 group-hover:scale-110 transition-transform" />
+            <span className="font-medium">News & Blog</span>
           </Link>
 
           <Link href="/admin/newsletter" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
