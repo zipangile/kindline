@@ -34,8 +34,8 @@ export async function uploadImage(formData: FormData) {
     .upload(filePath, file);
 
   if (error) {
-    console.error('Upload error:', error);
-    throw new Error('Failed to upload image to Supabase');
+    console.error('[uploadImage] Supabase storage error:', error);
+    throw new Error(`Failed to upload image to Supabase: ${error.message}`);
   }
 
   const { data: { publicUrl } } = supabase.storage

@@ -25,7 +25,8 @@ export default async function AdminNewsPage(props: {
     });
   } catch (error) {
     console.error('[AdminNewsPage] Error fetching news posts:', error);
-    throw error;
+    // Rethrow to trigger the error boundary with a helpful message
+    throw new Error('Failed to load news posts. This may be due to a missing database table. Please check server logs.');
   }
 
   return (
