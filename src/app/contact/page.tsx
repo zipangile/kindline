@@ -6,57 +6,67 @@ export default function ContactPage() {
   return (
     <div className="bg-white min-h-screen">
       {/* Header */}
-      <section className="bg-blue-800 text-white py-20">
+      <section className="bg-brand-blue text-white py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Get in Touch</h1>
-          <p className="text-xl text-blue-100 max-w-3xl mx-auto">
-            We would love to hear from you. Reach out to ask questions, learn about our programmes, or simply say hello.
+          <h1 className="text-4xl md:text-6xl font-extrabold mb-6">Get in Touch</h1>
+          <p className="text-xl text-white/90 max-w-3xl mx-auto font-medium">
+            We&apos;d love to hear from you. Whether you want to donate, partner, volunteer, or learn more about our work, every message helps us move closer to transforming lives in Zambia.
           </p>
         </div>
       </section>
 
-      <section className="py-20">
+      <section className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             {/* Contact Info */}
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">Contact Information</h2>
-              <div className="space-y-8">
+              <h2 className="text-3xl font-extrabold text-gray-900 mb-10">Contact Information</h2>
+              <div className="space-y-10">
                 <div className="flex items-start">
-                  <div className="bg-blue-100 p-3 rounded-lg text-blue-600 mr-4">
-                    <Mail className="h-6 w-6" />
+                  <div className="bg-brand-blue/10 p-4 rounded-2xl text-brand-blue mr-6">
+                    <Mail className="h-7 w-7" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900">Email Us</h3>
-                    <p className="text-gray-600">info@kindlinecare.org</p>
-                    <p className="text-gray-600">partnerships@kindlinecare.org</p>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">Email Us</h3>
+                    <div className="space-y-2">
+                      <div>
+                        <p className="text-sm font-bold text-brand-blue uppercase tracking-wider mb-1">General Enquiries</p>
+                        <p className="text-gray-700 font-medium">info@kindlinecare.org</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-brand-blue uppercase tracking-wider mb-1">Partnerships & Donations</p>
+                        <p className="text-gray-700 font-medium">partnerships@kindlinecare.org</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 <div className="flex items-start">
-                  <div className="bg-blue-100 p-3 rounded-lg text-blue-600 mr-4">
-                    <Phone className="h-6 w-6" />
+                  <div className="bg-brand-blue/10 p-4 rounded-2xl text-brand-blue mr-6">
+                    <Phone className="h-7 w-7" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900">Call Us</h3>
-                    <p className="text-gray-600">+260 958 582 293</p>
-                    <p className="text-gray-600">+260 762 595 634</p>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">Call Us</h3>
+                    <p className="text-gray-700 font-medium">+260 958 582 293</p>
+                    <p className="text-gray-700 font-medium">+260 762 595 634</p>
                   </div>
                 </div>
 
                 <div className="flex items-start">
-                  <div className="bg-blue-100 p-3 rounded-lg text-blue-600 mr-4">
-                    <MapPin className="h-6 w-6" />
+                  <div className="bg-brand-blue/10 p-4 rounded-2xl text-brand-blue mr-6">
+                    <MapPin className="h-7 w-7" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900">Our Location</h3>
-                    <p className="text-gray-600">Lusaka, Zambia</p>
-                    <p className="text-sm text-gray-500 mt-1 italic">(In-person visits by appointment only)</p>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">Our Location</h3>
+                    <div className="space-y-2 text-gray-700 font-medium">
+                      <p>Mtendere, Lusaka, Zambia</p>
+                      <p className="text-sm text-gray-500 italic">Service Area: 10 Miles, Chibombo District, Central Province</p>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-12 p-8 bg-gray-50 rounded-2xl border border-gray-100">
+              <div className="mt-16 p-10 bg-gray-50 rounded-[2rem] border border-gray-100">
                 <h3 className="font-bold text-gray-900 mb-4">Follow Our Work</h3>
                 <div className="flex space-x-4">
                   <div className="w-10 h-10 bg-blue-800 rounded-full flex items-center justify-center text-white font-bold cursor-pointer hover:bg-blue-900 transition-colors">f</div>

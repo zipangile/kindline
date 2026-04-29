@@ -71,7 +71,7 @@ const Header = () => {
                 key={link.name}
                 href={link.href}
                 className={`font-semibold ${
-                  pathname === link.href ? 'text-brand-blue' : 'text-gray-700 hover:text-brand-purple'
+                  pathname === link.href ? 'text-brand-blue' : 'text-gray-700 hover:text-brand-blue'
                 } md:py-6 transition-colors`}
                 aria-current={pathname === link.href ? 'page' : undefined}
               >
@@ -80,22 +80,22 @@ const Header = () => {
             ))}
             <Link
               href="/get-involved"
-              className="flex items-center gap-x-2 font-bold text-white bg-brand-blue hover:bg-brand-blue/90 px-6 py-2.5 rounded-full transition-all shadow-sm"
+              className="flex items-center gap-x-2 font-bold text-white bg-brand-blue hover:scale-105 px-6 py-2.5 rounded-full transition-all shadow-sm"
             >
               Donate
             </Link>
 
             {!user ? (
               <div className="flex items-center gap-x-3">
-                <Link href="/login" className="text-gray-700 hover:text-brand-purple font-semibold transition-colors">Log in</Link>
-                <Link href="/signup" className="text-gray-700 hover:text-brand-purple font-semibold border-2 border-gray-200 px-4 py-1.5 rounded-full transition-all">Sign up</Link>
+                <Link href="/login" className="text-gray-700 hover:text-brand-blue font-semibold transition-colors">Log in</Link>
+                <Link href="/signup" className="text-gray-700 hover:text-brand-blue font-semibold border-2 border-gray-200 px-4 py-1.5 rounded-full transition-all">Sign up</Link>
               </div>
             ) : (
               <div className="flex items-center gap-x-4">
-                <Link href="/dashboard" className="text-gray-700 hover:text-brand-purple font-semibold transition-colors">Dashboard</Link>
+                <Link href="/dashboard" className="text-gray-700 hover:text-brand-blue font-semibold transition-colors">Dashboard</Link>
                 <button
                   onClick={handleSignOut}
-                  className="text-gray-700 hover:text-brand-purple font-semibold transition-colors"
+                  className="text-gray-700 hover:text-brand-blue font-semibold transition-colors"
                 >
                   Log out
                 </button>

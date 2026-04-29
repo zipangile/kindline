@@ -18,40 +18,48 @@ interface Story {
 }
 
 const ImpactSnapshot = ({ stats, stories }: { stats: Stat[], stories: Story[] }) => {
+  const defaultStats = [
+    { id: '1', label: 'Children Supported', value: '50+', icon: 'Users' },
+    { id: '2', label: 'Widows Reached', value: '15+', icon: 'Heart' },
+    { id: '3', label: 'Communities Reached', value: '5', icon: 'MapPin' },
+  ];
+
+  const displayStats = stats.length > 0 ? stats : defaultStats;
+
   return (
     <section className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-20">
           <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-6 tracking-tight">Our Impact</h2>
-          <p className="text-lg text-gray-700 max-w-2xl mx-auto font-medium">
-            See the tangible difference your support makes in real lives.
+          <p className="text-xl text-gray-700 max-w-2xl mx-auto font-medium">
+            Real change. Real lives transformed.
           </p>
         </div>
 
-        {stats.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-24">
-            {stats.map((stat) => {
-              const iconKey = stat.icon as keyof typeof LucideIcons;
-              const Icon = (stat.icon && LucideIcons[iconKey]) ? (LucideIcons[iconKey] as LucideIcons.LucideIcon) : LucideIcons.BarChart;
-              return (
-                <Card key={stat.id} className="text-center border-none bg-gray-50 shadow-none hover:bg-gray-100 transition-colors group">
-                  <CardHeader className="flex flex-col items-center">
-                    <div className="mb-4 p-3 bg-white rounded-2xl shadow-sm group-hover:scale-110 transition-transform">
-                      <Icon className="h-8 w-8 text-brand-blue" />
-                    </div>
-                    <div className="text-4xl font-extrabold text-gray-900 mb-1">{stat.value}</div>
-                    <CardTitle className="text-sm uppercase tracking-widest text-brand-orange font-bold">{stat.label}</CardTitle>
-                  </CardHeader>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
+          {displayStats.map((stat) => {
+            const iconKey = stat.icon as keyof typeof LucideIcons;
+            const Icon = (stat.icon && LucideIcons[iconKey]) ? (LucideIcons[iconKey] as LucideIcons.LucideIcon) : LucideIcons.BarChart;
+            return (
+              <Card key={stat.id} className="text-center border-none bg-brand-blue/5 shadow-none hover:bg-brand-blue/10 transition-colors group p-8 rounded-[2rem]">
+                <CardHeader className="flex flex-col items-center">
+                  <div className="mb-6 p-4 bg-white rounded-2xl shadow-sm group-hover:scale-110 transition-transform">
+                    <Icon className="h-10 w-10 text-brand-blue" />
+                  </div>
+                  <div className="text-5xl font-extrabold text-brand-blue mb-2">{stat.value}</div>
+                  <CardTitle className="text-lg uppercase tracking-widest text-gray-600 font-bold">{stat.label}</CardTitle>
+                </CardHeader>
+                {'description' in stat && stat.description && (
                   <CardContent>
                     <p className="text-sm text-gray-600 font-medium">
                       {stat.description}
                     </p>
                   </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        )}
+                )}
+              </Card>
+            );
+          })}
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
 

@@ -16,7 +16,7 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="text-lg font-bold mb-6 text-brand-orange">Quick Links</h4>
+            <h4 className="text-lg font-bold mb-6 text-brand-blue">Quick Links</h4>
             <ul className="space-y-3 text-sm text-gray-300">
               <li><Link href="/about" className="hover:text-brand-blue transition-colors">About Us</Link></li>
               <li><Link href="/programmes" className="hover:text-brand-blue transition-colors">Our Programmes</Link></li>
@@ -27,7 +27,7 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="text-lg font-bold mb-6 text-brand-orange">Contact Info</h4>
+            <h4 className="text-lg font-bold mb-6 text-brand-blue">Contact Info</h4>
             <ul className="space-y-3 text-sm text-gray-300">
               <li><span className="text-gray-500">Email:</span> info@kindlinecare.org</li>
               <li><span className="text-gray-500">Phone:</span> +260 958 582 293</li>
@@ -36,7 +36,7 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="text-lg font-bold mb-6 text-brand-orange">Support Our Cause</h4>
+            <h4 className="text-lg font-bold mb-6 text-brand-blue">Support Our Cause</h4>
             <p className="text-sm text-gray-300 mb-6">Your support transforms lives and creates lasting impact in our communities.</p>
             <Link
               href="/get-involved"
@@ -49,7 +49,7 @@ const Footer = () => {
 
         <div className="mt-16 pt-8 border-t border-gray-800 text-center text-sm text-gray-400">
           <p>&copy; {new Date().getFullYear()} Kindline Care Foundation. All rights reserved.</p>
-          <p className="mt-2 font-medium text-gray-500">A Registered Non-Profit Organisation . <span className="text-brand-purple">My care.</span> <span className="text-brand-green">Your care.</span> <span className="text-brand-blue">Our care.</span></p>
+          <p className="mt-2 font-medium text-gray-500">A Registered Non-Profit Organisation . <span className="text-brand-blue">My care. Your care. Our care.</span></p>
         </div>
       </div>
     </footer>
