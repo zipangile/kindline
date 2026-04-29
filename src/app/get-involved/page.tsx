@@ -22,6 +22,7 @@ export default async function GetInvolvedPage(props: {
 
   const donationSettings = {
     lencoPublic: settings?.lencoPublic || process.env.LENCO_PUBLIC_KEY || undefined,
+    lencoBaseUrl: settings?.lencoBaseUrl || process.env.LENCO_BASE_URL || 'https://sandbox.lenco.co/access/v2/',
     flutterwavePublic: settings?.flutterwavePublic || process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY || undefined,
     flutterwavePlanZMW: settings?.flutterwavePlanZMW || process.env.FLUTTERWAVE_PLAN_ZMW || undefined,
     flutterwavePlanUSD: settings?.flutterwavePlanUSD || process.env.FLUTTERWAVE_PLAN_USD || undefined
@@ -51,10 +52,14 @@ export default async function GetInvolvedPage(props: {
     }
   ];
 
+  const lencoScript = donationSettings.lencoBaseUrl.includes('sandbox')
+    ? "https://pay.sandbox.lenco.co/js/v1/inline.js"
+    : "https://pay.lenco.co/js/v1/inline.js";
+
   return (
     <div className="bg-white">
       <Script src="https://checkout.flutterwave.com/v3.js" />
-      <Script src="https://pay.lenco.co/js/v1/inline.js" />
+      <Script src={lencoScript} />
 
       {/* Header */}
       <section className="bg-blue-800 text-white py-20">

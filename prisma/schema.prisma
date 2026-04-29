@@ -70,6 +70,7 @@ model Donation {
   type          String   @default("one-time") // one-time, monthly
   gateway       String
   transactionId String?  @unique
+  donorPhone    String?
   createdAt     DateTime @default(now())
 }
 

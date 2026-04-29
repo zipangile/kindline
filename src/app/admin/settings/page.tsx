@@ -118,10 +118,12 @@ export default async function AdminSettingsPage(props: {
             <div>
               <label className="block text-sm font-medium text-gray-700">Signature Key / Webhook Secret</label>
               <input name="lencoSignatureKey" type="password" defaultValue={settings.lencoSignatureKey || ''} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" />
+              <p className="text-xs text-gray-500 mt-1">This should be the SHA256 hash of your Lenco API Token.</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Base URL</label>
               <input name="lencoBaseUrl" type="text" defaultValue={settings.lencoBaseUrl || ''} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" />
+              <p className="text-xs text-gray-500 mt-1">Use https://sandbox.lenco.co/access/v2/ for testing or https://api.lenco.co/access/v2/ for production.</p>
             </div>
           </div>
         </div>

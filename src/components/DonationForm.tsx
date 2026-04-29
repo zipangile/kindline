@@ -28,7 +28,7 @@ declare global {
   }
 }
 
-export default function DonationForm({ settings }: { settings: { lencoPublic?: string; flutterwavePublic?: string; flutterwavePlanZMW?: string; flutterwavePlanUSD?: string } }) {
+export default function DonationForm({ settings }: { settings: { lencoPublic?: string; lencoBaseUrl?: string; flutterwavePublic?: string; flutterwavePlanZMW?: string; flutterwavePlanUSD?: string } }) {
   const [userId, setUserId] = useState<string | null>(null);
   const [amount, setAmount] = useState('50');
   const [currency, setCurrency] = useState('ZMW');
@@ -36,6 +36,7 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
   const [frequency, setFrequency] = useState('one-time');
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
   const supabase = createClient();
 
   useEffect(() => {
@@ -55,16 +56,20 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
     }
 
     if (typeof window.LencoPay !== 'undefined' && typeof window.LencoPay.getPaid === 'function') {
+      const reference = `KCF-L-${userId || 'anon'}-${Date.now()}`;
+      console.log("Initiating Lenco payment with reference:", reference);
+
       window.LencoPay.getPaid({
         key: publicKey,
         email: email,
         amount: parseFloat(amount), // Lenco v2 expects amount in decimal
         currency: currency,
-        reference: "KCF-L-" + Date.now(),
+        reference: reference,
         channels: ["card", "mobile-money"],
         customer: {
           firstName: name.split(' ')[0] || '',
           lastName: name.split(' ').slice(1).join(' ') || '',
+          phone: phone,
         },
         onSuccess: function(response: LencoPayResponse) {
           console.log("Lenco payment success", response);
@@ -74,14 +79,17 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               reference: response.reference,
-              supabaseUserId: userId
+              supabaseUserId: userId,
+              phone: phone
             })
           })
-          .then(verifyRes => {
+          .then(async verifyRes => {
             if (verifyRes.ok) {
               alert("Thank you for your donation!");
               window.location.reload();
             } else {
+              const errorData = await verifyRes.json().catch(() => ({}));
+              console.error("Lenco verification failed:", verifyRes.status, errorData);
               alert("Payment completed but verification failed. Please contact support.");
             }
           })
@@ -177,8 +185,9 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
         <div className="space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-2 uppercase tracking-wide">Full Name</label>
+              <label htmlFor="donorName" className="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-2 uppercase tracking-wide">Full Name</label>
               <input
+                id="donorName"
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -187,8 +196,9 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-2 uppercase tracking-wide">Email Address</label>
+              <label htmlFor="donorEmail" className="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-2 uppercase tracking-wide">Email Address</label>
               <input
+                id="donorEmail"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -196,6 +206,18 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
                 className="block w-full rounded-xl border-2 border-gray-100 dark:border-gray-700 shadow-sm focus:border-brand-blue focus:ring-brand-blue p-4 text-gray-900 dark:text-white font-medium transition-colors bg-gray-50/50 dark:bg-gray-800/50"
               />
             </div>
+          </div>
+
+          <div>
+            <label htmlFor="donorPhone" className="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-2 uppercase tracking-wide">Phone Number (Required for Mobile Money)</label>
+            <input
+              id="donorPhone"
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="e.g. 0970000000"
+              className="block w-full rounded-xl border-2 border-gray-100 dark:border-gray-700 shadow-sm focus:border-brand-blue focus:ring-brand-blue p-4 text-gray-900 dark:text-white font-medium transition-colors bg-gray-50/50 dark:bg-gray-800/50"
+            />
           </div>
 
           <div>
@@ -224,13 +246,14 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-                <label className="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-2 uppercase tracking-wide">Currency</label>
+                <label htmlFor="currency" className="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-2 uppercase tracking-wide">Currency</label>
                 <select
+                id="currency"
                 value={currency}
                 onChange={(e) => {
                     const newCurrency = e.target.value;
                     setCurrency(newCurrency);
-                    if (newCurrency !== 'ZMW') setMethod('flutterwave');
+                    if (newCurrency !== 'ZMW' && newCurrency !== 'USD') setMethod('flutterwave');
                 }}
                 className="block w-full rounded-xl border-2 border-gray-100 dark:border-gray-700 shadow-sm focus:border-brand-blue focus:ring-brand-blue p-4 text-gray-900 dark:text-white font-bold bg-gray-50/50 dark:bg-gray-800/50"
                 >
@@ -242,15 +265,16 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
                 </select>
             </div>
             <div>
-                <label className="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-2 uppercase tracking-wide">Payment Gateway</label>
+                <label htmlFor="paymentMethod" className="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-2 uppercase tracking-wide">Payment Gateway</label>
                 <select
+                id="paymentMethod"
                 value={method}
                 onChange={(e) => setMethod(e.target.value)}
-                disabled={currency !== 'ZMW'}
+                disabled={currency !== 'ZMW' && currency !== 'USD'}
                 className="block w-full rounded-xl border-2 border-gray-100 dark:border-gray-700 shadow-sm focus:border-brand-blue focus:ring-brand-blue p-4 text-gray-900 dark:text-white font-bold bg-gray-50/50 dark:bg-gray-800/50 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed"
                 >
                 <option value="flutterwave" className="dark:bg-gray-800">Flutterwave (Universal)</option>
-                {currency === 'ZMW' && <option value="lenco" className="dark:bg-gray-800">Lenco Pay (Local)</option>}
+                {(currency === 'ZMW' || currency === 'USD') && <option value="lenco" className="dark:bg-gray-800">Lenco Pay (Cards & MM)</option>}
                 </select>
             </div>
           </div>
