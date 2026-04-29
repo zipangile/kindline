@@ -29,6 +29,7 @@ export default async function AdminSettingsPage(props: {
       lencoBaseUrl: 'https://sandbox.lenco.co/access/v2/',
       flutterwavePlanZMW: '',
       flutterwavePlanUSD: '',
+      notificationEmail: '',
     };
   }
 
@@ -152,6 +153,26 @@ export default async function AdminSettingsPage(props: {
               />
               {process.env.LENCO_BASE_URL && <p className="text-xs text-green-600 mt-1">✓ Base URL is set in environment</p>}
               <p className="text-xs text-gray-500 mt-1">Use https://sandbox.lenco.co/access/v2/ for testing or https://api.lenco.co/access/v2/ for production.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Email Notifications */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+            Notification Settings
+          </h2>
+          <div className="grid grid-cols-1 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Transaction Notification Email</label>
+              <input
+                name="notificationEmail"
+                type="email"
+                defaultValue={settings.notificationEmail || ''}
+                placeholder="admin@kindlinecare.org"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+              />
+              <p className="text-xs text-gray-500 mt-1">Email address(es) that should receive alerts for new donations (separate by commas for multiple).</p>
             </div>
           </div>
         </div>
