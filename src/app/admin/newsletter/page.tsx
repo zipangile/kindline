@@ -6,6 +6,7 @@ import { sendNewsletter, deleteSubscriber } from './actions';
 import { Send, Users, Trash2 } from 'lucide-react';
 import { checkAdmin } from '@/lib/auth-utils';
 import { Subscriber } from '@prisma/client';
+import { ConfirmButton } from '@/components/ConfirmButton';
 
 export default async function AdminNewsletterPage(props: {
   params: Promise<Record<string, string | string[] | undefined>>;
@@ -93,18 +94,14 @@ export default async function AdminNewsletterPage(props: {
                     </td>
                     <td className="py-2 px-4 text-right">
                       <form action={deleteSubscriber.bind(null, sub.id)} className="inline">
-                        <button
+                        <ConfirmButton
                           type="submit"
                           className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                           title="Delete Subscriber"
-                          onClick={(e) => {
-                            if (!confirm('Are you sure you want to delete this subscriber?')) {
-                              e.preventDefault();
-                            }
-                          }}
+                          confirmMessage="Are you sure you want to delete this subscriber?"
                         >
                           <Trash2 size={16} />
-                        </button>
+                        </ConfirmButton>
                       </form>
                     </td>
                   </tr>

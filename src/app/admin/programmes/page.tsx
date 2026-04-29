@@ -6,6 +6,7 @@ import Link from 'next/link';
 import AddProgramForm from './AddProgramForm';
 import { Edit2, Trash2, Globe, Archive } from 'lucide-react';
 import { checkAdmin } from '@/lib/auth-utils';
+import { ConfirmButton } from '@/components/ConfirmButton';
 
 export default async function AdminProgramsPage(props: {
   params: Promise<Record<string, string | string[] | undefined>>;
@@ -84,18 +85,14 @@ export default async function AdminProgramsPage(props: {
                     </form>
 
                     <form action={deleteProgram.bind(null, programme.id)} className="inline">
-                      <button
+                      <ConfirmButton
                         type="submit"
                         className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                         title="Delete Programme"
-                        onClick={(e) => {
-                          if (!confirm('Are you sure you want to delete this programme?')) {
-                            e.preventDefault();
-                          }
-                        }}
+                        confirmMessage="Are you sure you want to delete this programme?"
                       >
                         <Trash2 size={18} />
-                      </button>
+                      </ConfirmButton>
                     </form>
                   </div>
                 </td>

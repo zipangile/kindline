@@ -23,8 +23,18 @@ export async function uploadImage(formData: FormData) {
   const file = formData.get('file') as File;
   if (!file) throw new Error('No file provided');
 
-  const { createClient } = await import('@/utils/supabase/server');
-  const supabase = await createClient();
+  const { createClient } = await import('@supabase/supabase-js');
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error('Missing Supabase environment variables for storage upload.');
+  }
+
+  // Use service role key to bypass RLS in this admin-only server action
+  const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
   const fileExt = file.name.split('.').pop();
   const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
   const filePath = `site-images/${fileName}`;

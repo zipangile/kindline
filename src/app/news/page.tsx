@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { Calendar, ChevronRight } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { NewsletterSubscribeForm } from "@/components/NewsletterSubscribeForm";
 
 export const dynamic = "force-dynamic";
 
@@ -89,15 +90,7 @@ export default async function NewsPage(props: {
           <p className="text-gray-600 mb-8">
             Get the latest stories of impact and project updates delivered to your inbox.
           </p>
-          <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto" onSubmit={(e) => e.preventDefault()}>
-            <input
-              type="email"
-              placeholder="Your email address"
-              className="flex-grow px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
-              required
-            />
-            <Button type="submit">Subscribe</Button>
-          </form>
+          <NewsletterSubscribeForm />
         </div>
       </section>
     </div>
