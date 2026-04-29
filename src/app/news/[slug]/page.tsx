@@ -23,7 +23,7 @@ export default async function NewsPostDetailPage({
     where: {
       slug: {
         equals: slug,
-        // @ts-expect-error - 'mode' is not supported in SQLite but is needed for PostgreSQL production
+        // @ts-ignore - 'mode' is not supported in SQLite but is needed for PostgreSQL production
         mode: 'insensitive'
       }
     },
