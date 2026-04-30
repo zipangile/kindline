@@ -9,7 +9,7 @@ const resend = new Resend(process.env.RESEND_API_KEY || 're_placeholder');
 
 export async function subscribe(formData: FormData) {
   const email = formData.get('email') as string;
-  if (!email) return;
+  if (!email || email.length > 254) return;
 
   try {
     await prisma.subscriber.upsert({
@@ -25,7 +25,10 @@ export async function subscribe(formData: FormData) {
 export async function sendNewsletter(formData: FormData) {
   await checkAdmin('CONTENT_EDITOR');
   const subject = formData.get('subject') as string;
-  const content = formData.get('content') as string;
+  let content = formData.get('content') as string;
+
+  // Basic sanitization: strip script tags
+  content = content.replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gmi, "");
 
   const subscribers = await prisma.subscriber.findMany({
     where: { status: 'active' },

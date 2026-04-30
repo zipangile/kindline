@@ -18,7 +18,7 @@ export default async function DashboardRedirect(props: {
   }
 
   const userId = user.id;
-  const adminEmail = process.env.ADMIN_EMAIL || 'sobhuxa@gmail.com';
+  const adminEmail = process.env.ADMIN_EMAIL || 'info@kindlinecare.org';
   const isAdmin = user.app_metadata?.role === 'admin' || user.email === adminEmail;
 
   // Admin check

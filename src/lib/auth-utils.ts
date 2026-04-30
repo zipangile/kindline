@@ -18,7 +18,13 @@ export async function checkAdmin(requiredLevel: PermissionLevel = 'CONTENT_EDITO
     redirect('/login');
   }
 
-  const adminEmail = process.env.ADMIN_EMAIL || 'sobhuxa@gmail.com';
+  // Ensure email is verified for admin access
+  if (!user.email_confirmed_at) {
+    console.warn(`[checkAdmin] User ${user.email} has not verified their email.`);
+    redirect('/login?error=Please verify your email to access administrative features.');
+  }
+
+  const adminEmail = process.env.ADMIN_EMAIL || 'info@kindlinecare.org';
   const userRole = user.app_metadata?.role as PermissionLevel || 'USER';
 
   // Super admin and hardcoded admin always have full access
@@ -68,7 +74,7 @@ export async function getUserRole() {
 
   if (!user) return 'USER';
 
-  const adminEmail = process.env.ADMIN_EMAIL || 'sobhuxa@gmail.com';
+  const adminEmail = process.env.ADMIN_EMAIL || 'info@kindlinecare.org';
   if (user.email === adminEmail) return 'SUPER_ADMIN';
 
   const role = user.app_metadata?.role as PermissionLevel || 'USER';
