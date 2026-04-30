@@ -56,7 +56,7 @@ export default async function Home(props: {
                   <Link href="/get-involved">Donate Now</Link>
                 </Button>
                 <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-brand-blue px-10 h-14 text-lg font-bold rounded-full" asChild>
-                  <Link href="/get-involved">Get Involved</Link>
+                  <Link href="/volunteer">Partner With Us</Link>
                 </Button>
               </div>
             </div>

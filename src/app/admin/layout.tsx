@@ -63,7 +63,7 @@ export default async function AdminLayout({
           {hasAccess(['SUPER_ADMIN', 'VOLUNTEER_COORD']) && (
             <Link href="/admin/volunteers" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
               <Users size={20} className="text-blue-400 group-hover:scale-110 transition-transform" />
-              <span className="font-medium">Partner with Us</span>
+              <span className="font-medium">Partners</span>
             </Link>
           )}
 

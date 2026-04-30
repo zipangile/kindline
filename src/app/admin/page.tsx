@@ -117,7 +117,7 @@ export default async function AdminPage(props: {
                   <Users size={20} />
                 </div>
                 <div>
-                  <p className="font-bold text-gray-900">Partner with Us</p>
+                  <p className="font-bold text-gray-900">Partners</p>
                   <p className="text-xs text-gray-500">Review applications</p>
                 </div>
               </div>
@@ -185,10 +185,10 @@ export default async function AdminPage(props: {
           </div>
 
           <div className="mt-10 pt-6 border-t border-gray-700">
-             <Link href="/admin/settings" className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
-                <Settings size={18} />
-                <span>System Settings</span>
-             </Link>
+            <Link href="/admin/settings" className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+              <Settings size={18} />
+              <span>System Settings</span>
+            </Link>
           </div>
         </div>
       </div>

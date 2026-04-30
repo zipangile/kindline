@@ -6,7 +6,6 @@ const AboutSnapshot = ({ imageUrl }: { imageUrl?: string }) => {
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-brand-blue font-bold uppercase tracking-widest mb-4">About Us</h2>
             <h3 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-8">What We Do</h3>
             <p className="text-xl text-gray-700 max-w-3xl mx-auto font-medium">
               We go beyond short-term support. We focus on building long-term resilience and independence.
@@ -60,10 +59,10 @@ const AboutSnapshot = ({ imageUrl }: { imageUrl?: string }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
-              <h2 className="text-white/80 font-bold uppercase tracking-widest mb-4">Who We Serve</h2>
-              <h3 className="text-3xl md:text-5xl font-extrabold mb-8 leading-tight">
+              <h1 className="text-white/80 font-bold uppercase tracking-widest mb-4">Who We Serve</h1>
+              <h2 className="text-3xl md:text-5xl font-extrabold mb-8 leading-tight">
                 Our work focuses on those who need it most.
-              </h3>
+              </h2>
               <ul className="space-y-6 mb-10">
                 {[
                   "Orphans",
@@ -93,7 +92,7 @@ const AboutSnapshot = ({ imageUrl }: { imageUrl?: string }) => {
                   <Image src={imageUrl} alt="Who We Serve" fill className="object-cover" />
                 ) : (
                   <div className="bg-white/5 h-full w-full flex items-center justify-center">
-                     <p className="text-white/40 italic">Impact Image</p>
+                    <p className="text-white/40 italic">Impact Image</p>
                   </div>
                 )}
               </div>
