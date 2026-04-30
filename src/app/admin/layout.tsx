@@ -9,6 +9,8 @@ import {
   BarChart3,
   Image as ImageIcon,
   Mail,
+  Inbox,
+  Send,
   Newspaper,
   ShieldCheck,
   Settings,
@@ -96,10 +98,22 @@ export default async function AdminLayout({
           )}
 
           {hasAccess(['SUPER_ADMIN', 'CONTENT_EDITOR', 'FINANCIAL_ADMIN']) && (
-            <Link href="/admin/newsletter" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
-              <Mail size={20} className="text-blue-400 group-hover:scale-110 transition-transform" />
-              <span className="font-medium">Newsletter</span>
-            </Link>
+            <>
+              <Link href="/admin/inbox" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
+                <Inbox size={20} className="text-blue-400 group-hover:scale-110 transition-transform" />
+                <span className="font-medium">Inbox</span>
+              </Link>
+
+              <Link href="/admin/communications" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
+                <Send size={20} className="text-indigo-400 group-hover:scale-110 transition-transform" />
+                <span className="font-medium">Communications</span>
+              </Link>
+
+              <Link href="/admin/newsletter" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
+                <Mail size={20} className="text-cyan-400 group-hover:scale-110 transition-transform" />
+                <span className="font-medium">Newsletter</span>
+              </Link>
+            </>
           )}
 
           <div className="pt-4 pb-2 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">

@@ -21,7 +21,7 @@ export async function sendDonationEmails(donation: DonationData) {
 
   try {
     const settings = await prisma.paymentSettings.findFirst();
-    const adminEmails = settings?.notificationEmail || process.env.ADMIN_EMAIL || 'sobhuxa@gmail.com';
+    const adminEmails = settings?.notificationEmail || process.env.ADMIN_EMAIL || 'info@kindlinecare.org';
 
     // 1. Confirmation Email to Donor
     await resend.emails.send({
@@ -94,7 +94,7 @@ export async function sendDonationEmails(donation: DonationData) {
           <p><strong>Transaction ID:</strong> ${donation.transactionId}</p>
           <p><strong>Status:</strong> Successful</p>
           <div style="margin-top: 20px;">
-            <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://kindlinecare.org'}/admin/friends"
+            <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://kindlinecare.org'}/admin/donors"
                style="color: #8B438E; font-weight: bold;">
                View in Admin Dashboard
             </a>
@@ -106,5 +106,196 @@ export async function sendDonationEmails(donation: DonationData) {
     console.log(`[Email] All donation emails sent for transaction ${donation.transactionId}`);
   } catch (error) {
     console.error('[Email] Error sending donation emails:', error);
+  }
+}
+
+export async function sendVolunteerStatusEmail(email: string, name: string, status: 'approved' | 'rejected') {
+  if (!process.env.RESEND_API_KEY) return;
+
+  const subject = status === 'approved'
+    ? 'Welcome to the Kindline Care Volunteer Team!'
+    : 'Update regarding your volunteer application';
+
+  const html = status === 'approved'
+    ? `
+      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+        <h1 style="color: #00A651;">Welcome Aboard, ${name}!</h1>
+        <p style="font-size: 16px; line-height: 1.6; color: #333;">
+          We are thrilled to inform you that your volunteer application has been approved. Your skills and passion are exactly what we need to continue our mission.
+        </p>
+        <p style="font-size: 16px; line-height: 1.6; color: #333;">
+          You can now log in to your dashboard to see active programmes and find opportunities that match your interests.
+        </p>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://kindlinecare.org'}/dashboard"
+             style="background-color: #8B438E; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+             Go to Volunteer Dashboard
+          </a>
+        </div>
+        <p style="font-size: 16px; line-height: 1.6; color: #333;">
+          Welcome to the family!<br>
+          <strong>The Kindline Care Team</strong>
+        </p>
+      </div>
+    `
+    : `
+      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+        <h1 style="color: #333;">Volunteer Application Update</h1>
+        <p style="font-size: 16px; line-height: 1.6; color: #333;">
+          Dear ${name}, thank you for your interest in volunteering with Kindline Care.
+        </p>
+        <p style="font-size: 16px; line-height: 1.6; color: #333;">
+          At this time, we are unable to move forward with your application. However, we encourage you to stay connected with us through our newsletter and social media for future opportunities.
+        </p>
+        <p style="font-size: 16px; line-height: 1.6; color: #333;">
+          Thank you for your heart for service,<br>
+          <strong>The Kindline Care Team</strong>
+        </p>
+      </div>
+    `;
+
+  try {
+    await resend.emails.send({
+      from: 'Kindline Volunteers <volunteers@kindlinecare.org>',
+      to: email,
+      subject: subject,
+      html: html,
+    });
+  } catch (error) {
+    console.error('[Email] Error sending volunteer status email:', error);
+  }
+}
+
+export async function sendNewVolunteerNotification(volunteer: { name: string, email: string, skills?: string | null }) {
+  if (!process.env.RESEND_API_KEY) return;
+
+  try {
+    const settings = await prisma.paymentSettings.findFirst();
+    const adminEmails = settings?.notificationEmail || process.env.ADMIN_EMAIL || 'info@kindlinecare.org';
+    const adminEmailList = adminEmails.split(',').map(e => e.trim());
+
+    await resend.emails.send({
+      from: 'Kindline System <system@kindlinecare.org>',
+      to: adminEmailList,
+      subject: `New Volunteer Application: ${volunteer.name}`,
+      html: `
+        <div style="font-family: sans-serif; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
+          <h2 style="color: #333;">New Volunteer Application</h2>
+          <p><strong>Name:</strong> ${volunteer.name}</p>
+          <p><strong>Email:</strong> ${volunteer.email}</p>
+          <p><strong>Skills:</strong> ${volunteer.skills || 'Not specified'}</p>
+          <div style="margin-top: 20px;">
+            <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://kindlinecare.org'}/admin/volunteers"
+               style="color: #8B438E; font-weight: bold;">
+               Review Application in Admin Panel
+            </a>
+          </div>
+        </div>
+      `
+    });
+  } catch (error) {
+    console.error('[Email] Error sending volunteer notification email:', error);
+  }
+}
+
+export async function sendContactNotification(message: { name: string, email: string, message: string }) {
+  if (!process.env.RESEND_API_KEY) return;
+
+  try {
+    const settings = await prisma.paymentSettings.findFirst();
+    const adminEmails = settings?.notificationEmail || process.env.ADMIN_EMAIL || 'info@kindlinecare.org';
+    const adminEmailList = adminEmails.split(',').map(e => e.trim());
+
+    await resend.emails.send({
+      from: 'Kindline System <system@kindlinecare.org>',
+      to: adminEmailList,
+      subject: `New Contact Message from ${message.name}`,
+      html: `
+        <div style="font-family: sans-serif; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
+          <h2 style="color: #333;">New Contact Form Submission</h2>
+          <p><strong>From:</strong> ${message.name} (${message.email})</p>
+          <p><strong>Message:</strong></p>
+          <p style="background: #f9f9f9; padding: 15px; border-radius: 5px;">${message.message}</p>
+          <div style="margin-top: 20px;">
+            <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://kindlinecare.org'}/admin/inbox"
+               style="color: #8B438E; font-weight: bold;">
+               View in Admin Inbox
+            </a>
+          </div>
+        </div>
+      `
+    });
+  } catch (error) {
+    console.error('[Email] Error sending contact notification email:', error);
+  }
+}
+
+export async function sendCommunicationEmail(recipient: string, subject: string, content: string) {
+  if (!process.env.RESEND_API_KEY) return;
+
+  try {
+    await resend.emails.send({
+      from: 'Kindline Care <info@kindlinecare.org>',
+      to: recipient,
+      subject: subject,
+      html: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+          <div style="margin-bottom: 20px;">
+            <img src="${process.env.NEXT_PUBLIC_SITE_URL || 'https://kindlinecare.org'}/logo.png" alt="Kindline Care" style="height: 40px;">
+          </div>
+          <div style="font-size: 16px; line-height: 1.6; color: #333;">
+            ${content}
+          </div>
+          <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
+          <p style="font-size: 14px; color: #666; text-align: center;">
+            Kindline Care Organization | Lusaka, Zambia
+          </p>
+        </div>
+      `
+    });
+    return { success: true };
+  } catch (error) {
+    console.error('[Email] Error sending communication email:', error);
+    return { success: false, error };
+  }
+}
+
+export async function sendVolunteerInvitation(email: string, message?: string) {
+  if (!process.env.RESEND_API_KEY) return;
+
+  const html = `
+    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+      <h1 style="color: #8B438E;">Join Kindline Care as a Volunteer!</h1>
+      <p style="font-size: 16px; line-height: 1.6; color: #333;">
+        We would love to have you join our team of dedicated volunteers working to transform lives in Zambia.
+      </p>
+      ${message ? `<div style="background: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0; color: #555;">${message}</div>` : ''}
+      <p style="font-size: 16px; line-height: 1.6; color: #333;">
+        Click the button below to start your application and create your volunteer profile.
+      </p>
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://kindlinecare.org'}/signup?role=volunteer"
+           style="background-color: #00A651; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+           Start Volunteering
+        </a>
+      </div>
+      <p style="font-size: 16px; line-height: 1.6; color: #333;">
+        With hope,<br>
+        <strong>The Kindline Care Team</strong>
+      </p>
+    </div>
+  `;
+
+  try {
+    await resend.emails.send({
+      from: 'Kindline Volunteers <volunteers@kindlinecare.org>',
+      to: email,
+      subject: 'You are invited to volunteer with Kindline Care',
+      html: html,
+    });
+    return { success: true };
+  } catch (error) {
+    console.error('[Email] Error sending volunteer invitation:', error);
+    return { success: false, error };
   }
 }

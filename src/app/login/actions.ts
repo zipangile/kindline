@@ -25,6 +25,7 @@ export async function login(formData: FormData) {
 }
 
 import prisma from '@/lib/prisma'
+import { sendNewVolunteerNotification } from '@/lib/email'
 
 export async function signup(formData: FormData) {
   const supabase = await createClient()
@@ -79,7 +80,7 @@ export async function signup(formData: FormData) {
 
   if (isVolunteer && authData.user) {
     try {
-      await prisma.volunteer.create({
+      const volunteer = await prisma.volunteer.create({
         data: {
           supabaseUserId: authData.user.id,
           name: signupData.options.data.name || 'Anonymous',
@@ -92,6 +93,12 @@ export async function signup(formData: FormData) {
           interests: signupData.options.data.interests || '',
         },
       })
+
+      await sendNewVolunteerNotification({
+        name: volunteer.name,
+        email: volunteer.email,
+        skills: volunteer.skills
+      });
     } catch (dbError) {
       console.error('Error creating volunteer record:', dbError)
       // We don't redirect here because the user is already created in Supabase
