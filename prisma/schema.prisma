@@ -22,6 +22,25 @@ model Program {
   updatedAt   DateTime @updatedAt
 }
 
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  status    String   @default("unread") // unread, read, replied
+  createdAt DateTime @default(now())
+}
+
+model Communication {
+  id        String   @id @default(cuid())
+  recipient String
+  subject   String
+  content   String
+  type      String   @default("manual") // manual, reply, system
+  sentBy    String?  // admin email or system
+  createdAt DateTime @default(now())
+}
+
 model ManagedAdmin {
   id        String    @id @default(cuid())
   email     String    @unique

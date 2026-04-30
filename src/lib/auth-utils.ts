@@ -52,6 +52,12 @@ export async function checkAdmin(requiredLevel: PermissionLevel = 'CONTENT_EDITO
   return user;
 }
 
+export async function getUserEmail() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  return user?.email || null;
+}
+
 export async function getUserRole() {
   const supabase = await createClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
