@@ -30,3 +30,16 @@ CREATE TABLE IF NOT EXISTS "public"."ManagedAdmin" (
 -- Create indices
 CREATE UNIQUE INDEX IF NOT EXISTS "NewsPost_slug_key" ON "public"."NewsPost"("slug");
 CREATE UNIQUE INDEX IF NOT EXISTS "ManagedAdmin_email_key" ON "public"."ManagedAdmin"("email");
+
+-- Create the Communication table if it doesn't exist
+CREATE TABLE IF NOT EXISTS "public"."Communication" (
+    "id" TEXT NOT NULL,
+    "recipient" TEXT NOT NULL,
+    "subject" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
+    "type" TEXT NOT NULL DEFAULT 'manual',
+    "sentBy" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Communication_pkey" PRIMARY KEY ("id")
+);
