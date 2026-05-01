@@ -21,10 +21,11 @@ export async function POST(request: Request) {
       // Try v3 verification first (library handles this)
       try {
         const flw = new Flutterwave(publicKey, secretKey);
-        const verificationData = await flw.Transaction.verify({ id: transaction_id });
+        const verificationResult = await flw.Transaction.verify({ id: transaction_id });
 
-        if (verificationData.status === 'success' && verificationData.data.status === 'successful') {
-          const { amount, currency, customer, meta, tx_ref, id } = verificationData.data;
+        if (verificationResult.status === 'success' && verificationResult.data.status === 'successful') {
+          const verificationData = verificationResult.data;
+          const { amount, currency, customer, meta, tx_ref, id } = verificationData;
 
           // Check for existing donation to avoid duplicates and race conditions
           const existingDonation = await prisma.donation.findUnique({

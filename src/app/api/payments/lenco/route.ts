@@ -122,9 +122,9 @@ export async function POST(request: Request) {
     }
 
     console.warn(`[Lenco API] Verification failed or status not successful:`, JSON.stringify(verificationData));
-    return NextResponse.json({ verified: false, data: verificationData }, { status: 400 });
+    return NextResponse.json({ verified: false }, { status: 400 });
   } catch (error) {
     console.error('Lenco payment verification error:', error);
-    return NextResponse.json({ error: 'Internal Server Error', details: error instanceof Error ? error.message : String(error) }, { status: 500 });
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

@@ -18,11 +18,11 @@ export async function checkAdmin(requiredLevel: PermissionLevel = 'CONTENT_EDITO
     redirect('/login');
   }
 
-  const adminEmail = process.env.ADMIN_EMAIL || 'sobhuxa@gmail.com';
+  const adminEmail = process.env.ADMIN_EMAIL;
   const userRole = user.app_metadata?.role as PermissionLevel || 'USER';
 
   // Super admin and hardcoded admin always have full access
-  const isSuperAdmin = userRole === 'SUPER_ADMIN' || user.email === adminEmail;
+  const isSuperAdmin = userRole === 'SUPER_ADMIN' || (!!adminEmail && user.email === adminEmail);
 
   if (isSuperAdmin) return user;
 
@@ -68,8 +68,8 @@ export async function getUserRole() {
 
   if (!user) return 'USER';
 
-  const adminEmail = process.env.ADMIN_EMAIL || 'sobhuxa@gmail.com';
-  if (user.email === adminEmail) return 'SUPER_ADMIN';
+  const adminEmail = process.env.ADMIN_EMAIL;
+  if (adminEmail && user.email === adminEmail) return 'SUPER_ADMIN';
 
   const role = user.app_metadata?.role as PermissionLevel || 'USER';
   return role;
