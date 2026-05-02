@@ -34,13 +34,11 @@ export async function POST(request: Request) {
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`[Lenco API] Verification request failed: ${response.status}`, errorText);
-      return NextResponse.json({ verified: false, error: 'Lenco verification request failed' }, { status: response.status });
+      console.error(`[Lenco API] Verification request failed: ${response.status}`);
+      return NextResponse.json({ verified: false, error: 'Verification failed' }, { status: 400 });
     }
 
     const verificationData = await response.json();
-    console.log(`[Lenco API] Verification data received`);
 
     if (verificationData.status === true && verificationData.data && verificationData.data.status === 'successful') {
       const { amount, currency, customer, reference: transactionId, mobileMoneyDetails } = verificationData.data;
@@ -121,10 +119,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ verified: true });
     }
 
-    console.warn(`[Lenco API] Verification failed or status not successful:`, JSON.stringify(verificationData));
-    return NextResponse.json({ verified: false, data: verificationData }, { status: 400 });
+    console.warn(`[Lenco API] Verification failed or status not successful`);
+    return NextResponse.json({ verified: false, error: 'Verification failed' }, { status: 400 });
   } catch (error) {
     console.error('Lenco payment verification error:', error);
-    return NextResponse.json({ error: 'Internal Server Error', details: error instanceof Error ? error.message : String(error) }, { status: 500 });
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
