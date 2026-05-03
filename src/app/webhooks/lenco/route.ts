@@ -29,9 +29,12 @@ export async function POST(request: Request) {
       .update(bodyText)
       .digest('hex');
 
-    console.log(`[Lenco Webhook] Signature verification: derived=${hash}, header=${signature}`);
+    console.log(`[Lenco Webhook] Signature verification initiated`);
 
-    if (hash !== signature) {
+    const hashBuffer = Buffer.from(hash, 'hex');
+    const signatureBuffer = Buffer.from(signature, 'hex');
+
+    if (hashBuffer.length !== signatureBuffer.length || !crypto.timingSafeEqual(hashBuffer, signatureBuffer)) {
       console.error('[Lenco Webhook] Invalid signature');
       return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
     }
