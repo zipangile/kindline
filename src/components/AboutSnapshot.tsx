@@ -10,6 +10,9 @@ const AboutSnapshot = ({ imageUrl }: { imageUrl?: string }) => {
             <p className="text-xl text-gray-700 max-w-3xl mx-auto font-medium">
               We go beyond short-term support. We focus on building long-term resilience and independence.
             </p>
+            <p className="text-xl text-gray-700 max-w-3xl mx-auto font-medium mt-4">
+              We do this through:
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">

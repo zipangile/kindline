@@ -1,4 +1,6 @@
 import { Heart, Shield, Users, Star, HandHeart } from "lucide-react";
+import prisma from '@/lib/prisma';
+import AboutSnapshot from '@/components/AboutSnapshot';
 
 export default async function AboutPage(props: {
   params: Promise<Record<string, string | string[] | undefined>>;
@@ -6,6 +8,9 @@ export default async function AboutPage(props: {
 }) {
   await props.params;
   await props.searchParams;
+  const images = await prisma.siteImage.findMany();
+  const getImage = (key: string) => images.find(img => img.key === key)?.url;
+
   const values = [
     { name: "Integrity", description: "Upholding honesty, accountability, and transparency in all we do.", icon: <Shield className="h-6 w-6" /> },
     { name: "Compassion", description: "Serving others with empathy, love, and kindness.", icon: <Heart className="h-6 w-6" /> },
@@ -47,6 +52,8 @@ export default async function AboutPage(props: {
           </div>
         </div>
       </section>
+
+      <AboutSnapshot imageUrl={getImage('about_snapshot') || '/images/volunteers.jpg'} />
 
       {/* Vision & Mission */}
       <section className="py-20 bg-gray-50">
