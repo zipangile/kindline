@@ -1,0 +1,4 @@
+## 2025-05-14 - [Authorization Bypass & Timing Attack Hardening]
+**Vulnerability:** A hardcoded fallback admin email ('sobhuxa@gmail.com') existed in multiple authorization paths. Additionally, the Lenco webhook signature verification was vulnerable to timing attacks and lacked a terminal return on failure.
+**Learning:** Hardcoded fallbacks in authorization logic create "hidden" backdoors that are easily overlooked. `crypto.timingSafeEqual` is the standard for signature verification but requires `try...catch` to handle the `ERR_CRYPTO_TIMING_SAFE_EQUAL_LENGTH` exception thrown when buffers have different lengths.
+**Prevention:** Always rely on environment variables for sensitive configuration; never use hardcoded fallbacks for identity/authorization. Use timing-safe comparison for all cryptographic signatures and ensure all error paths return a failure response immediately.
