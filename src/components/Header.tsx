@@ -45,7 +45,7 @@ const Header = () => {
     <header className="sticky top-0 inset-x-0 flex flex-wrap lg:justify-start lg:flex-nowrap z-50 w-full bg-white border-b border-gray-200 text-sm py-3 lg:py-0">
       <nav className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 lg:flex lg:items-center lg:justify-between" aria-label="Global">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex-none relative h-12 w-32" aria-label="Kindline Care">
+          <Link href="/" className="flex-none relative h-24 w-56" aria-label="Kindline Care">
             <Image src="/logo.png" alt="Kindline Care Foundation" fill className="object-contain" />
           </Link>
           <div className="lg:hidden">
