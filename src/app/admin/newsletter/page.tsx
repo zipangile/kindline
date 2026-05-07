@@ -1,12 +1,12 @@
 export const dynamic = "force-dynamic";
-import prisma from '@/lib/prisma';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { sendNewsletter, deleteSubscriber } from './actions';
-import { Send, Users, Trash2 } from 'lucide-react';
-import { checkAdmin } from '@/lib/auth-utils';
-import { Subscriber } from '@prisma/client';
-import { ConfirmButton } from '@/components/ConfirmButton';
+import prisma from "@/lib/prisma";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+import { sendNewsletter, deleteSubscriber } from "./actions";
+import { Send, Users, Trash2 } from "lucide-react";
+import { checkAdmin } from "@/lib/auth-utils";
+import { Subscriber } from "@prisma/client";
+import { ConfirmButton } from "@/components/ConfirmButton";
 
 export default async function AdminNewsletterPage(props: {
   params: Promise<Record<string, string | string[] | undefined>>;
@@ -14,54 +14,74 @@ export default async function AdminNewsletterPage(props: {
 }) {
   await props.params;
   await props.searchParams;
-  await checkAdmin('CONTENT_EDITOR');
+  await checkAdmin("CONTENT_EDITOR");
 
   let subscribers: Subscriber[] = [];
   try {
     subscribers = await prisma.subscriber.findMany({
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: "desc" },
     });
   } catch (error) {
-    console.error('[AdminNewsletterPage] Error fetching subscribers:', error);
+    console.error("[AdminNewsletterPage] Error fetching subscribers:", error);
   }
 
-  const activeCount = subscribers.filter(s => s.status === 'active').length;
+  const activeCount = subscribers.filter((s) => s.status === "active").length;
 
   return (
     <div className="space-y-8">
-      <h1 className="text-2xl font-bold text-gray-900">Newsletter Management</h1>
+      <h1 className="text-2xl font-bold text-gray-900">
+        Newsletter Management
+      </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="md:col-span-1">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Subscribers</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Active Subscribers
+            </CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{activeCount}</div>
-            <p className="text-xs text-muted-foreground">Total: {subscribers.length}</p>
+            <p className="text-xs text-muted-foreground">
+              Total: {subscribers.length}
+            </p>
           </CardContent>
         </Card>
 
         <Card className="md:col-span-2">
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                    <Send className="h-5 w-5" /> Send New Update
-                </CardTitle>
-            </CardHeader>
-            <CardContent>
-                <form action={sendNewsletter} className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium">Subject</label>
-                        <input name="subject" required className="w-full p-2 border rounded mt-1" placeholder="Latest from Kindline Care" />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium">Content (HTML allowed)</label>
-                        <textarea name="content" required className="w-full p-2 border rounded mt-1 h-48" placeholder="<h1>Hello!</h1><p>Here is what we have been up to...</p>" />
-                    </div>
-                    <Button type="submit" className="w-full">Send to {activeCount} Subscribers</Button>
-                </form>
-            </CardContent>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Send className="h-5 w-5" /> Send New Update
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form action={sendNewsletter} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium">Subject</label>
+                <input
+                  name="subject"
+                  required
+                  className="w-full p-2 border rounded mt-1"
+                  placeholder="Latest from Kindline Care"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium">
+                  Content (HTML allowed)
+                </label>
+                <textarea
+                  name="content"
+                  required
+                  className="w-full p-2 border rounded mt-1 h-48"
+                  placeholder="<h1>Hello!</h1><p>Here is what we have been up to...</p>"
+                />
+              </div>
+              <Button type="submit" className="w-full">
+                Send to {activeCount} Subscribers
+              </Button>
+            </form>
+          </CardContent>
         </Card>
       </div>
 
@@ -82,10 +102,15 @@ export default async function AdminNewsletterPage(props: {
               </thead>
               <tbody>
                 {subscribers.map((sub) => (
-                  <tr key={sub.id} className="border-b hover:bg-gray-50 transition-colors">
+                  <tr
+                    key={sub.id}
+                    className="border-b hover:bg-gray-50 transition-colors"
+                  >
                     <td className="py-2 px-4 font-medium">{sub.email}</td>
                     <td className="py-2 px-4">
-                      <span className={`px-2 py-1 rounded-full text-xs font-bold ${sub.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}>
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-bold ${sub.status === "active" ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-700"}`}
+                      >
                         {sub.status}
                       </span>
                     </td>
@@ -93,7 +118,10 @@ export default async function AdminNewsletterPage(props: {
                       {new Date(sub.createdAt).toLocaleDateString()}
                     </td>
                     <td className="py-2 px-4 text-right">
-                      <form action={deleteSubscriber.bind(null, sub.id)} className="inline">
+                      <form
+                        action={deleteSubscriber.bind(null, sub.id)}
+                        className="inline"
+                      >
                         <ConfirmButton
                           type="submit"
                           className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"

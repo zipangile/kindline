@@ -1,6 +1,6 @@
-import { redirect } from 'next/navigation';
-import Link from 'next/link';
-import { getUserRole, PermissionLevel } from '@/lib/auth-utils';
+import { redirect } from "next/navigation";
+import Link from "next/link";
+import { getUserRole, PermissionLevel } from "@/lib/auth-utils";
 import {
   LayoutDashboard,
   Briefcase,
@@ -14,8 +14,8 @@ import {
   Newspaper,
   ShieldCheck,
   Settings,
-  ExternalLink
-} from 'lucide-react';
+  ExternalLink,
+} from "lucide-react";
 
 export default async function AdminLayout({
   children,
@@ -27,8 +27,8 @@ export default async function AdminLayout({
   await params;
   const role = await getUserRole();
 
-  if (role === 'USER') {
-    redirect('/');
+  if (role === "USER") {
+    redirect("/");
   }
 
   const hasAccess = (required: PermissionLevel[]) => required.includes(role);
@@ -44,8 +44,14 @@ export default async function AdminLayout({
         </div>
 
         <nav className="flex-1 mt-4 px-3 space-y-1">
-          <Link href="/admin" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
-            <LayoutDashboard size={20} className="text-purple-400 group-hover:scale-110 transition-transform" />
+          <Link
+            href="/admin"
+            className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group"
+          >
+            <LayoutDashboard
+              size={20}
+              className="text-purple-400 group-hover:scale-110 transition-transform"
+            />
             <span className="font-medium">Overview</span>
           </Link>
 
@@ -53,23 +59,41 @@ export default async function AdminLayout({
             Management
           </div>
 
-          {hasAccess(['SUPER_ADMIN', 'CONTENT_EDITOR']) && (
-            <Link href="/admin/programmes" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
-              <Briefcase size={20} className="text-green-400 group-hover:scale-110 transition-transform" />
+          {hasAccess(["SUPER_ADMIN", "CONTENT_EDITOR"]) && (
+            <Link
+              href="/admin/programmes"
+              className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group"
+            >
+              <Briefcase
+                size={20}
+                className="text-green-400 group-hover:scale-110 transition-transform"
+              />
               <span className="font-medium">Programmes</span>
             </Link>
           )}
 
-          {hasAccess(['SUPER_ADMIN', 'VOLUNTEER_COORD']) && (
-            <Link href="/admin/volunteers" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
-              <Users size={20} className="text-blue-400 group-hover:scale-110 transition-transform" />
+          {hasAccess(["SUPER_ADMIN", "VOLUNTEER_COORD"]) && (
+            <Link
+              href="/admin/volunteers"
+              className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group"
+            >
+              <Users
+                size={20}
+                className="text-blue-400 group-hover:scale-110 transition-transform"
+              />
               <span className="font-medium">Partners</span>
             </Link>
           )}
 
-          {hasAccess(['SUPER_ADMIN', 'FINANCIAL_ADMIN']) && (
-            <Link href="/admin/donors" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
-              <Heart size={20} className="text-orange-400 group-hover:scale-110 transition-transform" />
+          {hasAccess(["SUPER_ADMIN", "FINANCIAL_ADMIN"]) && (
+            <Link
+              href="/admin/donors"
+              className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group"
+            >
+              <Heart
+                size={20}
+                className="text-orange-400 group-hover:scale-110 transition-transform"
+              />
               <span className="font-medium">Donors (Friends)</span>
             </Link>
           )}
@@ -78,39 +102,75 @@ export default async function AdminLayout({
             Content
           </div>
 
-          {hasAccess(['SUPER_ADMIN', 'CONTENT_EDITOR']) && (
+          {hasAccess(["SUPER_ADMIN", "CONTENT_EDITOR"]) && (
             <>
-              <Link href="/admin/impact" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
-                <BarChart3 size={20} className="text-purple-400 group-hover:scale-110 transition-transform" />
+              <Link
+                href="/admin/impact"
+                className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group"
+              >
+                <BarChart3
+                  size={20}
+                  className="text-purple-400 group-hover:scale-110 transition-transform"
+                />
                 <span className="font-medium">Impact & Stories</span>
               </Link>
 
-              <Link href="/admin/images" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
-                <ImageIcon size={20} className="text-green-400 group-hover:scale-110 transition-transform" />
+              <Link
+                href="/admin/images"
+                className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group"
+              >
+                <ImageIcon
+                  size={20}
+                  className="text-green-400 group-hover:scale-110 transition-transform"
+                />
                 <span className="font-medium">Site Images</span>
               </Link>
 
-              <Link href="/admin/news" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
-                <Newspaper size={20} className="text-orange-400 group-hover:scale-110 transition-transform" />
+              <Link
+                href="/admin/news"
+                className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group"
+              >
+                <Newspaper
+                  size={20}
+                  className="text-orange-400 group-hover:scale-110 transition-transform"
+                />
                 <span className="font-medium">News & Blog</span>
               </Link>
             </>
           )}
 
-          {hasAccess(['SUPER_ADMIN', 'CONTENT_EDITOR', 'FINANCIAL_ADMIN']) && (
+          {hasAccess(["SUPER_ADMIN", "CONTENT_EDITOR", "FINANCIAL_ADMIN"]) && (
             <>
-              <Link href="/admin/inbox" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
-                <Inbox size={20} className="text-blue-400 group-hover:scale-110 transition-transform" />
+              <Link
+                href="/admin/inbox"
+                className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group"
+              >
+                <Inbox
+                  size={20}
+                  className="text-blue-400 group-hover:scale-110 transition-transform"
+                />
                 <span className="font-medium">Inbox</span>
               </Link>
 
-              <Link href="/admin/communications" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
-                <Send size={20} className="text-indigo-400 group-hover:scale-110 transition-transform" />
+              <Link
+                href="/admin/communications"
+                className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group"
+              >
+                <Send
+                  size={20}
+                  className="text-indigo-400 group-hover:scale-110 transition-transform"
+                />
                 <span className="font-medium">Communications</span>
               </Link>
 
-              <Link href="/admin/newsletter" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
-                <Mail size={20} className="text-cyan-400 group-hover:scale-110 transition-transform" />
+              <Link
+                href="/admin/newsletter"
+                className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group"
+              >
+                <Mail
+                  size={20}
+                  className="text-cyan-400 group-hover:scale-110 transition-transform"
+                />
                 <span className="font-medium">Newsletter</span>
               </Link>
             </>
@@ -120,23 +180,38 @@ export default async function AdminLayout({
             System
           </div>
 
-          {hasAccess(['SUPER_ADMIN']) && (
-            <Link href="/admin/admins" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
-              <ShieldCheck size={20} className="text-purple-400 group-hover:scale-110 transition-transform" />
+          {hasAccess(["SUPER_ADMIN"]) && (
+            <Link
+              href="/admin/admins"
+              className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group"
+            >
+              <ShieldCheck
+                size={20}
+                className="text-purple-400 group-hover:scale-110 transition-transform"
+              />
               <span className="font-medium">Permissions</span>
             </Link>
           )}
 
-          {hasAccess(['SUPER_ADMIN', 'FINANCIAL_ADMIN']) && (
-            <Link href="/admin/settings" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
-              <Settings size={20} className="text-gray-400 group-hover:scale-110 transition-transform" />
+          {hasAccess(["SUPER_ADMIN", "FINANCIAL_ADMIN"]) && (
+            <Link
+              href="/admin/settings"
+              className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group"
+            >
+              <Settings
+                size={20}
+                className="text-gray-400 group-hover:scale-110 transition-transform"
+              />
               <span className="font-medium">Settings</span>
             </Link>
           )}
         </nav>
 
         <div className="p-4 border-t border-gray-700/50">
-          <Link href="/" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-400 hover:text-white group">
+          <Link
+            href="/"
+            className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-400 hover:text-white group"
+          >
             <ExternalLink size={18} />
             <span className="text-sm font-medium">View Website</span>
           </Link>
@@ -144,9 +219,7 @@ export default async function AdminLayout({
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-8 overflow-auto">
-        {children}
-      </main>
+      <main className="flex-1 p-8 overflow-auto">{children}</main>
     </div>
   );
 }

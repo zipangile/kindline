@@ -1,7 +1,7 @@
-import prisma from '@/lib/prisma';
-import AdminManagement from './AdminManagement';
-import { checkAdmin } from '@/lib/auth-utils';
-import { ManagedAdmin } from '@prisma/client';
+import prisma from "@/lib/prisma";
+import AdminManagement from "./AdminManagement";
+import { checkAdmin } from "@/lib/auth-utils";
+import { ManagedAdmin } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
 
@@ -11,24 +11,28 @@ export default async function AdminsPage(props: {
 }) {
   await props.params;
   await props.searchParams;
-  await checkAdmin('SUPER_ADMIN');
+  await checkAdmin("SUPER_ADMIN");
 
   let admins: ManagedAdmin[] = [];
   try {
     admins = await prisma.managedAdmin.findMany({
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
     });
   } catch (error) {
-    console.error('[AdminsPage] Error fetching admins:', error);
+    console.error("[AdminsPage] Error fetching admins:", error);
     // Rethrow to trigger the error boundary with a helpful message
-    throw new Error('Failed to load admins. This may be due to a missing database table. Please check server logs.');
+    throw new Error(
+      "Failed to load admins. This may be due to a missing database table. Please check server logs.",
+    );
   }
 
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Admin Permissions</h1>
-        <p className="text-gray-500">Manage dashboard access and permission levels for your team.</p>
+        <p className="text-gray-500">
+          Manage dashboard access and permission levels for your team.
+        </p>
       </div>
       <AdminManagement initialAdmins={admins} />
     </div>

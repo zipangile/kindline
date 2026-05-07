@@ -1,37 +1,37 @@
-'use server';
+"use server";
 
-import prisma from '@/lib/prisma';
-import { revalidatePath } from 'next/cache';
-import { checkAdmin, getUserEmail } from '@/lib/auth-utils';
-import { sendCommunicationEmail } from '@/lib/email';
+import prisma from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
+import { checkAdmin, getUserEmail } from "@/lib/auth-utils";
+import { sendCommunicationEmail } from "@/lib/email";
 
 export async function markMessageAsRead(id: string) {
-  await checkAdmin('CONTENT_EDITOR');
+  await checkAdmin("CONTENT_EDITOR");
   await prisma.contactMessage.update({
     where: { id },
-    data: { status: 'read' },
+    data: { status: "read" },
   });
-  revalidatePath('/admin/inbox');
+  revalidatePath("/admin/inbox");
 }
 
 export async function deleteMessage(id: string) {
-  await checkAdmin('CONTENT_EDITOR');
+  await checkAdmin("CONTENT_EDITOR");
   await prisma.contactMessage.delete({
     where: { id },
   });
-  revalidatePath('/admin/inbox');
+  revalidatePath("/admin/inbox");
 }
 
 export async function replyToMessage(id: string, formData: FormData) {
   const adminEmail = await getUserEmail();
-  await checkAdmin('CONTENT_EDITOR');
+  await checkAdmin("CONTENT_EDITOR");
 
-  const recipient = formData.get('recipient') as string;
-  const subject = formData.get('subject') as string;
-  const content = formData.get('content') as string;
+  const recipient = formData.get("recipient") as string;
+  const subject = formData.get("subject") as string;
+  const content = formData.get("content") as string;
 
   if (!recipient || !subject || !content) {
-    throw new Error('All fields are required.');
+    throw new Error("All fields are required.");
   }
 
   const result = await sendCommunicationEmail(recipient, subject, content);
@@ -42,18 +42,18 @@ export async function replyToMessage(id: string, formData: FormData) {
         recipient,
         subject,
         content,
-        type: 'reply',
+        type: "reply",
         sentBy: adminEmail,
       },
     });
 
     await prisma.contactMessage.update({
       where: { id },
-      data: { status: 'replied' },
+      data: { status: "replied" },
     });
 
-    revalidatePath('/admin/inbox');
+    revalidatePath("/admin/inbox");
   } else {
-    throw new Error('Failed to send reply.');
+    throw new Error("Failed to send reply.");
   }
 }

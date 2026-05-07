@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import Image from 'next/image';
+import Link from "next/link";
+import Image from "next/image";
 
 const Footer = () => {
   return (
@@ -8,39 +8,117 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-1">
             <div className="mb-4 relative h-16">
-              <Image src="/logo.png" alt="Kindline Care Foundation" fill className="object-contain brightness-0 invert" />
+              <Image
+                src="/logo.png"
+                alt="Kindline Care Foundation"
+                fill
+                className="object-contain brightness-0 invert"
+              />
             </div>
             <p className="text-gray-300 text-sm leading-relaxed">
-              Restoring dignity and creating opportunity for orphans, vulnerable children, and widows.
+              Restoring dignity and creating opportunity for orphans, vulnerable
+              children, and widows.
             </p>
           </div>
 
           <div>
-            <h4 className="text-lg font-bold mb-6 text-brand-blue">Quick Links</h4>
+            <h4 className="text-lg font-bold mb-6 text-brand-blue">
+              Quick Links
+            </h4>
             <ul className="space-y-3 text-sm text-gray-300">
-              <li><Link href="/" className="hover:text-brand-blue transition-colors">Home</Link></li>
-              <li><Link href="/about" className="hover:text-brand-blue transition-colors">About Us</Link></li>
-              <li><Link href="/programmes" className="hover:text-brand-blue transition-colors">Programmes</Link></li>
-              <li><Link href="/impact" className="hover:text-brand-blue transition-colors">Impact</Link></li>
-              <li><Link href="/get-involved" className="hover:text-brand-blue transition-colors">Friends</Link></li>
-              <li><Link href="/news" className="hover:text-brand-blue transition-colors">News</Link></li>
-              <li><Link href="/volunteer" className="hover:text-brand-blue transition-colors">Volunteer</Link></li>
-              <li><Link href="/contact" className="hover:text-brand-blue transition-colors">Contact</Link></li>
+              <li>
+                <Link
+                  href="/"
+                  className="hover:text-brand-blue transition-colors"
+                >
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/about"
+                  className="hover:text-brand-blue transition-colors"
+                >
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/programmes"
+                  className="hover:text-brand-blue transition-colors"
+                >
+                  Programmes
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/impact"
+                  className="hover:text-brand-blue transition-colors"
+                >
+                  Impact
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/friends"
+                  className="hover:text-brand-blue transition-colors"
+                >
+                  Friends of Kindline
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/news"
+                  className="hover:text-brand-blue transition-colors"
+                >
+                  News
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/volunteer"
+                  className="hover:text-brand-blue transition-colors"
+                >
+                  Volunteer with us
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contact"
+                  className="hover:text-brand-blue transition-colors"
+                >
+                  Contact
+                </Link>
+              </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-lg font-bold mb-6 text-brand-blue">Contact Info</h4>
+            <h4 className="text-lg font-bold mb-6 text-brand-blue">
+              Contact Info
+            </h4>
             <ul className="space-y-3 text-sm text-gray-300">
-              <li><span className="text-gray-500">Email:</span> info@kindlinecare.org</li>
-              <li><span className="text-gray-500">Phone:</span> +260 958 582 293</li>
-              <li><span className="text-gray-500">Phone:</span> +260 762 595 634</li>
+              <li>
+                <span className="text-gray-500">Email:</span>{" "}
+                info@kindlinecare.org
+              </li>
+              <li>
+                <span className="text-gray-500">Phone:</span> +260 958 582 293
+              </li>
+              <li>
+                <span className="text-gray-500">Phone:</span> +260 762 595 634
+              </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-lg font-bold mb-6 text-brand-blue">Support Our Cause</h4>
-            <p className="text-sm text-gray-300 mb-6">Your support transforms lives and creates lasting impact in our communities.</p>
+            <h4 className="text-lg font-bold mb-6 text-brand-blue">
+              Support Our Cause
+            </h4>
+            <p className="text-sm text-gray-300 mb-6">
+              Your support transforms lives and creates lasting impact in our
+              communities.
+            </p>
             <Link
               href="/get-involved"
               className="inline-block bg-brand-blue text-white px-8 py-3 rounded-full text-sm font-bold hover:bg-brand-blue/90 transition-all shadow-lg"
@@ -51,8 +129,16 @@ const Footer = () => {
         </div>
 
         <div className="mt-16 pt-8 border-t border-gray-800 text-center text-sm text-gray-400">
-          <p>&copy; {new Date().getFullYear()} Kindline Care Foundation. All rights reserved.</p>
-          <p className="mt-2 font-medium text-gray-500">A Registered Non-Profit Organisation . <span className="text-brand-blue">My care. Your care. Our care.</span></p>
+          <p>
+            &copy; {new Date().getFullYear()} Kindline Care Foundation. All
+            rights reserved.
+          </p>
+          <p className="mt-2 font-medium text-gray-500">
+            A Registered Non-Profit Organisation .{" "}
+            <span className="text-brand-blue">
+              My care. Your care. Our care.
+            </span>
+          </p>
         </div>
       </div>
     </footer>

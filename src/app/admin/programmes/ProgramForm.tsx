@@ -1,28 +1,34 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/Button';
-import { createProgram, updateProgram } from './actions';
-import { uploadImage } from '../images/actions';
-import { Loader2, X } from 'lucide-react';
-import { Program } from '@prisma/client';
-import Image from 'next/image';
+import { useState } from "react";
+import { Button } from "@/components/ui/Button";
+import { createProgram, updateProgram } from "./actions";
+import { uploadImage } from "../images/actions";
+import { Loader2, X } from "lucide-react";
+import { Program } from "@prisma/client";
+import Image from "next/image";
 
-export default function ProgramForm({ program, onComplete }: { program?: Program, onComplete?: () => void }) {
+export default function ProgramForm({
+  program,
+  onComplete,
+}: {
+  program?: Program;
+  onComplete?: () => void;
+}) {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [image, setImage] = useState(program?.image || '');
+  const [image, setImage] = useState(program?.image || "");
 
   const handleImageUpload = async (file: File) => {
     try {
       setUploading(true);
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append("file", file);
       const url = await uploadImage(formData);
       setImage(url);
     } catch (error) {
       console.error(error);
-      alert('Failed to upload image');
+      alert("Failed to upload image");
     } finally {
       setUploading(false);
     }
@@ -32,7 +38,7 @@ export default function ProgramForm({ program, onComplete }: { program?: Program
     e.preventDefault();
     setLoading(true);
     const formData = new FormData(e.currentTarget);
-    if (image) formData.append('image', image);
+    if (image) formData.append("image", image);
 
     try {
       if (program?.id) {
@@ -42,12 +48,12 @@ export default function ProgramForm({ program, onComplete }: { program?: Program
       }
       if (onComplete) onComplete();
     } catch (error) {
-      if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
-          if (onComplete) onComplete();
-          return;
+      if (error instanceof Error && error.message === "NEXT_REDIRECT") {
+        if (onComplete) onComplete();
+        return;
       }
       console.error(error);
-      alert('Failed to save programme');
+      alert("Failed to save programme");
     } finally {
       setLoading(false);
     }
@@ -57,7 +63,9 @@ export default function ProgramForm({ program, onComplete }: { program?: Program
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Title</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Title
+          </label>
           <input
             name="title"
             type="text"
@@ -68,7 +76,9 @@ export default function ProgramForm({ program, onComplete }: { program?: Program
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Category</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Category
+          </label>
           <select
             name="category"
             defaultValue={program?.category || "Economic Empowerment"}
@@ -81,7 +91,9 @@ export default function ProgramForm({ program, onComplete }: { program?: Program
         </div>
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700">Description</label>
+        <label className="block text-sm font-medium text-gray-700">
+          Description
+        </label>
         <textarea
           name="description"
           required
@@ -93,7 +105,9 @@ export default function ProgramForm({ program, onComplete }: { program?: Program
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Programme Image</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Programme Image
+        </label>
         <div className="flex items-center gap-4">
           <input
             type="file"
@@ -104,14 +118,16 @@ export default function ProgramForm({ program, onComplete }: { program?: Program
             }}
             className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
           />
-          {uploading && <Loader2 className="animate-spin text-blue-600" size={20} />}
+          {uploading && (
+            <Loader2 className="animate-spin text-blue-600" size={20} />
+          )}
         </div>
         {image && (
           <div className="mt-4 h-32 w-full max-w-xs relative rounded-xl overflow-hidden border">
             <Image src={image} alt="Preview" fill className="object-cover" />
             <button
               type="button"
-              onClick={() => setImage('')}
+              onClick={() => setImage("")}
               className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full text-[10px]"
             >
               <X size={12} />
@@ -121,23 +137,41 @@ export default function ProgramForm({ program, onComplete }: { program?: Program
       </div>
 
       <div className="flex items-center gap-4">
-         <div className="flex items-center">
-            <input name="status" type="radio" value="live" defaultChecked={program?.status !== 'archived'} className="h-4 w-4 text-blue-600" />
-            <label className="ml-2 block text-sm text-gray-700">Live</label>
-         </div>
-         <div className="flex items-center">
-            <input name="status" type="radio" value="archived" defaultChecked={program?.status === 'archived'} className="h-4 w-4 text-blue-600" />
-            <label className="ml-2 block text-sm text-gray-700">Archived</label>
-         </div>
+        <div className="flex items-center">
+          <input
+            name="status"
+            type="radio"
+            value="live"
+            defaultChecked={program?.status !== "archived"}
+            className="h-4 w-4 text-blue-600"
+          />
+          <label className="ml-2 block text-sm text-gray-700">Live</label>
+        </div>
+        <div className="flex items-center">
+          <input
+            name="status"
+            type="radio"
+            value="archived"
+            defaultChecked={program?.status === "archived"}
+            className="h-4 w-4 text-blue-600"
+          />
+          <label className="ml-2 block text-sm text-gray-700">Archived</label>
+        </div>
       </div>
       <div className="flex justify-end gap-3 pt-2">
-          {program?.id && (
-            <Button variant="outline" type="button" onClick={() => window.history.back()}>Cancel</Button>
-          )}
-          <Button type="submit" disabled={loading || uploading}>
-            {loading && <Loader2 className="animate-spin mr-2" size={18} />}
-            {program?.id ? 'Update Programme' : 'Save Programme'}
+        {program?.id && (
+          <Button
+            variant="outline"
+            type="button"
+            onClick={() => window.history.back()}
+          >
+            Cancel
           </Button>
+        )}
+        <Button type="submit" disabled={loading || uploading}>
+          {loading && <Loader2 className="animate-spin mr-2" size={18} />}
+          {program?.id ? "Update Programme" : "Save Programme"}
+        </Button>
       </div>
     </form>
   );

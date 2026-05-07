@@ -1,7 +1,7 @@
-import prisma from '@/lib/prisma';
-import NewsForm from '../../NewsForm';
-import { notFound } from 'next/navigation';
-import { checkAdmin } from '@/lib/auth-utils';
+import prisma from "@/lib/prisma";
+import NewsForm from "../../NewsForm";
+import { notFound } from "next/navigation";
+import { checkAdmin } from "@/lib/auth-utils";
 
 export default async function EditNewsPostPage({
   params,
@@ -12,7 +12,7 @@ export default async function EditNewsPostPage({
 }) {
   const { id } = await params;
   await searchParams;
-  await checkAdmin('CONTENT_EDITOR');
+  await checkAdmin("CONTENT_EDITOR");
 
   let post;
   try {
@@ -20,7 +20,7 @@ export default async function EditNewsPostPage({
       where: { id },
     });
   } catch (error) {
-    console.error('[EditNewsPostPage] Error fetching post:', error);
+    console.error("[EditNewsPostPage] Error fetching post:", error);
     throw error;
   }
 

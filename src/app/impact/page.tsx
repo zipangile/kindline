@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma';
+import prisma from "@/lib/prisma";
 import ImpactSnapshot from "@/components/ImpactSnapshot";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
@@ -13,11 +13,11 @@ export default async function ImpactPage(props: {
   await props.searchParams;
 
   const stats = await prisma.impactStat.findMany({
-    orderBy: { order: 'asc' }
+    orderBy: { order: "asc" },
   });
 
   const stories = await prisma.impactStory.findMany({
-    orderBy: { order: 'asc' }
+    orderBy: { order: "asc" },
   });
 
   return (
@@ -38,16 +38,19 @@ export default async function ImpactPage(props: {
       {/* CTA */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-6 text-gray-900">Be Part of the Impact</h2>
+          <h2 className="text-3xl font-bold mb-6 text-gray-900">
+            Be Part of the Impact
+          </h2>
           <p className="text-xl text-gray-600 mb-10 leading-relaxed">
-            Your generosity fuels these stories of transformation. Join us in creating a brighter future for those who need it most.
+            Your generosity fuels these stories of transformation. Join us in
+            creating a brighter future for those who need it most.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
               <Link href="/get-involved">Donate Now</Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <Link href="/volunteer">Partner With Us</Link>
+              <Link href="/volunteer">Volunteer with us</Link>
             </Button>
           </div>
         </div>

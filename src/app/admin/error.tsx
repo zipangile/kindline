@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { Button } from '@/components/ui/Button';
-import { AlertCircle, RefreshCcw } from 'lucide-react';
+import { useEffect } from "react";
+import { Button } from "@/components/ui/Button";
+import { AlertCircle, RefreshCcw } from "lucide-react";
 
 export default function AdminError({
   error,
@@ -13,7 +13,7 @@ export default function AdminError({
 }) {
   useEffect(() => {
     // Log the error to an error reporting service
-    console.error('Admin Dashboard Error:', error);
+    console.error("Admin Dashboard Error:", error);
   }, [error]);
 
   return (
@@ -23,7 +23,9 @@ export default function AdminError({
           <AlertCircle size={32} />
         </div>
 
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Something went wrong</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          Something went wrong
+        </h2>
         <p className="text-gray-500 mb-6">
           An error occurred while loading this part of the admin dashboard.
           {error.message && (
@@ -48,7 +50,7 @@ export default function AdminError({
           </Button>
           <Button
             variant="outline"
-            onClick={() => window.location.href = '/admin'}
+            onClick={() => (window.location.href = "/admin")}
           >
             Back to Dashboard
           </Button>

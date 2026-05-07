@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Plus, X } from 'lucide-react';
-import ProgramForm from './ProgramForm';
+import { useState } from "react";
+import { Plus, X } from "lucide-react";
+import ProgramForm from "./ProgramForm";
 
 export default function AddProgramForm() {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,8 +14,12 @@ export default function AddProgramForm() {
         onClick={() => setIsOpen(!isOpen)}
       >
         <h2 className="text-lg font-bold flex items-center gap-2">
-          {isOpen ? <X size={20} className="text-red-500" /> : <Plus size={20} className="text-green-500" />}
-          {isOpen ? 'Cancel New Programme' : 'Add New Programme'}
+          {isOpen ? (
+            <X size={20} className="text-red-500" />
+          ) : (
+            <Plus size={20} className="text-green-500" />
+          )}
+          {isOpen ? "Cancel New Programme" : "Add New Programme"}
         </h2>
         {!isOpen && (
           <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm font-medium">

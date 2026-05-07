@@ -1,11 +1,15 @@
-'use server';
+"use server";
 
-import prisma from '@/lib/prisma';
-import { revalidatePath } from 'next/cache';
-import { checkAdmin } from '@/lib/auth-utils';
-import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+import prisma from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
+import { checkAdmin } from "@/lib/auth-utils";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
-export type AdminRole = 'SUPER_ADMIN' | 'CONTENT_EDITOR' | 'FINANCIAL_ADMIN' | 'VOLUNTEER_COORD';
+export type AdminRole =
+  | "SUPER_ADMIN"
+  | "CONTENT_EDITOR"
+  | "FINANCIAL_ADMIN"
+  | "VOLUNTEER_COORD";
 
 // Helper to get Supabase Admin client
 const getSupabaseAdmin = () => {
@@ -13,15 +17,17 @@ const getSupabaseAdmin = () => {
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!serviceKey) {
-    console.warn('SUPABASE_SERVICE_ROLE_KEY not found. Metadata sync will fail.');
+    console.warn(
+      "SUPABASE_SERVICE_ROLE_KEY not found. Metadata sync will fail.",
+    );
     return null;
   }
 
   return createSupabaseClient(url, serviceKey, {
     auth: {
       autoRefreshToken: false,
-      persistSession: false
-    }
+      persistSession: false,
+    },
   });
 };
 
@@ -30,13 +36,16 @@ async function syncUserRole(email: string, role: AdminRole | null) {
   if (!adminClient) return;
 
   // 1. Find user by email
-  const { data: { users }, error: listError } = await adminClient.auth.admin.listUsers();
+  const {
+    data: { users },
+    error: listError,
+  } = await adminClient.auth.admin.listUsers();
   if (listError) {
-    console.error('Error listing users:', listError);
+    console.error("Error listing users:", listError);
     return;
   }
 
-  const user = users.find(u => u.email === email);
+  const user = users.find((u) => u.email === email);
   if (!user) {
     console.log(`User with email ${email} not found in Supabase Auth yet.`);
     return;
@@ -45,16 +54,16 @@ async function syncUserRole(email: string, role: AdminRole | null) {
   // 2. Update app_metadata
   const { error: updateError } = await adminClient.auth.admin.updateUserById(
     user.id,
-    { app_metadata: { role: role || 'USER' } }
+    { app_metadata: { role: role || "USER" } },
   );
 
   if (updateError) {
-    console.error('Error updating user metadata:', updateError);
+    console.error("Error updating user metadata:", updateError);
   }
 }
 
 export async function addAdmin(email: string, name: string, role: AdminRole) {
-  await checkAdmin('SUPER_ADMIN');
+  await checkAdmin("SUPER_ADMIN");
 
   const admin = await prisma.managedAdmin.upsert({
     where: { email },
@@ -64,12 +73,12 @@ export async function addAdmin(email: string, name: string, role: AdminRole) {
 
   await syncUserRole(email, role);
 
-  revalidatePath('/admin/admins');
+  revalidatePath("/admin/admins");
   return admin;
 }
 
 export async function updateAdminRole(id: string, role: AdminRole) {
-  await checkAdmin('SUPER_ADMIN');
+  await checkAdmin("SUPER_ADMIN");
 
   const admin = await prisma.managedAdmin.update({
     where: { id },
@@ -78,12 +87,12 @@ export async function updateAdminRole(id: string, role: AdminRole) {
 
   await syncUserRole(admin.email, role);
 
-  revalidatePath('/admin/admins');
+  revalidatePath("/admin/admins");
   return admin;
 }
 
 export async function removeAdmin(id: string) {
-  await checkAdmin('SUPER_ADMIN');
+  await checkAdmin("SUPER_ADMIN");
 
   const admin = await prisma.managedAdmin.delete({
     where: { id },
@@ -91,5 +100,5 @@ export async function removeAdmin(id: string) {
 
   await syncUserRole(admin.email, null);
 
-  revalidatePath('/admin/admins');
+  revalidatePath("/admin/admins");
 }

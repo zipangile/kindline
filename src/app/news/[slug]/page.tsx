@@ -1,9 +1,9 @@
-import prisma from '@/lib/prisma';
-import { notFound } from 'next/navigation';
-import { Calendar, ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { Button } from '@/components/ui/Button';
+import prisma from "@/lib/prisma";
+import { notFound } from "next/navigation";
+import { Calendar, ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
+import { Button } from "@/components/ui/Button";
 
 export const dynamic = "force-dynamic";
 
@@ -22,11 +22,11 @@ export default async function NewsPostDetailPage({
   const post = await prisma.newsPost.findFirst({
     where: {
       slug: {
-        equals: slug,
+        equals: slug.trim(),
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        mode: 'insensitive'
-      }
+        mode: "insensitive",
+      },
     },
   });
 
@@ -35,7 +35,7 @@ export default async function NewsPostDetailPage({
     notFound();
   }
 
-  if (!post.published && process.env.NODE_ENV === 'production') {
+  if (!post.published && process.env.NODE_ENV === "production") {
     console.log(`[NewsPostDetailPage] Post not published: ${slug}`);
     notFound();
   }
@@ -55,7 +55,9 @@ export default async function NewsPostDetailPage({
             <span className="mx-3 text-gray-300">•</span>
             <span className="flex items-center">
               <Calendar className="h-4 w-4 mr-1" />
-              {post?.publishedAt ? new Date(post.publishedAt).toLocaleDateString() : 'Draft'}
+              {post?.publishedAt
+                ? new Date(post.publishedAt).toLocaleDateString()
+                : "Draft"}
             </span>
           </div>
           <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 leading-tight">
@@ -65,12 +67,17 @@ export default async function NewsPostDetailPage({
 
         {post?.image && (
           <div className="mb-12 aspect-video relative rounded-3xl overflow-hidden shadow-lg border">
-            <Image src={post.image} alt={post.title} fill className="object-cover" />
+            <Image
+              src={post.image}
+              alt={post.title}
+              fill
+              className="object-cover"
+            />
           </div>
         )}
 
         <div className="prose prose-lg max-w-none prose-blue">
-          {post?.content.split('\n').map((para, i) => (
+          {post?.content.split("\n").map((para, i) => (
             <p key={i} className="mb-6 text-gray-700 leading-relaxed">
               {para}
             </p>

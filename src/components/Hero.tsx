@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import { Button } from '@/components/ui/Button';
+import Link from "next/link";
+import { Button } from "@/components/ui/Button";
 
 const Hero = ({ imageUrl }: { imageUrl?: string }) => {
   return (
@@ -9,7 +9,7 @@ const Hero = ({ imageUrl }: { imageUrl?: string }) => {
           className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
           style={{ backgroundImage: `url(${imageUrl})` }}
         >
-           <div className="absolute inset-0 bg-black/50"></div>
+          <div className="absolute inset-0 bg-black/50"></div>
         </div>
       ) : (
         <div className="absolute inset-0 bg-black/40"></div>
@@ -22,13 +22,23 @@ const Hero = ({ imageUrl }: { imageUrl?: string }) => {
             Creating Opportunity.
           </h1>
           <p className="text-xl md:text-2xl text-white/90 mb-12 leading-relaxed max-w-2xl font-medium">
-            Transforming children, widows, and communities in Zambia through education, skills, and sustainable support.
+            Transforming children, widows, and communities in Zambia through
+            education, skills, and sustainable support.
           </p>
           <div className="flex flex-col sm:flex-row gap-5">
-            <Button size="lg" className="bg-brand-orange hover:bg-brand-orange/90 text-white border-none px-10 h-14 text-lg font-bold rounded-full shadow-xl transition-all hover:scale-105" asChild>
+            <Button
+              size="lg"
+              className="bg-brand-orange hover:bg-brand-orange/90 text-white border-none px-10 h-14 text-lg font-bold rounded-full shadow-xl transition-all hover:scale-105"
+              asChild
+            >
               <Link href="/get-involved">Donate Now</Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-white border-2 border-white hover:bg-white hover:text-brand-blue px-10 h-14 text-lg font-bold rounded-full shadow-lg transition-all" asChild>
+            <Button
+              size="lg"
+              variant="outline"
+              className="text-white border-2 border-white hover:bg-white hover:text-brand-blue px-10 h-14 text-lg font-bold rounded-full shadow-lg transition-all"
+              asChild
+            >
               <Link href="/impact">See Our Impact</Link>
             </Button>
           </div>

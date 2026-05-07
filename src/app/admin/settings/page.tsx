@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
-import prisma from '@/lib/prisma';
-import { updatePaymentSettings } from './actions';
-import { checkAdmin } from '@/lib/auth-utils';
+import prisma from "@/lib/prisma";
+import { updatePaymentSettings } from "./actions";
+import { checkAdmin } from "@/lib/auth-utils";
 
 export default async function AdminSettingsPage(props: {
   params: Promise<Record<string, string | string[] | undefined>>;
@@ -9,27 +9,30 @@ export default async function AdminSettingsPage(props: {
 }) {
   await props.params;
   await props.searchParams;
-  await checkAdmin('SUPER_ADMIN');
+  await checkAdmin("SUPER_ADMIN");
 
   let settings;
   try {
     settings = await prisma.paymentSettings.findFirst();
   } catch (error) {
-    console.error('[AdminSettingsPage] Error fetching payment settings:', error);
+    console.error(
+      "[AdminSettingsPage] Error fetching payment settings:",
+      error,
+    );
   }
 
   if (!settings) {
     settings = {
-      flutterwaveSecret: '',
-      flutterwavePublic: '',
-      flutterwaveEncrypt: '',
-      lencoSecret: '',
-      lencoPublic: '',
-      lencoSignatureKey: '',
-      lencoBaseUrl: 'https://sandbox.lenco.co/access/v2/',
-      flutterwavePlanZMW: '',
-      flutterwavePlanUSD: '',
-      notificationEmail: '',
+      flutterwaveSecret: "",
+      flutterwavePublic: "",
+      flutterwaveEncrypt: "",
+      lencoSecret: "",
+      lencoPublic: "",
+      lencoSignatureKey: "",
+      lencoBaseUrl: "https://sandbox.lenco.co/access/v2/",
+      flutterwavePlanZMW: "",
+      flutterwavePlanUSD: "",
+      notificationEmail: "",
     };
   }
 
@@ -45,55 +48,83 @@ export default async function AdminSettingsPage(props: {
           </h2>
           <div className="grid grid-cols-1 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Public Key</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Public Key
+              </label>
               <input
                 name="flutterwavePublic"
                 type="text"
-                defaultValue={settings.flutterwavePublic || ''}
-                placeholder={process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY || ""}
+                defaultValue={settings.flutterwavePublic || ""}
+                placeholder={
+                  process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY || ""
+                }
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
               />
-              {process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY && <p className="text-xs text-green-600 mt-1">✓ Public key is set in environment</p>}
+              {process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY && (
+                <p className="text-xs text-green-600 mt-1">
+                  ✓ Public key is set in environment
+                </p>
+              )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Secret Key</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Secret Key
+              </label>
               <input
                 name="flutterwaveSecret"
                 type="password"
-                defaultValue={settings.flutterwaveSecret || ''}
-                placeholder={process.env.FLUTTERWAVE_SECRET_KEY ? "********" : ""}
+                defaultValue={settings.flutterwaveSecret || ""}
+                placeholder={
+                  process.env.FLUTTERWAVE_SECRET_KEY ? "********" : ""
+                }
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
               />
-              {process.env.FLUTTERWAVE_SECRET_KEY && <p className="text-xs text-green-600 mt-1">✓ Secret key is set in environment</p>}
+              {process.env.FLUTTERWAVE_SECRET_KEY && (
+                <p className="text-xs text-green-600 mt-1">
+                  ✓ Secret key is set in environment
+                </p>
+              )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Encryption Key</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Encryption Key
+              </label>
               <input
                 name="flutterwaveEncrypt"
                 type="text"
-                defaultValue={settings.flutterwaveEncrypt || ''}
-                placeholder={process.env.FLUTTERWAVE_ENCRYPTION_KEY ? "********" : ""}
+                defaultValue={settings.flutterwaveEncrypt || ""}
+                placeholder={
+                  process.env.FLUTTERWAVE_ENCRYPTION_KEY ? "********" : ""
+                }
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
               />
-              {process.env.FLUTTERWAVE_ENCRYPTION_KEY && <p className="text-xs text-green-600 mt-1">✓ Encryption key is set in environment</p>}
+              {process.env.FLUTTERWAVE_ENCRYPTION_KEY && (
+                <p className="text-xs text-green-600 mt-1">
+                  ✓ Encryption key is set in environment
+                </p>
+              )}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Monthly Plan ID (ZMW)</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Monthly Plan ID (ZMW)
+                </label>
                 <input
                   name="flutterwavePlanZMW"
                   type="text"
-                  defaultValue={settings.flutterwavePlanZMW || ''}
+                  defaultValue={settings.flutterwavePlanZMW || ""}
                   placeholder="e.g. 78508"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Monthly Plan ID (USD/GBP/CAD/EUR)</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Monthly Plan ID (USD/GBP/CAD/EUR)
+                </label>
                 <input
                   name="flutterwavePlanUSD"
                   type="text"
-                  defaultValue={settings.flutterwavePlanUSD || ''}
+                  defaultValue={settings.flutterwavePlanUSD || ""}
                   placeholder="e.g. 78509"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
                 />
@@ -109,50 +140,82 @@ export default async function AdminSettingsPage(props: {
           </h2>
           <div className="grid grid-cols-1 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Public Key</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Public Key
+              </label>
               <input
                 name="lencoPublic"
                 type="text"
-                defaultValue={settings.lencoPublic || ''}
+                defaultValue={settings.lencoPublic || ""}
                 placeholder={process.env.LENCO_PUBLIC_KEY || ""}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
               />
-              {process.env.LENCO_PUBLIC_KEY && <p className="text-xs text-green-600 mt-1">✓ Public key is set in environment</p>}
+              {process.env.LENCO_PUBLIC_KEY && (
+                <p className="text-xs text-green-600 mt-1">
+                  ✓ Public key is set in environment
+                </p>
+              )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Secret Key</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Secret Key
+              </label>
               <input
                 name="lencoSecret"
                 type="password"
-                defaultValue={settings.lencoSecret || ''}
+                defaultValue={settings.lencoSecret || ""}
                 placeholder={process.env.LENCO_SECRET_KEY ? "********" : ""}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
               />
-              {process.env.LENCO_SECRET_KEY && <p className="text-xs text-green-600 mt-1">✓ Secret key is set in environment</p>}
+              {process.env.LENCO_SECRET_KEY && (
+                <p className="text-xs text-green-600 mt-1">
+                  ✓ Secret key is set in environment
+                </p>
+              )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Signature Key / Webhook Secret</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Signature Key / Webhook Secret
+              </label>
               <input
                 name="lencoSignatureKey"
                 type="password"
-                defaultValue={settings.lencoSignatureKey || ''}
+                defaultValue={settings.lencoSignatureKey || ""}
                 placeholder={process.env.LENCO_SIGNATURE_KEY ? "********" : ""}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
               />
-              {process.env.LENCO_SIGNATURE_KEY && <p className="text-xs text-green-600 mt-1">✓ Signature key is set in environment</p>}
-              <p className="text-xs text-gray-500 mt-1">This should be the SHA256 hash of your Lenco API Token.</p>
+              {process.env.LENCO_SIGNATURE_KEY && (
+                <p className="text-xs text-green-600 mt-1">
+                  ✓ Signature key is set in environment
+                </p>
+              )}
+              <p className="text-xs text-gray-500 mt-1">
+                This should be the SHA256 hash of your Lenco API Token.
+              </p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Base URL</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Base URL
+              </label>
               <input
                 name="lencoBaseUrl"
                 type="text"
-                defaultValue={settings.lencoBaseUrl || ''}
-                placeholder={process.env.LENCO_BASE_URL || 'https://api.lenco.co/access/v2/'}
+                defaultValue={settings.lencoBaseUrl || ""}
+                placeholder={
+                  process.env.LENCO_BASE_URL ||
+                  "https://api.lenco.co/access/v2/"
+                }
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
               />
-              {process.env.LENCO_BASE_URL && <p className="text-xs text-green-600 mt-1">✓ Base URL is set in environment</p>}
-              <p className="text-xs text-gray-500 mt-1">Use https://sandbox.lenco.co/access/v2/ for testing or https://api.lenco.co/access/v2/ for production.</p>
+              {process.env.LENCO_BASE_URL && (
+                <p className="text-xs text-green-600 mt-1">
+                  ✓ Base URL is set in environment
+                </p>
+              )}
+              <p className="text-xs text-gray-500 mt-1">
+                Use https://sandbox.lenco.co/access/v2/ for testing or
+                https://api.lenco.co/access/v2/ for production.
+              </p>
             </div>
           </div>
         </div>
@@ -164,21 +227,29 @@ export default async function AdminSettingsPage(props: {
           </h2>
           <div className="grid grid-cols-1 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Transaction Notification Email</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Transaction Notification Email
+              </label>
               <input
                 name="notificationEmail"
                 type="email"
-                defaultValue={settings.notificationEmail || ''}
+                defaultValue={settings.notificationEmail || ""}
                 placeholder="admin@kindlinecare.org"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
               />
-              <p className="text-xs text-gray-500 mt-1">Email address(es) that should receive alerts for new donations (separate by commas for multiple).</p>
+              <p className="text-xs text-gray-500 mt-1">
+                Email address(es) that should receive alerts for new donations
+                (separate by commas for multiple).
+              </p>
             </div>
           </div>
         </div>
 
         <div className="flex justify-end">
-          <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 font-bold">
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 font-bold"
+          >
             Update Settings
           </button>
         </div>

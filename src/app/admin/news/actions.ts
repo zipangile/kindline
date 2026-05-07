@@ -1,9 +1,9 @@
-'use server';
+"use server";
 
-import prisma from '@/lib/prisma';
-import { revalidatePath } from 'next/cache';
-import { checkAdmin } from '@/lib/auth-utils';
-import { redirect } from 'next/navigation';
+import prisma from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
+import { checkAdmin } from "@/lib/auth-utils";
+import { redirect } from "next/navigation";
 
 export async function createNewsPost(data: {
   title: string;
@@ -14,7 +14,7 @@ export async function createNewsPost(data: {
   image?: string;
   published: boolean;
 }) {
-  await checkAdmin('CONTENT_EDITOR');
+  await checkAdmin("CONTENT_EDITOR");
 
   await prisma.newsPost.create({
     data: {
@@ -23,22 +23,25 @@ export async function createNewsPost(data: {
     },
   });
 
-  revalidatePath('/news');
+  revalidatePath("/news");
   revalidatePath(`/news/${data.slug}`);
-  revalidatePath('/admin/news');
-  redirect('/admin/news');
+  revalidatePath("/admin/news");
+  redirect("/admin/news");
 }
 
-export async function updateNewsPost(id: string, data: {
-  title: string;
-  slug: string;
-  content: string;
-  excerpt?: string;
-  category: string;
-  image?: string;
-  published: boolean;
-}) {
-  await checkAdmin('CONTENT_EDITOR');
+export async function updateNewsPost(
+  id: string,
+  data: {
+    title: string;
+    slug: string;
+    content: string;
+    excerpt?: string;
+    category: string;
+    image?: string;
+    published: boolean;
+  },
+) {
+  await checkAdmin("CONTENT_EDITOR");
 
   const existing = await prisma.newsPost.findUnique({ where: { id } });
 
@@ -57,17 +60,17 @@ export async function updateNewsPost(id: string, data: {
     },
   });
 
-  revalidatePath('/news');
+  revalidatePath("/news");
   revalidatePath(`/news/${data.slug}`);
   if (existing && existing.slug !== data.slug) {
     revalidatePath(`/news/${existing.slug}`);
   }
-  revalidatePath('/admin/news');
-  redirect('/admin/news');
+  revalidatePath("/admin/news");
+  redirect("/admin/news");
 }
 
 export async function deleteNewsPost(id: string) {
-  await checkAdmin('CONTENT_EDITOR');
+  await checkAdmin("CONTENT_EDITOR");
 
   const post = await prisma.newsPost.findUnique({ where: { id } });
 
@@ -75,9 +78,9 @@ export async function deleteNewsPost(id: string) {
     where: { id },
   });
 
-  revalidatePath('/news');
+  revalidatePath("/news");
   if (post) {
     revalidatePath(`/news/${post.slug}`);
   }
-  revalidatePath('/admin/news');
+  revalidatePath("/admin/news");
 }

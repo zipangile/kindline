@@ -17,7 +17,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Kindline Care Foundation",
-  description: "Restoring dignity and creating opportunity for orphans, vulnerable children, and widows.",
+  description:
+    "Restoring dignity and creating opportunity for orphans, vulnerable children, and widows.",
 };
 
 export default async function RootLayout(props: {
@@ -32,9 +33,7 @@ export default async function RootLayout(props: {
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
         <Header />
-        <main className="flex-grow">
-          {children}
-        </main>
+        <main className="flex-grow">{children}</main>
         <Footer />
         <PrelineScript />
       </body>

@@ -1,8 +1,8 @@
-import { createClient } from '@/utils/supabase/server';
-import { redirect } from 'next/navigation';
-import prisma from '@/lib/prisma';
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
+import prisma from "@/lib/prisma";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export default async function DashboardRedirect(props: {
   params: Promise<Record<string, string | string[] | undefined>>;
@@ -11,19 +11,22 @@ export default async function DashboardRedirect(props: {
   await props.params;
   await props.searchParams;
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect('/login');
+    redirect("/login");
   }
 
   const userId = user.id;
-  const adminEmail = process.env.ADMIN_EMAIL || 'sobhuxa@gmail.com';
-  const isAdmin = user.app_metadata?.role === 'admin' || user.email === adminEmail;
+  const adminEmail = process.env.ADMIN_EMAIL || "sobhuxa@gmail.com";
+  const isAdmin =
+    user.app_metadata?.role === "admin" || user.email === adminEmail;
 
   // Admin check
   if (isAdmin) {
-    redirect('/admin');
+    redirect("/admin");
   }
 
   let volunteer = null;
@@ -43,23 +46,23 @@ export default async function DashboardRedirect(props: {
       });
     }
   } catch (error) {
-    console.error('Database error in dashboard redirect:', error);
+    console.error("Database error in dashboard redirect:", error);
     dbError = true;
   }
 
   // Handle role-based redirection outside try-catch
   if (dbError) {
-    redirect('/volunteer');
+    redirect("/volunteer");
   }
 
   if (volunteer) {
-    redirect('/dashboard/volunteer');
+    redirect("/dashboard/volunteer");
   }
 
   if (donation) {
-    redirect('/dashboard/friend');
+    redirect("/dashboard/friend");
   }
 
   // Default redirect if no specific role found
-  redirect('/volunteer');
+  redirect("/volunteer");
 }

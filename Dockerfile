@@ -28,11 +28,10 @@ ENV NEXT_TELEMETRY_DISABLED 1
 # of pages that fetch data from Prisma. This ensures static generation succeeds.
 # Since we now use PostgreSQL in schema.prisma, we must override the provider
 # during build to use SQLite for this temporary step.
-RUN export DATABASE_URL="file:./build.db" && \
-    export DIRECT_URL="file:./build.db" && \
-    cp prisma/schema.prisma prisma/schema.prisma.original && \
-    sed -i 's/provider = "postgresql"/provider = "sqlite"/' prisma/schema.prisma && \
-    sed -i '/directUrl = env("DIRECT_URL")/d' prisma/schema.prisma && \
+RUN cp prisma/schema.prisma prisma/schema.prisma.original && \
+    sed -i 's/provider *= *"postgresql"/provider = "sqlite"/' prisma/schema.prisma && \
+    sed -i '/url *= *env("DATABASE_URL")/c\  url = "file:./build.db"' prisma/schema.prisma && \
+    sed -i '/directUrl *= *env("DIRECT_URL")/d' prisma/schema.prisma && \
     npx prisma generate && \
     npx prisma db push --accept-data-loss && \
     npm run build && \

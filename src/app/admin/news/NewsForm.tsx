@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/Button';
-import { createNewsPost, updateNewsPost } from './actions';
-import { uploadImage } from '../images/actions';
-import { Loader2 } from 'lucide-react';
-import Image from 'next/image';
+import { useState } from "react";
+import { Button } from "@/components/ui/Button";
+import { createNewsPost, updateNewsPost } from "./actions";
+import { uploadImage } from "../images/actions";
+import { Loader2 } from "lucide-react";
+import Image from "next/image";
 
 interface NewsPost {
   id?: string;
@@ -21,14 +21,14 @@ interface NewsPost {
 export default function NewsForm({ post }: { post?: NewsPost }) {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [image, setImage] = useState(post?.image || '');
-  const [slug, setSlug] = useState(post?.slug || '');
+  const [image, setImage] = useState(post?.image || "");
+  const [slug, setSlug] = useState(post?.slug || "");
 
   const handleImageUpload = async (file: File) => {
     try {
       setUploading(true);
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append("file", file);
       const url = await uploadImage(formData);
       setImage(url);
     } catch (error) {
@@ -36,7 +36,7 @@ export default function NewsForm({ post }: { post?: NewsPost }) {
       if (error instanceof Error) {
         alert(error.message);
       } else {
-        alert('Failed to upload image');
+        alert("Failed to upload image");
       }
     } finally {
       setUploading(false);
@@ -49,13 +49,13 @@ export default function NewsForm({ post }: { post?: NewsPost }) {
     const formData = new FormData(e.currentTarget);
 
     const data = {
-      title: formData.get('title') as string,
-      slug: formData.get('slug') as string,
-      content: formData.get('content') as string,
-      excerpt: formData.get('excerpt') as string,
-      category: formData.get('category') as string,
+      title: formData.get("title") as string,
+      slug: formData.get("slug") as string,
+      content: formData.get("content") as string,
+      excerpt: formData.get("excerpt") as string,
+      category: formData.get("category") as string,
       image,
-      published: formData.get('published') === 'on',
+      published: formData.get("published") === "on",
     };
 
     try {
@@ -67,35 +67,47 @@ export default function NewsForm({ post }: { post?: NewsPost }) {
     } catch (error) {
       // Server-side redirects in Next.js result in an error on the client side
       // with a specific digest or message. If it's a redirect, we don't want to alert error.
-      if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
-          return;
+      if (error instanceof Error && error.message === "NEXT_REDIRECT") {
+        return;
       }
       console.error(error);
-      alert('Failed to save post');
+      alert("Failed to save post");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-4xl bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-6 max-w-4xl bg-white p-8 rounded-2xl shadow-sm border border-gray-100"
+    >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-bold text-gray-700 mb-2">Title</label>
+          <label className="block text-sm font-bold text-gray-700 mb-2">
+            Title
+          </label>
           <input
             name="title"
             defaultValue={post?.title}
             required
             className="w-full p-3 border rounded-xl"
             onChange={(e) => {
-               if (!post?.id) {
-                 setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''));
-               }
+              if (!post?.id) {
+                setSlug(
+                  e.target.value
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, "-")
+                    .replace(/(^-|-$)/g, ""),
+                );
+              }
             }}
           />
         </div>
         <div>
-          <label className="block text-sm font-bold text-gray-700 mb-2">Slug</label>
+          <label className="block text-sm font-bold text-gray-700 mb-2">
+            Slug
+          </label>
           <input
             name="slug"
             value={slug}
@@ -108,15 +120,23 @@ export default function NewsForm({ post }: { post?: NewsPost }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-bold text-gray-700 mb-2">Category</label>
-          <select name="category" defaultValue={post?.category || 'Field Update'} className="w-full p-3 border rounded-xl">
+          <label className="block text-sm font-bold text-gray-700 mb-2">
+            Category
+          </label>
+          <select
+            name="category"
+            defaultValue={post?.category || "Field Update"}
+            className="w-full p-3 border rounded-xl"
+          >
             <option value="Field Update">Field Update</option>
             <option value="Announcement">Announcement</option>
             <option value="Event">Event</option>
           </select>
         </div>
         <div>
-          <label className="block text-sm font-bold text-gray-700 mb-2">Published</label>
+          <label className="block text-sm font-bold text-gray-700 mb-2">
+            Published
+          </label>
           <div className="flex items-center h-12">
             <input
               type="checkbox"
@@ -124,16 +144,20 @@ export default function NewsForm({ post }: { post?: NewsPost }) {
               defaultChecked={post?.published}
               className="w-6 h-6 text-blue-600 rounded"
             />
-            <span className="ml-2 text-sm text-gray-600">Visible on public website</span>
+            <span className="ml-2 text-sm text-gray-600">
+              Visible on public website
+            </span>
           </div>
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-bold text-gray-700 mb-2">Excerpt</label>
+        <label className="block text-sm font-bold text-gray-700 mb-2">
+          Excerpt
+        </label>
         <textarea
           name="excerpt"
-          defaultValue={post?.excerpt || ''}
+          defaultValue={post?.excerpt || ""}
           rows={2}
           className="w-full p-3 border rounded-xl"
           placeholder="Brief summary for list view"
@@ -141,7 +165,9 @@ export default function NewsForm({ post }: { post?: NewsPost }) {
       </div>
 
       <div>
-        <label className="block text-sm font-bold text-gray-700 mb-2">Content</label>
+        <label className="block text-sm font-bold text-gray-700 mb-2">
+          Content
+        </label>
         <textarea
           name="content"
           defaultValue={post?.content}
@@ -153,7 +179,9 @@ export default function NewsForm({ post }: { post?: NewsPost }) {
       </div>
 
       <div>
-        <label className="block text-sm font-bold text-gray-700 mb-2">Featured Image</label>
+        <label className="block text-sm font-bold text-gray-700 mb-2">
+          Featured Image
+        </label>
         <div className="flex items-center gap-4">
           <input
             type="file"
@@ -164,14 +192,16 @@ export default function NewsForm({ post }: { post?: NewsPost }) {
             }}
             className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
           />
-          {uploading && <Loader2 className="animate-spin text-blue-600" size={20} />}
+          {uploading && (
+            <Loader2 className="animate-spin text-blue-600" size={20} />
+          )}
         </div>
         {image && (
           <div className="mt-4 h-48 w-full max-w-md relative rounded-xl overflow-hidden border">
             <Image src={image} alt="Preview" fill className="object-cover" />
             <button
               type="button"
-              onClick={() => setImage('')}
+              onClick={() => setImage("")}
               className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full text-xs"
             >
               Remove
@@ -181,10 +211,16 @@ export default function NewsForm({ post }: { post?: NewsPost }) {
       </div>
 
       <div className="pt-4 border-t flex justify-end gap-4">
-        <Button variant="outline" type="button" onClick={() => window.history.back()}>Cancel</Button>
+        <Button
+          variant="outline"
+          type="button"
+          onClick={() => window.history.back()}
+        >
+          Cancel
+        </Button>
         <Button type="submit" disabled={loading || uploading}>
           {loading && <Loader2 className="animate-spin mr-2" size={18} />}
-          {post?.id ? 'Update Post' : 'Create Post'}
+          {post?.id ? "Update Post" : "Create Post"}
         </Button>
       </div>
     </form>
