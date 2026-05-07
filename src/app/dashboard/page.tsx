@@ -18,8 +18,8 @@ export default async function DashboardRedirect(props: {
   }
 
   const userId = user.id;
-  const adminEmail = process.env.ADMIN_EMAIL || 'sobhuxa@gmail.com';
-  const isAdmin = user.app_metadata?.role === 'admin' || user.email === adminEmail;
+  const adminEmail = process.env.ADMIN_EMAIL;
+  const isAdmin = user.app_metadata?.role === 'admin' || (adminEmail && user.email === adminEmail);
 
   // Admin check
   if (isAdmin) {
