@@ -5,7 +5,6 @@ import CoreValues from '@/components/CoreValues';
 import ProgramsOverview from '@/components/ProgramsOverview';
 import GetInvolvedSnapshot from '@/components/GetInvolvedSnapshot';
 import ImpactSnapshot from '@/components/ImpactSnapshot';
-import LoveCareShare from '@/components/LoveCareShare';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import prisma from '@/lib/prisma';
@@ -40,8 +39,6 @@ export default async function Home(props: {
       <CoreValues />
 
       <GetInvolvedSnapshot />
-
-      <LoveCareShare />
 
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

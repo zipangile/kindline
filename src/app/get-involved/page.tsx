@@ -1,6 +1,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Landmark, Users, Heart, Building2, ArrowRight } from "lucide-react";
 import DonationForm from "@/components/DonationForm";
+import LoveCareShare from "@/components/LoveCareShare";
 import prisma from "@/lib/prisma";
 import Script from "next/script";
 import Link from "next/link";
@@ -176,6 +177,8 @@ export default async function GetInvolvedPage(props: {
           </div>
         </div>
       </section>
+
+      <LoveCareShare />
 
     </div>
   );
