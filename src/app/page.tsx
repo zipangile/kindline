@@ -41,29 +41,6 @@ export default async function Home(props: {
 
       <GetInvolvedSnapshot />
 
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-brand-blue rounded-[3rem] p-8 md:p-20 text-center text-white relative overflow-hidden shadow-2xl">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-brand-orange/20 rounded-full -mr-32 -mt-32"></div>
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-purple/20 rounded-full -ml-32 -mb-32"></div>
-            <div className="relative z-10">
-              <h2 className="text-3xl md:text-5xl font-extrabold mb-8">Be Part of the Impact</h2>
-              <p className="text-xl text-white/90 mb-12 max-w-2xl mx-auto font-medium">
-                Your generosity fuels these stories of transformation. Join us in creating a brighter future for those who need it most.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-5 justify-center">
-                <Button size="lg" className="bg-brand-orange hover:bg-brand-orange/90 text-white border-none px-10 h-14 text-lg font-bold rounded-full" asChild>
-                  <Link href="/get-involved">Donate Now</Link>
-                </Button>
-                <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-brand-blue px-10 h-14 text-lg font-bold rounded-full" asChild>
-                  <Link href="/volunteer">Partner With Us</Link>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <LoveCareShare />
 
       <section className="py-24 bg-white">

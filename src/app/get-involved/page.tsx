@@ -31,7 +31,7 @@ export default async function GetInvolvedPage(props: {
 
   const ways = [
     {
-      title: "Partner with Us",
+      title: "Individual Volunteering",
       description: "Join our team of dedicated volunteers and partners. Whether you have specific skills or just a heart to serve, we have a place for you.",
       icon: <Users className="h-6 w-6 text-blue-600" />,
       href: "/volunteer",
@@ -45,7 +45,7 @@ export default async function GetInvolvedPage(props: {
       action: "Contact Us"
     },
     {
-      title: "Partner with Us",
+      title: "Corporate Partnerships",
       description: "We partner with companies, churches, and other organizations to amplify our impact. Let's work together for sustainable change.",
       icon: <Building2 className="h-6 w-6 text-blue-600" />,
       href: "/contact",

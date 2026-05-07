@@ -14,7 +14,8 @@ export default async function NewsPostDetailPage({
   params: Promise<{ slug: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const { slug } = await params;
+  const { slug: rawSlug } = await params;
+  const slug = rawSlug.trim();
   await searchParams;
 
   console.log(`[NewsPostDetailPage] Fetching post with slug: ${slug}`);
