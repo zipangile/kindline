@@ -58,9 +58,9 @@ export default async function VolunteerDashboard(props: {
           <p className="text-blue-100">Welcome back, {volunteer.name}!</p>
         </div>
 
-        <div className="p-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="md:col-span-2">
+        <div className="p-4 sm:p-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
               <h2 className="text-xl font-bold text-gray-900 mb-6">Application Status</h2>
               <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
                 <div className="flex items-center justify-between mb-4">

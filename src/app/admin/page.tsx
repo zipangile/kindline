@@ -91,8 +91,8 @@ export default async function AdminPage(props: {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-        <div className="xl:col-span-2 bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 bg-white p-4 sm:p-8 rounded-2xl shadow-sm border border-gray-100">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-xl font-bold text-gray-900">Quick Management</h2>
           </div>
@@ -165,7 +165,7 @@ export default async function AdminPage(props: {
           </div>
         </div>
 
-        <div className="bg-[#1e293b] p-8 rounded-2xl shadow-sm text-white">
+        <div className="bg-[#1e293b] p-4 sm:p-8 rounded-2xl shadow-sm text-white">
           <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
             <PlusCircle size={20} className="text-green-400" />
             Rapid Actions

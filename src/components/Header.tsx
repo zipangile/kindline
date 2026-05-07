@@ -42,13 +42,13 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 inset-x-0 flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full bg-white border-b border-gray-200 text-sm py-3 md:py-0">
-      <nav className="max-w-7xl w-full mx-auto px-4 md:flex md:items-center md:justify-between" aria-label="Global">
+    <header className="sticky top-0 inset-x-0 flex flex-wrap lg:justify-start lg:flex-nowrap z-50 w-full bg-white border-b border-gray-200 text-sm py-3 lg:py-0">
+      <nav className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 lg:flex lg:items-center lg:justify-between" aria-label="Global">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex-none relative h-12 w-32" aria-label="Kindline Care">
             <Image src="/logo.png" alt="Kindline Care Foundation" fill className="object-contain" />
           </Link>
-          <div className="md:hidden">
+          <div className="lg:hidden">
             <button
               type="button"
               className="hs-collapse-toggle p-2 inline-flex justify-center items-center gap-2 rounded-lg border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm"
@@ -65,15 +65,15 @@ const Header = () => {
             </button>
           </div>
         </div>
-        <div id="navbar-collapse-with-animation" className="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow md:block">
-          <div className="flex flex-col gap-y-4 gap-x-0 mt-5 md:flex-row md:items-center md:justify-end md:gap-y-0 md:gap-x-7 md:mt-0 md:ps-7">
+        <div id="navbar-collapse-with-animation" className="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow lg:block">
+          <div className="flex flex-col gap-y-4 gap-x-0 mt-5 lg:flex-row lg:items-center lg:justify-end lg:gap-y-0 lg:gap-x-7 lg:mt-0 lg:ps-7">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
                 className={`font-semibold ${
                   pathname === link.href ? 'text-brand-blue' : 'text-gray-700 hover:text-brand-blue'
-                } md:py-6 transition-colors`}
+                } lg:py-6 transition-colors`}
                 aria-current={pathname === link.href ? 'page' : undefined}
               >
                 {link.name}
@@ -81,16 +81,16 @@ const Header = () => {
             ))}
 
             {!user ? (
-              <div className="flex items-center gap-x-3">
+              <div className="flex flex-col lg:flex-row lg:items-center gap-y-4 lg:gap-y-0 lg:gap-x-3 mt-4 lg:mt-0">
                 <Link href="/login" className="text-gray-700 hover:text-brand-blue font-semibold transition-colors">Log in</Link>
-                <Link href="/signup" className="text-gray-700 hover:text-brand-blue font-semibold border-2 border-gray-200 px-4 py-1.5 rounded-full transition-all">Sign up</Link>
+                <Link href="/signup" className="text-white bg-brand-blue hover:bg-blue-700 px-6 py-2 rounded-full font-bold transition-all text-center">Sign up</Link>
               </div>
             ) : (
-              <div className="flex items-center gap-x-4">
+              <div className="flex flex-col lg:flex-row lg:items-center gap-y-4 lg:gap-y-0 lg:gap-x-4 mt-4 lg:mt-0">
                 <Link href="/dashboard" className="text-gray-700 hover:text-brand-blue font-semibold transition-colors">Dashboard</Link>
                 <button
                   onClick={handleSignOut}
-                  className="text-gray-700 hover:text-brand-blue font-semibold transition-colors"
+                  className="text-gray-700 hover:text-brand-blue font-semibold transition-colors text-left"
                 >
                   Log out
                 </button>

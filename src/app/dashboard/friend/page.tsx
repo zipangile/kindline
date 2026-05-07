@@ -51,15 +51,15 @@ export default async function FriendDashboard(props: {
           <p className="text-purple-100">Thank you for your generous support!</p>
         </div>
 
-        <div className="p-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-            <div className="bg-purple-50 p-6 rounded-xl border border-purple-100 md:col-span-2">
+        <div className="p-4 sm:p-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <div className="bg-purple-50 p-6 rounded-xl border border-purple-100 sm:col-span-2">
               <p className="text-sm font-medium text-purple-600 uppercase tracking-wider">Total Contribution</p>
               <div className="flex flex-wrap gap-4 mt-2">
                 {Object.entries(totalsByCurrency).length > 0 ? (
                   Object.entries(totalsByCurrency).map(([curr, amt]) => (
                     <div key={curr} className="flex flex-col">
-                      <span className="text-3xl font-bold text-purple-900">{curr} {amt.toLocaleString()}</span>
+                      <span className="text-2xl sm:text-3xl font-bold text-purple-900">{curr} {amt.toLocaleString()}</span>
                     </div>
                   ))
                 ) : (
@@ -73,10 +73,10 @@ export default async function FriendDashboard(props: {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            <div className="md:col-span-2">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+            <div className="lg:col-span-2">
               <h2 className="text-xl font-bold text-gray-900 mb-6">Donation History</h2>
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto -mx-4 sm:mx-0">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
