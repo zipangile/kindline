@@ -75,7 +75,7 @@ export default function ProgramForm({ program, onComplete }: { program?: Program
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
           >
             <option value="Economic Empowerment">Economic Empowerment</option>
-            <option value="Child Welfare">Child Welfare</option>
+            <option value="Child Wellbeing">Child Wellbeing</option>
             <option value="Sustainable Impact">Sustainable Impact</option>
           </select>
         </div>

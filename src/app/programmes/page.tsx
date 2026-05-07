@@ -18,7 +18,7 @@ export default async function ProgramsPage(props: {
   const getIcon = (category: string) => {
     switch (category) {
       case 'Economic Empowerment': return <Sprout size={120} strokeWidth={1} />;
-      case 'Child Welfare': return <HeartPulse size={120} strokeWidth={1} />;
+      case 'Child Wellbeing': return <HeartPulse size={120} strokeWidth={1} />;
       case 'Sustainable Impact': return <Landmark size={120} strokeWidth={1} />;
       default: return <Sprout size={120} strokeWidth={1} />;
     }
@@ -27,7 +27,7 @@ export default async function ProgramsPage(props: {
   const getBadgeColor = (category: string) => {
     switch (category) {
       case 'Economic Empowerment': return 'bg-blue-100 text-blue-800';
-      case 'Child Welfare': return 'bg-green-100 text-green-800';
+      case 'Child Wellbeing': return 'bg-green-100 text-green-800';
       case 'Sustainable Impact': return 'bg-orange-100 text-orange-800';
       default: return 'bg-gray-100 text-gray-800';
     }
@@ -36,7 +36,7 @@ export default async function ProgramsPage(props: {
   const getBgColor = (category: string) => {
     switch (category) {
       case 'Economic Empowerment': return 'bg-blue-50';
-      case 'Child Welfare': return 'bg-green-50';
+      case 'Child Wellbeing': return 'bg-green-50';
       case 'Sustainable Impact': return 'bg-orange-50';
       default: return 'bg-gray-50';
     }
@@ -132,7 +132,7 @@ export default async function ProgramsPage(props: {
                    {programme.image ? (
                       <Image src={programme.image} alt={programme.title} fill className="object-cover" />
                    ) : (
-                      <div className={`${programme.category === 'Economic Empowerment' ? 'text-blue-200' : programme.category === 'Child Welfare' ? 'text-green-200' : 'text-orange-200'}`}>
+                      <div className={`${programme.category === 'Economic Empowerment' ? 'text-blue-200' : programme.category === 'Child Wellbeing' ? 'text-green-200' : 'text-orange-200'}`}>
                         {getIcon(programme.category)}
                       </div>
                    )}
