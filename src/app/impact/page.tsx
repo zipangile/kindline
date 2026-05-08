@@ -47,7 +47,7 @@ export default async function ImpactPage(props: {
               <Link href="/get-involved">Donate Now</Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <Link href="/volunteer">Partner With Us</Link>
+              <Link href="/contact">Partner With Us</Link>
             </Button>
           </div>
         </div>
