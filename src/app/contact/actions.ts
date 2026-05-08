@@ -5,13 +5,26 @@ import { sendContactNotification } from '@/lib/email';
 import { revalidatePath } from 'next/cache';
 
 export async function submitContactForm(formData: FormData) {
-  const firstName = formData.get('firstName') as string;
-  const lastName = formData.get('lastName') as string;
-  const email = formData.get('email') as string;
-  const message = formData.get('message') as string;
+  const firstName = (formData.get('firstName') as string || '').trim();
+  const lastName = (formData.get('lastName') as string || '').trim();
+  const email = (formData.get('email') as string || '').trim().toLowerCase();
+  const message = (formData.get('message') as string || '').trim();
 
+  // Security: Input validation and length limits
   if (!email || !message) {
     return { success: false, error: 'Email and message are required.' };
+  }
+
+  if (firstName.length > 100 || lastName.length > 100) {
+    return { success: false, error: 'Name is too long (max 100 characters per field).' };
+  }
+
+  if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { success: false, error: 'Invalid email address.' };
+  }
+
+  if (message.length > 5000) {
+    return { success: false, error: 'Message is too long (max 5000 characters).' };
   }
 
   const fullName = `${firstName} ${lastName}`.trim() || 'Anonymous';

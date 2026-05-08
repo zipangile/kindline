@@ -12,3 +12,8 @@
 **Vulnerability:** Payment verification API was returning raw `verificationData` from the gateway and internal error `details` (including stack traces/messages) in 400 and 500 responses.
 **Learning:** Verbose error messages and raw gateway responses can leak architectural details or sensitive transaction metadata to clients.
 **Prevention:** Return generic error messages to the client and log detailed information server-side only.
+
+## 2025-05-15 - Missing Input Validation and Length Limits in Server Actions
+**Vulnerability:** Multiple server actions (newsletter subscription, contact form, volunteer registration) lacked input validation and length limits, making the system vulnerable to malformed data, potential DoS through large payloads, and lack of data integrity.
+**Learning:** Server actions in Next.js are public endpoints and must be treated with the same security rigor as traditional API routes. Relying on frontend validation is insufficient.
+**Prevention:** Always implement server-side validation (regex, length checks) for all user-provided data in server actions before database operations.
