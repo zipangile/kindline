@@ -13,7 +13,7 @@
   - Enterprise Circles (Peer Support Groups)
 
 ## Program 2: Child Support & Development
-- **Category:** Child Welbeing
+- **Category:** Child Wellbeing
 - **Description:** We are dedicated to ensuring that every child has the chance to succeed. Our comprehensive program offers education support, literacy development, nutrition, and wellbeing for orphans and vulnerable children, enabling them to become confident and responsible members of their communities.
 - **Education Focus:**
   - Enrolment Support
