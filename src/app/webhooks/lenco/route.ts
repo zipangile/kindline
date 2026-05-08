@@ -23,16 +23,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing signature' }, { status: 401 });
     }
 
-    // Verify signature
+    // Verify signature timing-safely
     const hash = crypto
       .createHmac('sha512', signatureKey)
       .update(bodyText)
       .digest('hex');
 
-    console.log(`[Lenco Webhook] Signature verification: derived=${hash}, header=${signature}`);
-
-    if (hash !== signature) {
-      console.error('[Lenco Webhook] Invalid signature');
+    try {
+      if (!crypto.timingSafeEqual(Buffer.from(hash), Buffer.from(signature))) {
+        console.error('[Lenco Webhook] Invalid signature');
+        return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
+      }
+    } catch {
+      console.error('[Lenco Webhook] Signature verification error (likely length mismatch)');
       return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
     }
 
