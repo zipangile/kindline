@@ -73,6 +73,8 @@ export default async function GetInvolvedPage(props: {
         </div>
       </section>
 
+      <LoveCareShare />
+
       {/* Donation Section */}
       <section className="py-24 dark:bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -80,27 +82,30 @@ export default async function GetInvolvedPage(props: {
             <div>
               <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-8">Your Gift, Their Future.</h2>
               <p className="text-xl text-gray-600 dark:text-gray-300 mb-10 leading-relaxed font-medium">
-                Every kwacha you give helps a child access education and empowers a widow to rebuild her life with dignity, hope, and independence. Here is exactly what your support provides:
+                Every kwacha you give helps a child access education and empowers a widow to rebuild her life with dignity, hope, and independence.
+              </p>
+              <p className="text-lg text-gray-700 dark:text-gray-300 mb-10 font-bold">
+                Here is exactly what your support could do:
               </p>
 
               <div className="space-y-6 mb-12">
                 <div className="p-6 bg-brand-blue/5 rounded-2xl border-l-4 border-brand-blue">
                   <h3 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                    <span className="text-brand-blue">K750 / $40</span> — School Supplies for a Child
+                    <span className="text-brand-blue">K750 / $40</span> — School Supplies for one Child
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-400">Provide essential school supplies including books, uniform, shoes, and a school bag; giving a child the chance to learn with confidence.</p>
-                </div>
-                <div className="p-6 bg-brand-purple/5 rounded-2xl border-l-4 border-brand-purple">
-                  <h3 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                    <span className="text-brand-purple">K1000 / $50</span> — Skills Training Support
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400">Support our widows’ meetings within the community, where women receive skills training, encouragement, and practical support to rebuild their lives and support their families.</p>
+                  <p className="text-gray-600 dark:text-gray-400">Could provide essential school supplies including books, uniform, shoes, and a school bag; giving a child the chance to learn with confidence.</p>
                 </div>
                 <div className="p-6 bg-brand-green/5 rounded-2xl border-l-4 border-brand-green">
                   <h3 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
                     <span className="text-brand-green">K1500 / $80</span> — Business Starter Kit
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-400">Empower a widow with the tools, resources, and basic training needed to start a small, sustainable business.</p>
+                  <p className="text-gray-600 dark:text-gray-400">Could empower a widow with the tools, resources, and basic training needed to start a small, sustainable business.</p>
+                </div>
+                <div className="p-6 bg-brand-purple/5 rounded-2xl border-l-4 border-brand-purple">
+                  <h3 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                    <span className="text-brand-purple">K1000 / $50</span> — Skills Training Support
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400">Could support widows’ meetings within the community, where women receive skills training, encouragement, and practical support to rebuild their lives and support their families.</p>
                 </div>
               </div>
 
@@ -177,8 +182,6 @@ export default async function GetInvolvedPage(props: {
           </div>
         </div>
       </section>
-
-      <LoveCareShare />
 
     </div>
   );
