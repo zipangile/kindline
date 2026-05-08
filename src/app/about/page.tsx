@@ -109,7 +109,7 @@ export default async function AboutPage(props: {
                 Kindline Care Foundation was born out of a deep concern for the increasing number of vulnerable individuals in our communities who lack basic support systems. We recognized that while charity provides immediate relief, true restoration comes from empowerment and sustainable community integration.
               </p>
               <p className="text-lg text-blue-100 mt-4">
-                Since our inception, we have grown from a small group of concerned citizens to registered Non-Profit Organisation , impacting hundreds of lives through education, skills training, and community-led initiatives.
+                Since our inception, we have grown from a small group of concerned citizens to registered Non-Profit Organisation , impacting lives through education, skills training, and community-led initiatives.
               </p>
             </div>
           </div>
