@@ -8,8 +8,16 @@ import { Resend } from 'resend';
 const resend = new Resend(process.env.RESEND_API_KEY || 're_placeholder');
 
 export async function subscribe(formData: FormData) {
-  const email = formData.get('email') as string;
-  if (!email) return;
+  const rawEmail = formData.get('email') as string;
+  if (!rawEmail) return;
+
+  const email = rawEmail.trim().toLowerCase();
+
+  // Basic validation: length and regex
+  if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    console.error('Invalid email subscription attempt:', email);
+    return;
+  }
 
   try {
     await prisma.subscriber.upsert({
@@ -24,8 +32,17 @@ export async function subscribe(formData: FormData) {
 
 export async function sendNewsletter(formData: FormData) {
   await checkAdmin('CONTENT_EDITOR');
-  const subject = formData.get('subject') as string;
-  const content = formData.get('content') as string;
+  const rawSubject = formData.get('subject') as string;
+  const rawContent = formData.get('content') as string;
+
+  // Security: Basic sanitization and length limits
+  if (rawSubject.length > 200) {
+    throw new Error('Subject is too long');
+  }
+
+  // Remove <script> tags to prevent basic XSS in email clients that might execute them
+  const content = rawContent.replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gim, "");
+  const subject = rawSubject;
 
   const subscribers = await prisma.subscriber.findMany({
     where: { status: 'active' },
