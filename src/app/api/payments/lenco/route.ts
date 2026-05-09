@@ -9,8 +9,9 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { reference, supabaseUserId, phone } = body;
 
-    if (!reference) {
-      return NextResponse.json({ error: 'Missing reference' }, { status: 400 });
+    // Security: Validate reference to prevent injection or SSRF-like behavior
+    if (!reference || typeof reference !== 'string' || reference.length > 100 || !/^[a-zA-Z0-9-_]+$/.test(reference)) {
+      return NextResponse.json({ error: 'Invalid reference' }, { status: 400 });
     }
 
     const settings = await prisma.paymentSettings.findFirst();

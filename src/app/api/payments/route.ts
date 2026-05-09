@@ -9,6 +9,11 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { transaction_id, status } = body;
 
+    // Security: Validate transaction_id to prevent injection
+    if (!transaction_id || (typeof transaction_id !== 'string' && typeof transaction_id !== 'number') || String(transaction_id).length > 100 || !/^[a-zA-Z0-9-_]+$/.test(String(transaction_id))) {
+      return NextResponse.json({ error: 'Invalid transaction ID' }, { status: 400 });
+    }
+
     const settings = await prisma.paymentSettings.findFirst();
     const secretKey = settings?.flutterwaveSecret || process.env.FLUTTERWAVE_SECRET_KEY;
     const publicKey = settings?.flutterwavePublic || process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY;
