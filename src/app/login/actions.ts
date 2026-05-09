@@ -7,14 +7,19 @@ import { createClient } from '@/utils/supabase/server'
 export async function login(formData: FormData) {
   const supabase = await createClient()
 
-  // type-casting here for convenience
-  // in practice, you should use a validation library
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
+  const email = (formData.get('email') as string || '').trim().toLowerCase();
+  const password = formData.get('password') as string;
+
+  // Security: Basic input validation
+  if (!email || !password) {
+    redirect(`/login?error=${encodeURIComponent('Email and password are required')}`);
   }
 
-  const { error } = await supabase.auth.signInWithPassword(data)
+  if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    redirect(`/login?error=${encodeURIComponent('Invalid email address')}`);
+  }
+
+  const { error } = await supabase.auth.signInWithPassword({ email, password })
 
   if (error) {
     redirect(`/login?error=${encodeURIComponent(error.message)}`)
@@ -30,9 +35,22 @@ import { sendNewVolunteerNotification } from '@/lib/email'
 export async function signup(formData: FormData) {
   const supabase = await createClient()
 
-  const email = formData.get('email') as string
-  const password = formData.get('password') as string
-  const role = formData.get('role') as string
+  const email = (formData.get('email') as string || '').trim().toLowerCase();
+  const password = formData.get('password') as string;
+  const role = formData.get('role') as string;
+
+  // Security: Input validation and length limits
+  if (!email || !password) {
+    redirect(`/signup?error=${encodeURIComponent('Email and password are required')}${role ? `&role=${role}` : ''}`);
+  }
+
+  if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    redirect(`/signup?error=${encodeURIComponent('Invalid email address')}${role ? `&role=${role}` : ''}`);
+  }
+
+  if (password.length < 6 || password.length > 100) {
+    redirect(`/signup?error=${encodeURIComponent('Password must be between 6 and 100 characters')}${role ? `&role=${role}` : ''}`);
+  }
 
   const isVolunteer = role === 'volunteer'
 
@@ -60,15 +78,36 @@ export async function signup(formData: FormData) {
   }
 
   if (isVolunteer) {
+    const name = (formData.get('name') as string || '').trim();
+    const phone = (formData.get('phone') as string || '').trim();
+    const location = (formData.get('location') as string || '').trim();
+    const availability = (formData.get('availability') as string || '').trim();
+    const skills = (formData.get('skills') as string || '').trim();
+    const experience = (formData.get('experience') as string || '').trim();
+    const interests = (formData.get('interests') as string || '').trim();
+
+    // Security: Volunteer-specific validation
+    if (!name) {
+      redirect(`/signup?error=${encodeURIComponent('Name is required for volunteers')}&role=volunteer`);
+    }
+
+    if (name.length > 200) throw new Error('Name is too long');
+    if (phone.length > 50) throw new Error('Phone number is too long');
+    if (location.length > 200) throw new Error('Location is too long');
+    if (availability.length > 500) throw new Error('Availability is too long');
+    if (skills.length > 1000) throw new Error('Skills description is too long');
+    if (experience.length > 2000) throw new Error('Experience description is too long');
+    if (interests.length > 1000) throw new Error('Interests description is too long');
+
     signupData.options.data = {
       role: 'volunteer',
-      name: formData.get('name') as string,
-      phone: formData.get('phone') as string,
-      location: formData.get('location') as string,
-      availability: formData.get('availability') as string,
-      skills: formData.get('skills') as string,
-      experience: formData.get('experience') as string,
-      interests: formData.get('interests') as string,
+      name,
+      phone,
+      location,
+      availability,
+      skills,
+      experience,
+      interests,
     }
   }
 

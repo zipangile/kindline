@@ -36,7 +36,7 @@ export async function uploadImage(formData: FormData) {
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
   const fileExt = file.name.split('.').pop();
-  const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+  const fileName = `${crypto.randomUUID()}.${fileExt}`;
   const filePath = `site-images/${fileName}`;
 
   const { error } = await supabase.storage
