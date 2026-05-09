@@ -38,6 +38,8 @@ RUN export DATABASE_URL="file:./build.db" && \
     npm run build && \
     cp prisma/schema.prisma.original prisma/schema.prisma && \
     npx prisma generate && \
+    mkdir -p .next/standalone/prisma && \
+    cp prisma/schema.prisma .next/standalone/prisma/schema.prisma && \
     mkdir -p .next/standalone/node_modules/.prisma/client && \
     cp -R node_modules/.prisma/client/* .next/standalone/node_modules/.prisma/client/
 
