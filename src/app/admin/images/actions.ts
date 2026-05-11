@@ -23,6 +23,18 @@ export async function uploadImage(formData: FormData) {
   const file = formData.get('file') as File;
   if (!file) throw new Error('No file provided');
 
+  // Security: File size and type validation
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+  const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+
+  if (file.size > MAX_FILE_SIZE) {
+    throw new Error('File size exceeds 5MB limit');
+  }
+
+  if (!ALLOWED_TYPES.includes(file.type)) {
+    throw new Error('Invalid file type. Only JPG, PNG, WEBP, and GIF are allowed.');
+  }
+
   const { createClient } = await import('@supabase/supabase-js');
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;

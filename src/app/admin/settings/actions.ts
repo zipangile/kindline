@@ -17,6 +17,23 @@ export async function updatePaymentSettings(formData: FormData) {
   const lencoBaseUrl = formData.get('lencoBaseUrl') as string;
   const notificationEmail = formData.get('notificationEmail') as string;
 
+  // Security: Input validation and length limits
+  const fields = [
+    flutterwaveSecret, flutterwavePublic, flutterwaveEncrypt,
+    flutterwavePlanZMW, flutterwavePlanUSD, lencoSecret,
+    lencoPublic, lencoSignatureKey, lencoBaseUrl
+  ];
+
+  for (const field of fields) {
+    if (field && field.length > 500) {
+      throw new Error('Configuration field too long (max 500 characters)');
+    }
+  }
+
+  if (notificationEmail && (notificationEmail.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(notificationEmail))) {
+    throw new Error('Invalid notification email');
+  }
+
   const settings = await prisma.paymentSettings.findFirst();
 
   if (settings) {

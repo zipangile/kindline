@@ -60,11 +60,20 @@ export async function sendVolunteerInvite(formData: FormData) {
   const adminEmail = await getUserEmail();
   await checkAdmin('VOLUNTEER_COORD');
 
-  const recipient = formData.get('recipient') as string;
-  const message = formData.get('message') as string;
+  const recipient = (formData.get('recipient') as string || '').trim().toLowerCase();
+  const message = (formData.get('message') as string || '').trim();
 
+  // Security: Input validation and length limits
   if (!recipient) {
     throw new Error('Recipient email is required.');
+  }
+
+  if (recipient.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient)) {
+    throw new Error('Invalid recipient email address');
+  }
+
+  if (message.length > 5000) {
+    throw new Error('Message is too long');
   }
 
   const result = await sendVolunteerInvitation(recipient, message);
