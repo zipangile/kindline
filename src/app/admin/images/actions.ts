@@ -7,6 +7,10 @@ import { checkAdmin } from '@/lib/auth-utils';
 export async function updateSiteImage(key: string, url: string, alt?: string) {
   await checkAdmin('CONTENT_EDITOR');
 
+  // Security: Input validation and length limits
+  if (url && url.length > 500) throw new Error('URL is too long');
+  if (alt && alt.length > 200) throw new Error('Alt text is too long');
+
   await prisma.siteImage.upsert({
     where: { key },
     update: { url, alt },

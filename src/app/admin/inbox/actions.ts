@@ -26,13 +26,24 @@ export async function replyToMessage(id: string, formData: FormData) {
   const adminEmail = await getUserEmail();
   await checkAdmin('CONTENT_EDITOR');
 
-  const recipient = formData.get('recipient') as string;
-  const subject = formData.get('subject') as string;
-  const content = formData.get('content') as string;
+  const recipient = (formData.get('recipient') as string || '').trim().toLowerCase();
+  const rawSubject = (formData.get('subject') as string || '').trim();
+  const rawContent = (formData.get('content') as string || '').trim();
 
-  if (!recipient || !subject || !content) {
+  if (!recipient || !rawSubject || !rawContent) {
     throw new Error('All fields are required.');
   }
+
+  // Security: Input validation and length limits
+  if (recipient.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient)) {
+    throw new Error('Invalid recipient email address');
+  }
+  if (rawSubject.length > 200) throw new Error('Subject is too long');
+  if (rawContent.length > 5000) throw new Error('Content is too long');
+
+  // Basic XSS sanitization
+  const subject = rawSubject.replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gim, "");
+  const content = rawContent.replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gim, "");
 
   const result = await sendCommunicationEmail(recipient, subject, content);
 
