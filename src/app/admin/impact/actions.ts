@@ -6,11 +6,18 @@ import { checkAdmin } from '@/lib/auth-utils';
 
 export async function createImpactStat(formData: FormData) {
   await checkAdmin('CONTENT_EDITOR');
-  const label = formData.get('label') as string;
-  const value = formData.get('value') as string;
-  const description = formData.get('description') as string;
-  const icon = formData.get('icon') as string;
+  const label = (formData.get('label') as string || '').trim();
+  const value = (formData.get('value') as string || '').trim();
+  const description = (formData.get('description') as string || '').trim();
+  const icon = (formData.get('icon') as string || '').trim();
   const order = parseInt(formData.get('order') as string || '0');
+
+  // Security: Input validation and length limits
+  if (!label || !value) throw new Error('Label and value are required');
+  if (label.length > 100) throw new Error('Label is too long');
+  if (value.length > 100) throw new Error('Value is too long');
+  if (description.length > 1000) throw new Error('Description is too long');
+  if (icon.length > 100) throw new Error('Icon name is too long');
 
   await prisma.impactStat.create({
     data: { label, value, description, icon, order },
@@ -23,11 +30,18 @@ export async function createImpactStat(formData: FormData) {
 
 export async function updateImpactStat(id: string, formData: FormData) {
   await checkAdmin('CONTENT_EDITOR');
-  const label = formData.get('label') as string;
-  const value = formData.get('value') as string;
-  const description = formData.get('description') as string;
-  const icon = formData.get('icon') as string;
+  const label = (formData.get('label') as string || '').trim();
+  const value = (formData.get('value') as string || '').trim();
+  const description = (formData.get('description') as string || '').trim();
+  const icon = (formData.get('icon') as string || '').trim();
   const order = parseInt(formData.get('order') as string || '0');
+
+  // Security: Input validation and length limits
+  if (!label || !value) throw new Error('Label and value are required');
+  if (label.length > 100) throw new Error('Label is too long');
+  if (value.length > 100) throw new Error('Value is too long');
+  if (description.length > 1000) throw new Error('Description is too long');
+  if (icon.length > 100) throw new Error('Icon name is too long');
 
   await prisma.impactStat.update({
     where: { id },
@@ -52,12 +66,24 @@ export async function deleteImpactStat(id: string) {
 
 export async function createImpactStory(formData: FormData) {
   await checkAdmin('CONTENT_EDITOR');
-  const title = formData.get('title') as string;
-  const content = formData.get('content') as string;
-  const category = formData.get('category') as string;
-  const author = formData.get('author') as string;
-  const authorRole = formData.get('authorRole') as string;
-  const image = formData.get('image') as string;
+  const title = (formData.get('title') as string || '').trim();
+  const rawContent = (formData.get('content') as string || '').trim();
+  const category = (formData.get('category') as string || '').trim();
+  const author = (formData.get('author') as string || '').trim();
+  const authorRole = (formData.get('authorRole') as string || '').trim();
+  const image = (formData.get('image') as string || '').trim();
+
+  // Security: Input validation and length limits
+  if (!title || !rawContent) throw new Error('Title and content are required');
+  if (title.length > 200) throw new Error('Title is too long');
+  if (rawContent.length > 10000) throw new Error('Content is too long');
+  if (category.length > 100) throw new Error('Category is too long');
+  if (author.length > 200) throw new Error('Author name is too long');
+  if (authorRole.length > 100) throw new Error('Author role is too long');
+  if (image.length > 500) throw new Error('Image URL is too long');
+
+  // Remove <script> tags to prevent basic XSS
+  const content = rawContent.replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gim, "");
 
   await prisma.impactStory.create({
     data: { title, content, category, author, authorRole, image },

@@ -56,6 +56,13 @@ async function syncUserRole(email: string, role: AdminRole | null) {
 export async function addAdmin(email: string, name: string, role: AdminRole) {
   await checkAdmin('SUPER_ADMIN');
 
+  // Security: Input validation and length limits
+  if (!email || !name || !role) throw new Error('All fields are required');
+  if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    throw new Error('Invalid email address');
+  }
+  if (name.length > 200) throw new Error('Name is too long');
+
   const admin = await prisma.managedAdmin.upsert({
     where: { email },
     update: { name, role },
