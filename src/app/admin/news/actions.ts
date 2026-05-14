@@ -4,6 +4,7 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
 import { redirect } from 'next/navigation';
+import { sanitizeContent } from '@/lib/security';
 
 export async function createNewsPost(data: {
   title: string;
@@ -16,9 +17,20 @@ export async function createNewsPost(data: {
 }) {
   await checkAdmin('CONTENT_EDITOR');
 
+  // Security: Input validation and length limits
+  if (!data.title || data.title.length > 200) throw new Error('Invalid title');
+  if (!data.slug || data.slug.length > 200 || !/^[a-z0-9-]+$/.test(data.slug)) throw new Error('Invalid slug');
+  if (!data.content || data.content.length > 20000) throw new Error('Content too long');
+  if (data.excerpt && data.excerpt.length > 1000) throw new Error('Excerpt too long');
+  if (data.category && data.category.length > 100) throw new Error('Category too long');
+  if (data.image && data.image.length > 1000) throw new Error('Image URL too long');
+
+  const sanitizedContent = sanitizeContent(data.content);
+
   await prisma.newsPost.create({
     data: {
       ...data,
+      content: sanitizedContent,
       publishedAt: data.published ? new Date() : null,
     },
   });
@@ -40,6 +52,16 @@ export async function updateNewsPost(id: string, data: {
 }) {
   await checkAdmin('CONTENT_EDITOR');
 
+  // Security: Input validation and length limits
+  if (!data.title || data.title.length > 200) throw new Error('Invalid title');
+  if (!data.slug || data.slug.length > 200 || !/^[a-z0-9-]+$/.test(data.slug)) throw new Error('Invalid slug');
+  if (!data.content || data.content.length > 20000) throw new Error('Content too long');
+  if (data.excerpt && data.excerpt.length > 1000) throw new Error('Excerpt too long');
+  if (data.category && data.category.length > 100) throw new Error('Category too long');
+  if (data.image && data.image.length > 1000) throw new Error('Image URL too long');
+
+  const sanitizedContent = sanitizeContent(data.content);
+
   const existing = await prisma.newsPost.findUnique({ where: { id } });
 
   let publishedAt = existing?.publishedAt;
@@ -53,6 +75,7 @@ export async function updateNewsPost(id: string, data: {
     where: { id },
     data: {
       ...data,
+      content: sanitizedContent,
       publishedAt,
     },
   });

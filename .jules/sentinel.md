@@ -17,3 +17,8 @@
 **Vulnerability:** Multiple server actions (newsletter subscription, contact form, volunteer registration) lacked input validation and length limits, making the system vulnerable to malformed data, potential DoS through large payloads, and lack of data integrity.
 **Learning:** Server actions in Next.js are public endpoints and must be treated with the same security rigor as traditional API routes. Relying on frontend validation is insufficient.
 **Prevention:** Always implement server-side validation (regex, length checks) for all user-provided data in server actions before database operations.
+
+## 2026-05-14 - Centralized Input Hardening for Server Actions
+**Vulnerability:** Scattered and inconsistent input validation across administrative server actions left the application vulnerable to malformed data and resource exhaustion.
+**Learning:** Next.js Server Actions are public endpoints. Centralizing sanitization (like script tag removal) and validation (like email regex) in a dedicated utility (`src/lib/security.ts`) ensures consistency and reduces the risk of overlooking vulnerabilities in new actions.
+**Prevention:** Always use centralized security utilities for input hardening in all Server Actions, enforcing strict length limits and type-safe validation before database operations.
