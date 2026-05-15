@@ -4,6 +4,7 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
 import { Resend } from 'resend';
+import { isValidEmail, sanitizeContent } from '@/lib/security';
 
 const resend = new Resend(process.env.RESEND_API_KEY || 're_placeholder');
 
@@ -14,7 +15,7 @@ export async function subscribe(formData: FormData) {
   const email = rawEmail.trim().toLowerCase();
 
   // Basic validation: length and regex
-  if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  if (email.length > 254 || !isValidEmail(email)) {
     console.error('Invalid email subscription attempt:', email);
     return;
   }
@@ -41,7 +42,7 @@ export async function sendNewsletter(formData: FormData) {
   }
 
   // Remove <script> tags to prevent basic XSS in email clients that might execute them
-  const content = rawContent.replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gim, "");
+  const content = sanitizeContent(rawContent);
   const subject = rawSubject;
 
   const subscribers = await prisma.subscriber.findMany({
