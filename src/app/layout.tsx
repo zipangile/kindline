@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PrelineScript from "@/components/PrelineScript";
+import prisma from "@/lib/prisma";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,16 +27,27 @@ export default async function RootLayout(props: {
 }) {
   const { children, params } = props;
   await params;
+
+  let logoUrl: string | undefined;
+  try {
+    const logoImage = await prisma.siteImage.findUnique({
+      where: { key: 'logo' }
+    });
+    logoUrl = logoImage?.url;
+  } catch (error) {
+    console.error('[RootLayout] Error fetching logo:', error);
+  }
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
-        <Header />
+        <Header logoUrl={logoUrl} />
         <main className="flex-grow">
           {children}
         </main>
-        <Footer />
+        <Footer logoUrl={logoUrl} />
         <PrelineScript />
       </body>
     </html>

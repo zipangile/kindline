@@ -83,12 +83,14 @@ export default function ImageManager({ initialImages }: { initialImages: SiteIma
   const [uploading, setUploading] = useState<string | null>(null);
 
   const imageKeys = [
+    { key: 'logo', label: 'Organization Logo' },
     { key: 'homepage_hero', label: 'Homepage Hero Image' },
     { key: 'about_snapshot', label: 'About Section Image' },
     { key: 'donation_hero', label: 'Donation Page Hero' },
     { key: 'child_development', label: 'Child Development Section' },
     { key: 'wesap_group', label: 'WESAP Group Photo' },
     { key: 'volunteers_action', label: 'Volunteers in Action' },
+    { key: 'volunteer_action', label: 'Volunteer Page Feature Image' },
   ];
 
   const handleUpload = async (key: string, file: File, alt: string) => {

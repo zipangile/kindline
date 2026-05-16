@@ -18,9 +18,20 @@ export default async function Home(props: {
 }) {
   await props.params;
   await props.searchParams;
-  const images = await prisma.siteImage.findMany();
-  const stats = await prisma.impactStat.findMany({ orderBy: { order: 'asc' }, take: 4 });
-  const stories = await prisma.impactStory.findMany({ orderBy: { createdAt: 'desc' }, take: 2 });
+
+  let images: any[] = [];
+  let stats: any[] = [];
+  let stories: any[] = [];
+
+  try {
+    [images, stats, stories] = await Promise.all([
+      prisma.siteImage.findMany(),
+      prisma.impactStat.findMany({ orderBy: { order: 'asc' }, take: 4 }),
+      prisma.impactStory.findMany({ orderBy: { createdAt: 'desc' }, take: 2 })
+    ]);
+  } catch (error) {
+    console.error('[Home] Error fetching data:', error);
+  }
 
   const getImage = (key: string) => images.find(img => img.key === key)?.url;
 

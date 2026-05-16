@@ -7,7 +7,11 @@ import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js';
 
-const Header = () => {
+interface HeaderProps {
+  logoUrl?: string;
+}
+
+const Header = ({ logoUrl }: HeaderProps) => {
   const pathname = usePathname();
   const [user, setUser] = useState<User | null>(null);
   const supabase = createClient();
@@ -46,7 +50,7 @@ const Header = () => {
       <nav className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 lg:flex lg:items-center lg:justify-between" aria-label="Global">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex-none relative h-24 w-56" aria-label="Kindline Care">
-            <Image src="/logo.png" alt="Kindline Care Foundation" fill className="object-contain" />
+            <Image src={logoUrl || "/logo.png"} alt="Kindline Care Foundation" fill className="object-contain" />
           </Link>
           <div className="lg:hidden">
             <button

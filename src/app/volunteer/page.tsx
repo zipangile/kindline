@@ -1,5 +1,6 @@
 import VolunteerForm from "./VolunteerForm";
 import Image from 'next/image';
+import prisma from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
@@ -9,6 +10,17 @@ export default async function VolunteerPage(props: {
 }) {
   await props.params;
   await props.searchParams;
+
+  let actionImage: string | undefined;
+  try {
+    const siteImage = await prisma.siteImage.findUnique({
+      where: { key: 'volunteer_action' }
+    });
+    actionImage = siteImage?.url;
+  } catch (error) {
+    console.error('[VolunteerPage] Error fetching action image:', error);
+  }
+
   return (
     <div className="bg-white">
       {/* Header */}
@@ -54,7 +66,7 @@ export default async function VolunteerPage(props: {
             </div>
             <div className="relative h-96 w-full">
               <Image
-                src="https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&q=80"
+                src={actionImage || "https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&q=80"}
                 alt="Volunteers working together"
                 fill
                 className="rounded-2xl shadow-lg object-cover"
