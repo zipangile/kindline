@@ -9,7 +9,7 @@ export default async function AboutPage(props: {
   await props.params;
   await props.searchParams;
 
-  let images: any[] = [];
+  let images: { key: string; url: string }[] = [];
   try {
     images = await prisma.siteImage.findMany();
   } catch (error) {

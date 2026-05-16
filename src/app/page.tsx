@@ -19,9 +19,9 @@ export default async function Home(props: {
   await props.params;
   await props.searchParams;
 
-  let images: any[] = [];
-  let stats: any[] = [];
-  let stories: any[] = [];
+  let images: { key: string; url: string }[] = [];
+  let stats: { id: string; label: string; value: string; description: string | null; icon: string | null; order: number }[] = [];
+  let stories: { id: string; title: string; content: string; image: string | null; category: string; author: string; authorRole: string | null; createdAt: Date }[] = [];
 
   try {
     [images, stats, stories] = await Promise.all([
@@ -35,6 +35,13 @@ export default async function Home(props: {
 
   const getImage = (key: string) => images.find(img => img.key === key)?.url;
 
+  // Adapt database models to component expected props
+  const formattedStories = stories.map(s => ({
+    ...s,
+    category: s.category || 'Impact Story',
+    author: s.author || 'Anonymous'
+  }));
+
   return (
     <div>
       <Hero imageUrl={getImage('homepage_hero') || '/images/child-development.jpg'} />
@@ -43,7 +50,7 @@ export default async function Home(props: {
 
       <ProgramsOverview />
 
-      <ImpactSnapshot stats={stats} stories={stories} />
+      <ImpactSnapshot stats={stats} stories={formattedStories} />
 
       <VisionMission />
 
