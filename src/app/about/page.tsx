@@ -8,7 +8,14 @@ export default async function AboutPage(props: {
 }) {
   await props.params;
   await props.searchParams;
-  const images = await prisma.siteImage.findMany();
+
+  let images: any[] = [];
+  try {
+    images = await prisma.siteImage.findMany();
+  } catch (error) {
+    console.error('[AboutPage] Error fetching images:', error);
+  }
+
   const getImage = (key: string) => images.find(img => img.key === key)?.url;
 
   const values = [
