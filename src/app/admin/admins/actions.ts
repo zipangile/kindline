@@ -4,6 +4,7 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+import { isValidEmail } from '@/lib/security';
 
 export type AdminRole = 'SUPER_ADMIN' | 'CONTENT_EDITOR' | 'FINANCIAL_ADMIN' | 'VOLUNTEER_COORD';
 
@@ -56,6 +57,19 @@ async function syncUserRole(email: string, role: AdminRole | null) {
 export async function addAdmin(email: string, name: string, role: AdminRole) {
   await checkAdmin('SUPER_ADMIN');
 
+  // Security: Input validation and length limits
+  if (!email || !name || !role) {
+    throw new Error('All fields are required');
+  }
+
+  if (email.length > 254 || !isValidEmail(email)) {
+    throw new Error('Invalid email address');
+  }
+
+  if (name.length > 200) {
+    throw new Error('Name is too long');
+  }
+
   const admin = await prisma.managedAdmin.upsert({
     where: { email },
     update: { name, role },
@@ -70,6 +84,10 @@ export async function addAdmin(email: string, name: string, role: AdminRole) {
 
 export async function updateAdminRole(id: string, role: AdminRole) {
   await checkAdmin('SUPER_ADMIN');
+
+  if (!role) {
+    throw new Error('Role is required');
+  }
 
   const admin = await prisma.managedAdmin.update({
     where: { id },
