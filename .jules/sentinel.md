@@ -22,3 +22,8 @@
 **Vulnerability:** Scattered and inconsistent input validation and sanitization across various server actions (News, Impact, Inbox, etc.) leading to potential XSS and data integrity issues.
 **Learning:** Centralizing security logic ensures consistency and reduces the risk of overlooking validation in new features. Server actions must be hardened against both malicious input (XSS) and resource exhaustion (long strings).
 **Prevention:** Use a centralized utility like `src/lib/security.ts` for common validation (email) and sanitization (script removal). Enforce strict length limits on all user-provided fields in server actions.
+
+## 2025-05-16 - Open Redirect and Host Header Injection in Auth Callback
+**Vulnerability:** `src/app/auth/callback/route.ts` used unvalidated `next` parameter for redirects and relied on `x-forwarded-host` header, enabling Open Redirect and Host Header Injection.
+**Learning:** Redirect parameters from URLs are untrusted and must be validated as relative paths. Construction of absolute URLs for redirects should favor the request's internal `origin` over external headers like `x-forwarded-host`.
+**Prevention:** Always validate that redirect paths start with a single `/` and do not start with `//`. Use `new URL(request.url).origin` for constructing redirect URLs.

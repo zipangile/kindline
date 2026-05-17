@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import prisma from '@/lib/prisma';
 import { subscribe } from '@/app/admin/newsletter/actions';
+import { SiteImage, ImpactStat, ImpactStory } from '@prisma/client';
 
 export const dynamic = "force-dynamic";
 
@@ -19,9 +20,9 @@ export default async function Home(props: {
   await props.params;
   await props.searchParams;
 
-  let images: any[] = [];
-  let stats: any[] = [];
-  let stories: any[] = [];
+  let images: SiteImage[] = [];
+  let stats: ImpactStat[] = [];
+  let stories: ImpactStory[] = [];
 
   try {
     [images, stats, stories] = await Promise.all([
