@@ -7,10 +7,13 @@ import { sendDonationEmails } from '@/lib/email';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { transaction_id, status } = body;
+    const transaction_id = body.transaction_id || body.id;
+    console.log('[Flutterwave API] Received verification request for ID:', transaction_id);
+    const status = body.status;
 
     // Security: Validate transaction_id to prevent injection
-    if (!transaction_id || (typeof transaction_id !== 'string' && typeof transaction_id !== 'number') || String(transaction_id).length > 100 || !/^[a-zA-Z0-9-_]+$/.test(String(transaction_id))) {
+    if (!transaction_id || (typeof transaction_id !== 'string' && typeof transaction_id !== 'number') || String(transaction_id).length > 100 || !/^[a-zA-Z0-9.:_/-]+$/.test(String(transaction_id))) {
+      console.error('[Flutterwave API] Invalid transaction ID format:', transaction_id);
       return NextResponse.json({ error: 'Invalid transaction ID' }, { status: 400 });
     }
 
@@ -22,14 +25,20 @@ export async function POST(request: Request) {
        return NextResponse.json({ error: 'Gateway not configured' }, { status: 500 });
     }
 
-    if (status === 'successful') {
+    if (status?.toLowerCase() === 'successful' || status?.toLowerCase() === 'success') {
       // Try v3 verification first (library handles this)
       try {
         const flw = new Flutterwave(publicKey, secretKey);
         const verificationData = await flw.Transaction.verify({ id: transaction_id });
+        console.log('[Flutterwave API] v3 verification result:', verificationData?.status, verificationData?.data?.status);
 
-        if (verificationData.status === 'success' && verificationData.data.status === 'successful') {
+        if (verificationData?.status === 'success' && verificationData?.data?.status?.toLowerCase() === 'successful') {
           const { amount, currency, customer, meta, tx_ref, id } = verificationData.data;
+
+          if (!customer?.email) {
+            console.error('[Flutterwave API] Missing customer email in verification data');
+            return NextResponse.json({ verified: false, error: 'Missing customer data' }, { status: 400 });
+          }
 
           // Check for existing donation to avoid duplicates and race conditions
           const existingDonation = await prisma.donation.findUnique({
@@ -87,9 +96,15 @@ export async function POST(request: Request) {
         });
 
         const verificationData = await res.json();
+        console.log('[Flutterwave API] direct verification result:', verificationData?.status, verificationData?.data?.status);
 
-        if (verificationData.status === 'success' && verificationData.data.status === 'successful') {
+        if (verificationData?.status === 'success' && verificationData?.data?.status?.toLowerCase() === 'successful') {
           const { amount, currency, customer, meta, tx_ref, id } = verificationData.data;
+
+          if (!customer?.email) {
+            console.error('[Flutterwave API] Missing customer email in direct verification data');
+            return NextResponse.json({ verified: false, error: 'Missing customer data' }, { status: 400 });
+          }
 
           // Check for existing donation
           const existingDonation = await prisma.donation.findUnique({

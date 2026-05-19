@@ -73,7 +73,7 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
           phone: phone,
         },
         onSuccess: function(response: LencoPayResponse) {
-          console.log("Lenco payment success", response);
+          console.log("Lenco payment success callback for reference:", response.reference);
           // Verify with backend
           fetch('/api/payments/lenco', {
             method: 'POST',
@@ -91,7 +91,8 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
             } else {
               const errorData = await verifyRes.json().catch(() => ({}));
               console.error("Lenco verification failed:", verifyRes.status, errorData);
-              alert("Payment completed but verification failed. Please contact support.");
+              const message = errorData.error || errorData.message || "Please contact support.";
+              alert(`Payment completed but verification failed: ${message}`);
             }
           })
           .catch(e => {
@@ -143,22 +144,26 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
           logo: window.location.origin + "/logo.png",
         },
         callback: function (data: FlutterwaveResponse) {
-          console.log("Payment completed!", data);
+          console.log("Flutterwave payment completed callback for ID:", data.transaction_id);
           // Verify with backend
           fetch('/api/payments', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               transaction_id: data.transaction_id,
+              id: data.transaction_id, // Also pass as id just in case
               status: data.status
             })
           })
-          .then(verifyRes => {
+          .then(async verifyRes => {
             if (verifyRes.ok) {
               alert("Thank you for your donation!");
               window.location.reload();
             } else {
-              alert("Payment completed but verification failed. Please contact support.");
+              const errorData = await verifyRes.json().catch(() => ({}));
+              console.error("Flutterwave verification failed:", verifyRes.status, errorData);
+              const message = errorData.error || errorData.message || "Please contact support.";
+              alert(`Payment completed but verification failed: ${message}`);
             }
           })
           .catch(e => {
