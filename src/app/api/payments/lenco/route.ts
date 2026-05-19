@@ -8,9 +8,11 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { reference, supabaseUserId, phone } = body;
+    console.log('[Lenco API] Received verification request for reference:', reference);
 
     // Security: Validate reference to prevent injection or SSRF-like behavior
-    if (!reference || typeof reference !== 'string' || reference.length > 100 || !/^[a-zA-Z0-9-_]+$/.test(reference)) {
+    if (!reference || typeof reference !== 'string' || reference.length > 100 || !/^[a-zA-Z0-9.:_/-]+$/.test(reference)) {
+      console.error('[Lenco API] Invalid reference format:', reference);
       return NextResponse.json({ error: 'Invalid reference' }, { status: 400 });
     }
 
@@ -41,10 +43,16 @@ export async function POST(request: Request) {
     }
 
     const verificationData = await response.json();
-    console.log(`[Lenco API] Verification data received`);
+    console.log(`[Lenco API] Verification data received status:`, verificationData?.status, verificationData?.data?.status);
 
-    if (verificationData.status === true && verificationData.data && verificationData.data.status === 'successful') {
+    const isSuccess = verificationData.status === true || verificationData.status === 'success';
+    if (isSuccess && verificationData.data && (verificationData.data.status?.toLowerCase() === 'successful' || verificationData.data.status?.toLowerCase() === 'success')) {
       const { amount, currency, customer, reference: transactionId, mobileMoneyDetails } = verificationData.data;
+
+      if (!amount) {
+        console.error('[Lenco API] Missing amount in verification data');
+        return NextResponse.json({ verified: false, error: 'Missing payment amount' }, { status: 400 });
+      }
 
       // Check for existing donation to avoid duplicates (could have been handled by webhook)
       const existingDonation = await prisma.donation.findUnique({
