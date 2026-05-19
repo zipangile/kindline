@@ -6,22 +6,20 @@ export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
   // if "next" is in search params, use it as the redirection URL
-  const next = searchParams.get('next') ?? '/dashboard'
+  let next = searchParams.get('next') ?? '/dashboard'
+
+  // Security: Validate "next" to prevent Open Redirect
+  // Must start with / and not //
+  if (!next.startsWith('/') || next.startsWith('//')) {
+    next = '/dashboard'
+  }
 
   if (code) {
     const supabase = await createClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
-      const forwardedHost = request.headers.get('x-forwarded-host') // Hello, check for headers here!
-      const isLocalEnv = process.env.NODE_ENV === 'development'
-      if (isLocalEnv) {
-        // we can be sure that origin is the same as the site we want to redirect to
-        return NextResponse.redirect(`${origin}${next}`)
-      } else if (forwardedHost) {
-        return NextResponse.redirect(`https://${forwardedHost}${next}`)
-      } else {
-        return NextResponse.redirect(`${origin}${next}`)
-      }
+      // Security: Use origin instead of x-forwarded-host to prevent Host Header Injection
+      return NextResponse.redirect(`${origin}${next}`)
     }
   }
 

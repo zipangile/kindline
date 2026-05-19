@@ -1,6 +1,7 @@
 import { Heart, Shield, Users, Star, HandHeart } from "lucide-react";
 import prisma from '@/lib/prisma';
 import AboutSnapshot from '@/components/AboutSnapshot';
+import { SiteImage } from '@prisma/client';
 
 export default async function AboutPage(props: {
   params: Promise<Record<string, string | string[] | undefined>>;
@@ -9,7 +10,7 @@ export default async function AboutPage(props: {
   await props.params;
   await props.searchParams;
 
-  let images: any[] = [];
+  let images: SiteImage[] = [];
   try {
     images = await prisma.siteImage.findMany();
   } catch (error) {
