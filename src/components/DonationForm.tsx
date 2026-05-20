@@ -30,7 +30,7 @@ declare global {
 
 export default function DonationForm({ settings }: { settings: { lencoPublic?: string; lencoBaseUrl?: string; lencoName?: string; flutterwavePublic?: string; flutterwavePlanZMW?: string; flutterwavePlanUSD?: string } }) {
   const [userId, setUserId] = useState<string | null>(null);
-  const [amount, setAmount] = useState('50');
+  const [amount, setAmount] = useState('500');
   const [currency, setCurrency] = useState('ZMW');
   const [method, setMethod] = useState('flutterwave');
   const [frequency, setFrequency] = useState('one-time');
@@ -229,7 +229,7 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
           <div>
             <label className="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-4 uppercase tracking-wide">Donation Amount</label>
             <div className="flex gap-3 flex-wrap">
-              {['750', '1000', '1500'].map((val) => (
+              {(currency === 'ZMW' ? ['500', '1000', '1500'] : ['25', '50', '80']).map((val) => (
                 <button
                   key={val}
                   onClick={() => setAmount(val)}
@@ -259,6 +259,11 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
                 onChange={(e) => {
                     const newCurrency = e.target.value;
                     setCurrency(newCurrency);
+                    if (newCurrency === 'ZMW') {
+                      setAmount('500');
+                    } else {
+                      setAmount('25');
+                    }
                     if (newCurrency !== 'ZMW' && newCurrency !== 'USD') setMethod('flutterwave');
                 }}
                 className="block w-full rounded-xl border-2 border-gray-100 dark:border-gray-700 shadow-sm focus:border-brand-blue focus:ring-brand-blue p-4 text-gray-900 dark:text-white font-bold bg-gray-50/50 dark:bg-gray-800/50"
