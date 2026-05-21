@@ -91,7 +91,7 @@ export default async function GetInvolvedPage(props: {
               <div className="space-y-6 mb-12">
                 <div className="p-6 bg-brand-blue/5 rounded-2xl border-l-4 border-brand-blue">
                   <h3 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                    <span className="text-brand-blue">$25 AND KWACHA K500</span> — School Supplies for one Child
+                    <span className="text-brand-blue">$25 / K500</span> — School Supplies for one Child
                   </h3>
                   <p className="text-gray-600 dark:text-gray-400">Could provide essential school supplies including books, uniform, shoes, and a school bag; giving a child the chance to learn with confidence.</p>
                 </div>
