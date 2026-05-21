@@ -3,11 +3,12 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
+import { sanitizeContent } from '@/lib/security';
 
 export async function createProgram(formData: FormData) {
   await checkAdmin('CONTENT_EDITOR');
   const title = (formData.get('title') as string || '').trim();
-  const description = (formData.get('description') as string || '').trim();
+  const rawDescription = (formData.get('description') as string || '').trim();
   const category = (formData.get('category') as string || '').trim();
   const status = (formData.get('status') as string || '').trim();
   const image = (formData.get('image') as string || '').trim();
@@ -17,8 +18,10 @@ export async function createProgram(formData: FormData) {
   if (title.length > 200) throw new Error('Title is too long');
   if (category.length > 100) throw new Error('Category is too long');
   if (status.length > 50) throw new Error('Status is too long');
-  if (description.length > 10000) throw new Error('Description is too long');
+  if (rawDescription.length > 10000) throw new Error('Description is too long');
   if (image && image.length > 500) throw new Error('Image URL is too long');
+
+  const description = sanitizeContent(rawDescription);
 
   await prisma.program.create({
     data: {
@@ -37,7 +40,7 @@ export async function createProgram(formData: FormData) {
 export async function updateProgram(id: string, formData: FormData) {
   await checkAdmin('CONTENT_EDITOR');
   const title = (formData.get('title') as string || '').trim();
-  const description = (formData.get('description') as string || '').trim();
+  const rawDescription = (formData.get('description') as string || '').trim();
   const category = (formData.get('category') as string || '').trim();
   const status = (formData.get('status') as string || '').trim();
   const image = (formData.get('image') as string || '').trim();
@@ -47,8 +50,10 @@ export async function updateProgram(id: string, formData: FormData) {
   if (title.length > 200) throw new Error('Title is too long');
   if (category.length > 100) throw new Error('Category is too long');
   if (status.length > 50) throw new Error('Status is too long');
-  if (description.length > 10000) throw new Error('Description is too long');
+  if (rawDescription.length > 10000) throw new Error('Description is too long');
   if (image && image.length > 500) throw new Error('Image URL is too long');
+
+  const description = sanitizeContent(rawDescription);
 
   await prisma.program.update({
     where: { id },
