@@ -3,6 +3,7 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
+import { sanitizeContent } from '@/lib/security';
 
 export async function createProgram(formData: FormData) {
   await checkAdmin('CONTENT_EDITOR');
@@ -20,10 +21,12 @@ export async function createProgram(formData: FormData) {
   if (description.length > 10000) throw new Error('Description is too long');
   if (image && image.length > 500) throw new Error('Image URL is too long');
 
+  const sanitizedDescription = sanitizeContent(description);
+
   await prisma.program.create({
     data: {
       title,
-      description,
+      description: sanitizedDescription,
       category,
       status,
       image,
@@ -50,11 +53,13 @@ export async function updateProgram(id: string, formData: FormData) {
   if (description.length > 10000) throw new Error('Description is too long');
   if (image && image.length > 500) throw new Error('Image URL is too long');
 
+  const sanitizedDescription = sanitizeContent(description);
+
   await prisma.program.update({
     where: { id },
     data: {
       title,
-      description,
+      description: sanitizedDescription,
       category,
       status,
       image,
