@@ -57,7 +57,8 @@ export async function sendNewsletter(formData: FormData) {
   try {
     await resend.emails.send({
       from: 'Kindline Care <updates@kindlinecare.org>',
-      to: emails,
+      to: 'updates@kindlinecare.org',
+      bcc: emails,
       subject: subject,
       html: content,
     });

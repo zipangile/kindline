@@ -22,3 +22,8 @@
 **Vulnerability:** Scattered and inconsistent input validation and sanitization across various server actions (News, Impact, Inbox, etc.) leading to potential XSS and data integrity issues.
 **Learning:** Centralizing security logic ensures consistency and reduces the risk of overlooking validation in new features. Server actions must be hardened against both malicious input (XSS) and resource exhaustion (long strings).
 **Prevention:** Use a centralized utility like `src/lib/security.ts` for common validation (email) and sanitization (script removal). Enforce strict length limits on all user-provided fields in server actions.
+
+## 2025-05-15 - PII Leakage in Bulk Email Dispatch
+**Vulnerability:** Newsletter dispatch in `src/app/admin/newsletter/actions.ts` used the `to` field for the entire subscriber list, exposing all recipient email addresses to each other.
+**Learning:** Sending bulk emails via the `to` or `cc` fields leaks the PII (email addresses) of all recipients.
+**Prevention:** Always use the `bcc` field for recipient lists in mass email operations, while setting the `to` field to a generic organization-owned address.
