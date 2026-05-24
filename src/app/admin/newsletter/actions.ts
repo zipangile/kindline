@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
 import { Resend } from 'resend';
-import { isValidEmail, sanitizeContent } from '@/lib/security';
+import { isValidEmail, sanitizeContent, SECURITY_LIMITS } from '@/lib/security';
 
 const resend = new Resend(process.env.RESEND_API_KEY || 're_placeholder');
 
@@ -15,7 +15,7 @@ export async function subscribe(formData: FormData) {
   const email = rawEmail.trim().toLowerCase();
 
   // Basic validation: length and regex
-  if (email.length > 254 || !isValidEmail(email)) {
+  if (email.length > SECURITY_LIMITS.EMAIL || !isValidEmail(email)) {
     console.error('Invalid email subscription attempt:', email);
     return;
   }
@@ -37,7 +37,7 @@ export async function sendNewsletter(formData: FormData) {
   const rawContent = formData.get('content') as string;
 
   // Security: Basic sanitization and length limits
-  if (rawSubject.length > 200) {
+  if (rawSubject.length > SECURITY_LIMITS.SUBJECT) {
     throw new Error('Subject is too long');
   }
 
@@ -55,9 +55,11 @@ export async function sendNewsletter(formData: FormData) {
   if (emails.length === 0) return;
 
   try {
+    // Security: Use bcc to prevent PII leakage between subscribers
     await resend.emails.send({
       from: 'Kindline Care <updates@kindlinecare.org>',
-      to: emails,
+      to: 'Kindline Care <updates@kindlinecare.org>',
+      bcc: emails,
       subject: subject,
       html: content,
     });
