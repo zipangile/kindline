@@ -4,6 +4,7 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+import { isValidEmail, SECURITY_LIMITS } from '@/lib/security';
 
 export type AdminRole = 'SUPER_ADMIN' | 'CONTENT_EDITOR' | 'FINANCIAL_ADMIN' | 'VOLUNTEER_COORD';
 
@@ -56,13 +57,25 @@ async function syncUserRole(email: string, role: AdminRole | null) {
 export async function addAdmin(email: string, name: string, role: AdminRole) {
   await checkAdmin('SUPER_ADMIN');
 
+  const trimmedEmail = email.trim().toLowerCase();
+  const trimmedName = name.trim();
+
+  // Security: Input validation and length limits
+  if (!trimmedEmail || !isValidEmail(trimmedEmail) || trimmedEmail.length > SECURITY_LIMITS.EMAIL) {
+    throw new Error('Invalid email address');
+  }
+
+  if (trimmedName.length > SECURITY_LIMITS.NAME) {
+    throw new Error('Name is too long');
+  }
+
   const admin = await prisma.managedAdmin.upsert({
-    where: { email },
-    update: { name, role },
-    create: { email, name, role },
+    where: { email: trimmedEmail },
+    update: { name: trimmedName, role },
+    create: { email: trimmedEmail, name: trimmedName, role },
   });
 
-  await syncUserRole(email, role);
+  await syncUserRole(trimmedEmail, role);
 
   revalidatePath('/admin/admins');
   return admin;

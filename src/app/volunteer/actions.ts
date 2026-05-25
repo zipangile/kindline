@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import { isRedirectError } from 'next/dist/client/components/redirect-error';
+import { isValidEmail, SECURITY_LIMITS } from '@/lib/security';
 
 export async function registerVolunteer(formData: FormData) {
   try {
@@ -29,16 +30,16 @@ export async function registerVolunteer(formData: FormData) {
       throw new Error('Name and email are required');
     }
 
-    if (name.length > 200) throw new Error('Name is too long');
-    if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (name.length > SECURITY_LIMITS.NAME) throw new Error('Name is too long');
+    if (email.length > SECURITY_LIMITS.EMAIL || !isValidEmail(email)) {
       throw new Error('Invalid email address');
     }
-    if (phone.length > 50) throw new Error('Phone number is too long');
-    if (skills.length > 1000) throw new Error('Skills description is too long');
-    if (interests.length > 1000) throw new Error('Interests description is too long');
-    if (availability.length > 500) throw new Error('Availability description is too long');
-    if (experience.length > 2000) throw new Error('Experience description is too long');
-    if (location.length > 200) throw new Error('Location is too long');
+    if (phone.length > SECURITY_LIMITS.PHONE) throw new Error('Phone number is too long');
+    if (skills.length > SECURITY_LIMITS.CONTENT_SHORT) throw new Error('Skills description is too long');
+    if (interests.length > SECURITY_LIMITS.CONTENT_SHORT) throw new Error('Interests description is too long');
+    if (availability.length > SECURITY_LIMITS.DESCRIPTION) throw new Error('Availability description is too long');
+    if (experience.length > SECURITY_LIMITS.EXPERIENCE) throw new Error('Experience description is too long');
+    if (location.length > SECURITY_LIMITS.NAME) throw new Error('Location is too long');
 
     await prisma.volunteer.create({
       data: {

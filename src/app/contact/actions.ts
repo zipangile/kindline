@@ -3,6 +3,7 @@
 import prisma from '@/lib/prisma';
 import { sendContactNotification } from '@/lib/email';
 import { revalidatePath } from 'next/cache';
+import { isValidEmail, SECURITY_LIMITS } from '@/lib/security';
 
 export async function submitContactForm(formData: FormData) {
   const firstName = (formData.get('firstName') as string || '').trim();
@@ -15,16 +16,16 @@ export async function submitContactForm(formData: FormData) {
     return { success: false, error: 'Email and message are required.' };
   }
 
-  if (firstName.length > 100 || lastName.length > 100) {
-    return { success: false, error: 'Name is too long (max 100 characters per field).' };
+  if (firstName.length > SECURITY_LIMITS.NAME || lastName.length > SECURITY_LIMITS.NAME) {
+    return { success: false, error: `Name is too long (max ${SECURITY_LIMITS.NAME} characters per field).` };
   }
 
-  if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  if (email.length > SECURITY_LIMITS.EMAIL || !isValidEmail(email)) {
     return { success: false, error: 'Invalid email address.' };
   }
 
-  if (message.length > 5000) {
-    return { success: false, error: 'Message is too long (max 5000 characters).' };
+  if (message.length > SECURITY_LIMITS.MESSAGE) {
+    return { success: false, error: `Message is too long (max ${SECURITY_LIMITS.MESSAGE} characters).` };
   }
 
   const fullName = `${firstName} ${lastName}`.trim() || 'Anonymous';

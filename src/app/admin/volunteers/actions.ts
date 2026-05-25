@@ -5,6 +5,8 @@ import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
 import { sendVolunteerStatusEmail } from '@/lib/email';
 
+const ALLOWED_STATUSES = ['pending', 'approved', 'rejected'];
+
 export async function approveVolunteer(id: string) {
   await checkAdmin('VOLUNTEER_COORD');
   const volunteer = await prisma.volunteer.update({
@@ -35,13 +37,19 @@ export async function rejectVolunteer(id: string) {
 
 export async function updateVolunteerStatus(id: string, status: string) {
     await checkAdmin('VOLUNTEER_COORD');
+    const normalizedStatus = status.toLowerCase();
+
+    if (!ALLOWED_STATUSES.includes(normalizedStatus)) {
+        throw new Error('Invalid status');
+    }
+
     const volunteer = await prisma.volunteer.update({
       where: { id },
-      data: { status },
+      data: { status: normalizedStatus },
     });
 
-    if (volunteer && (status === 'approved' || status === 'rejected')) {
-      await sendVolunteerStatusEmail(volunteer.email, volunteer.name, status as 'approved' | 'rejected');
+    if (volunteer && (normalizedStatus === 'approved' || normalizedStatus === 'rejected')) {
+      await sendVolunteerStatusEmail(volunteer.email, volunteer.name, normalizedStatus as 'approved' | 'rejected');
     }
 
     revalidatePath('/admin/volunteers');
