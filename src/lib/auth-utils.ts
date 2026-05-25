@@ -18,6 +18,12 @@ export async function checkAdmin(requiredLevel: PermissionLevel = 'CONTENT_EDITO
     redirect('/login');
   }
 
+  // Security: Ensure email is confirmed before granting admin access
+  if (!user.email_confirmed_at) {
+    console.warn(`[checkAdmin] User ${user.email} has not confirmed their email`);
+    redirect('/login?error=' + encodeURIComponent('Please confirm your email address to access admin features.'));
+  }
+
   const adminEmail = process.env.ADMIN_EMAIL;
   const userRole = user.app_metadata?.role as PermissionLevel || 'USER';
 

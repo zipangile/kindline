@@ -13,7 +13,9 @@ export const SECURITY_LIMITS = {
   URL: 500,
   PHONE: 50,
   DESCRIPTION: 500,
-  EXPERIENCE: 2000
+  EXPERIENCE: 2000,
+  PASSWORD_MIN: 6,
+  PASSWORD_MAX: 100
 };
 
 export function isValidEmail(email: string): boolean {
