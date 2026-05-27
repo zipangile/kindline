@@ -12,7 +12,8 @@ export async function POST(request: Request) {
     const status = body.status;
 
     // Security: Validate transaction_id to prevent injection
-    if (!transaction_id || (typeof transaction_id !== 'string' && typeof transaction_id !== 'number') || String(transaction_id).length > 100 || !/^[a-zA-Z0-9.:_/-]+$/.test(String(transaction_id))) {
+    // Restrict to alphanumeric, dots, and hyphens (standard for transaction IDs)
+    if (!transaction_id || (typeof transaction_id !== 'string' && typeof transaction_id !== 'number') || String(transaction_id).length > 100 || !/^[a-zA-Z0-9.-]+$/.test(String(transaction_id))) {
       console.error('[Flutterwave API] Invalid transaction ID format:', transaction_id);
       return NextResponse.json({ error: 'Invalid transaction ID' }, { status: 400 });
     }
