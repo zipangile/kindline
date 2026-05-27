@@ -11,7 +11,8 @@ export async function POST(request: Request) {
     console.log('[Lenco API] Received verification request for reference:', reference);
 
     // Security: Validate reference to prevent injection or SSRF-like behavior
-    if (!reference || typeof reference !== 'string' || reference.length > 100 || !/^[a-zA-Z0-9.:_/-]+$/.test(reference)) {
+    // Restrict to alphanumeric, dots, and hyphens (standard for transaction IDs)
+    if (!reference || typeof reference !== 'string' || reference.length > 100 || !/^[a-zA-Z0-9.-]+$/.test(reference)) {
       console.error('[Lenco API] Invalid reference format:', reference);
       return NextResponse.json({ error: 'Invalid reference' }, { status: 400 });
     }
