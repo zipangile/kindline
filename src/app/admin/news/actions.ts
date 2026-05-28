@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
 import { redirect } from 'next/navigation';
-import { sanitizeContent } from '@/lib/security';
+import { sanitizeContent, SECURITY_LIMITS } from '@/lib/security';
 
 export async function createNewsPost(data: {
   title: string;
@@ -18,12 +18,12 @@ export async function createNewsPost(data: {
   await checkAdmin('CONTENT_EDITOR');
 
   // Security: Input validation and length limits
-  if (data.title.length > 200) throw new Error('Title is too long');
-  if (data.slug.length > 200) throw new Error('Slug is too long');
-  if (data.category.length > 100) throw new Error('Category is too long');
-  if (data.content.length > 20000) throw new Error('Content is too long');
-  if (data.excerpt && data.excerpt.length > 500) throw new Error('Excerpt is too long');
-  if (data.image && data.image.length > 500) throw new Error('Image URL is too long');
+  if (data.title.length > SECURITY_LIMITS.TITLE) throw new Error('Title is too long');
+  if (data.slug.length > SECURITY_LIMITS.SLUG) throw new Error('Slug is too long');
+  if (data.category.length > SECURITY_LIMITS.CATEGORY) throw new Error('Category is too long');
+  if (data.content.length > SECURITY_LIMITS.CONTENT_LONG) throw new Error('Content is too long');
+  if (data.excerpt && data.excerpt.length > SECURITY_LIMITS.DESCRIPTION) throw new Error('Excerpt is too long');
+  if (data.image && data.image.length > SECURITY_LIMITS.URL) throw new Error('Image URL is too long');
 
   const content = sanitizeContent(data.content);
   const excerpt = data.excerpt ? sanitizeContent(data.excerpt) : data.excerpt;
@@ -55,12 +55,12 @@ export async function updateNewsPost(id: string, data: {
   await checkAdmin('CONTENT_EDITOR');
 
   // Security: Input validation and length limits
-  if (data.title.length > 200) throw new Error('Title is too long');
-  if (data.slug.length > 200) throw new Error('Slug is too long');
-  if (data.category.length > 100) throw new Error('Category is too long');
-  if (data.content.length > 20000) throw new Error('Content is too long');
-  if (data.excerpt && data.excerpt.length > 500) throw new Error('Excerpt is too long');
-  if (data.image && data.image.length > 500) throw new Error('Image URL is too long');
+  if (data.title.length > SECURITY_LIMITS.TITLE) throw new Error('Title is too long');
+  if (data.slug.length > SECURITY_LIMITS.SLUG) throw new Error('Slug is too long');
+  if (data.category.length > SECURITY_LIMITS.CATEGORY) throw new Error('Category is too long');
+  if (data.content.length > SECURITY_LIMITS.CONTENT_LONG) throw new Error('Content is too long');
+  if (data.excerpt && data.excerpt.length > SECURITY_LIMITS.DESCRIPTION) throw new Error('Excerpt is too long');
+  if (data.image && data.image.length > SECURITY_LIMITS.URL) throw new Error('Image URL is too long');
 
   const content = sanitizeContent(data.content);
   const excerpt = data.excerpt ? sanitizeContent(data.excerpt) : data.excerpt;
