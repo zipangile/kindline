@@ -3,21 +3,23 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
-import { sanitizeContent } from '@/lib/security';
+import { sanitizeContent, SECURITY_LIMITS } from '@/lib/security';
 
 export async function createImpactStat(formData: FormData) {
   await checkAdmin('CONTENT_EDITOR');
   const label = (formData.get('label') as string || '').trim();
   const value = (formData.get('value') as string || '').trim();
-  const description = (formData.get('description') as string || '').trim();
+  const rawDescription = (formData.get('description') as string || '').trim();
   const icon = (formData.get('icon') as string || '').trim();
   const order = parseInt(formData.get('order') as string || '0');
 
   // Security: Input validation and length limits
-  if (label.length > 100) throw new Error('Label is too long');
-  if (value.length > 50) throw new Error('Value is too long');
-  if (description.length > 500) throw new Error('Description is too long');
-  if (icon.length > 100) throw new Error('Icon is too long');
+  if (label.length > SECURITY_LIMITS.LABEL) throw new Error('Label is too long');
+  if (value.length > SECURITY_LIMITS.VALUE) throw new Error('Value is too long');
+  if (rawDescription.length > SECURITY_LIMITS.DESCRIPTION) throw new Error('Description is too long');
+  if (icon.length > SECURITY_LIMITS.ICON) throw new Error('Icon is too long');
+
+  const description = sanitizeContent(rawDescription);
 
   await prisma.impactStat.create({
     data: { label, value, description, icon, order },
@@ -32,15 +34,17 @@ export async function updateImpactStat(id: string, formData: FormData) {
   await checkAdmin('CONTENT_EDITOR');
   const label = (formData.get('label') as string || '').trim();
   const value = (formData.get('value') as string || '').trim();
-  const description = (formData.get('description') as string || '').trim();
+  const rawDescription = (formData.get('description') as string || '').trim();
   const icon = (formData.get('icon') as string || '').trim();
   const order = parseInt(formData.get('order') as string || '0');
 
   // Security: Input validation and length limits
-  if (label.length > 100) throw new Error('Label is too long');
-  if (value.length > 50) throw new Error('Value is too long');
-  if (description.length > 500) throw new Error('Description is too long');
-  if (icon.length > 100) throw new Error('Icon is too long');
+  if (label.length > SECURITY_LIMITS.LABEL) throw new Error('Label is too long');
+  if (value.length > SECURITY_LIMITS.VALUE) throw new Error('Value is too long');
+  if (rawDescription.length > SECURITY_LIMITS.DESCRIPTION) throw new Error('Description is too long');
+  if (icon.length > SECURITY_LIMITS.ICON) throw new Error('Icon is too long');
+
+  const description = sanitizeContent(rawDescription);
 
   await prisma.impactStat.update({
     where: { id },
@@ -73,12 +77,12 @@ export async function createImpactStory(formData: FormData) {
   const image = (formData.get('image') as string || '').trim();
 
   // Security: Input validation and length limits
-  if (title.length > 200) throw new Error('Title is too long');
-  if (rawContent.length > 10000) throw new Error('Content is too long');
-  if (category.length > 100) throw new Error('Category is too long');
-  if (author.length > 100) throw new Error('Author is too long');
-  if (authorRole.length > 100) throw new Error('Author role is too long');
-  if (image && image.length > 500) throw new Error('Image URL is too long');
+  if (title.length > SECURITY_LIMITS.TITLE) throw new Error('Title is too long');
+  if (rawContent.length > SECURITY_LIMITS.CONTENT_MEDIUM) throw new Error('Content is too long');
+  if (category.length > SECURITY_LIMITS.CATEGORY) throw new Error('Category is too long');
+  if (author.length > SECURITY_LIMITS.NAME) throw new Error('Author is too long');
+  if (authorRole.length > SECURITY_LIMITS.NAME) throw new Error('Author role is too long');
+  if (image && image.length > SECURITY_LIMITS.URL) throw new Error('Image URL is too long');
 
   const content = sanitizeContent(rawContent);
 
