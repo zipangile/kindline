@@ -3,14 +3,30 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
+import { SECURITY_LIMITS } from '@/lib/security';
 
 export async function updateSiteImage(key: string, url: string, alt?: string) {
   await checkAdmin('CONTENT_EDITOR');
 
+  // Security: Input validation and length limits
+  if (!url || (typeof url !== 'string')) throw new Error('Invalid URL');
+
+  const trimmedUrl = url.trim();
+  if (trimmedUrl.length > SECURITY_LIMITS.URL) throw new Error('URL is too long');
+
+  // Only allow relative paths (starting with /) or absolute https links
+  if (!trimmedUrl.startsWith('/') && !trimmedUrl.startsWith('https://')) {
+    throw new Error('Invalid image URL format. Only relative paths or https:// links are allowed.');
+  }
+
+  if (alt && alt.length > SECURITY_LIMITS.DESCRIPTION) {
+    throw new Error('Alt text (description) is too long');
+  }
+
   await prisma.siteImage.upsert({
     where: { key },
-    update: { url, alt },
-    create: { key, url, alt },
+    update: { url: trimmedUrl, alt },
+    create: { key, url: trimmedUrl, alt },
   });
 
   revalidatePath('/');

@@ -22,3 +22,8 @@
 **Vulnerability:** Scattered and inconsistent input validation and sanitization across various server actions (News, Impact, Inbox, etc.) leading to potential XSS and data integrity issues.
 **Learning:** Centralizing security logic ensures consistency and reduces the risk of overlooking validation in new features. Server actions must be hardened against both malicious input (XSS) and resource exhaustion (long strings).
 **Prevention:** Use a centralized utility like `src/lib/security.ts` for common validation (email) and sanitization (script removal). Enforce strict length limits on all user-provided fields in server actions.
+
+## 2025-05-20 - Validation of URL Formats and Slugs
+**Vulnerability:** News slugs and site image URLs were accepted without format validation, allowing for potential Path Traversal, XSS (via `javascript:` URIs), or broken URL structures.
+**Learning:** Length limits alone are insufficient for fields that influence routing or resource loading. Strict regex for slugs and protocol/prefix checks for URLs are essential.
+**Prevention:** Enforce `SLUG_REGEX` (/^[a-z0-9-]+$/) for all slugs and validate that image URLs start with `/` or `https://`.
