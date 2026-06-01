@@ -3,9 +3,25 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
+import { SECURITY_LIMITS } from '@/lib/security';
 
 export async function updateSiteImage(key: string, url: string, alt?: string) {
   await checkAdmin('CONTENT_EDITOR');
+
+  // Security: Input validation and length limits
+  if (url.length > SECURITY_LIMITS.URL) {
+    throw new Error('Image URL is too long');
+  }
+
+  if (alt && alt.length > SECURITY_LIMITS.DESCRIPTION) {
+    throw new Error('Alt text is too long');
+  }
+
+  // Security: Validate URL format (allow relative paths or https)
+  const isSafeUrl = url.startsWith('/') || url.startsWith('https://');
+  if (!isSafeUrl) {
+    throw new Error('Invalid image URL format. Must be a relative path or https:// link.');
+  }
 
   await prisma.siteImage.upsert({
     where: { key },
