@@ -22,3 +22,8 @@
 **Vulnerability:** Scattered and inconsistent input validation and sanitization across various server actions (News, Impact, Inbox, etc.) leading to potential XSS and data integrity issues.
 **Learning:** Centralizing security logic ensures consistency and reduces the risk of overlooking validation in new features. Server actions must be hardened against both malicious input (XSS) and resource exhaustion (long strings).
 **Prevention:** Use a centralized utility like `src/lib/security.ts` for common validation (email) and sanitization (script removal). Enforce strict length limits on all user-provided fields in server actions.
+
+## 2025-05-15 - Admin Authentication Hardening with Email Verification
+**Vulnerability:** Administrative access checks relied on email matches or metadata roles without verifying if the email was actually confirmed, allowing potential unauthorized access if account creation doesn't mandate immediate verification.
+**Learning:** In Supabase/GoTrue, a user might exist with an admin email before they've proven they own it. Authenticated sessions should be checked for `email_confirmed_at` before granting elevated privileges.
+**Prevention:** Always verify `email_confirmed_at` in authorization utilities (like `checkAdmin`) to ensure only verified owners of administrative emails can access sensitive areas.

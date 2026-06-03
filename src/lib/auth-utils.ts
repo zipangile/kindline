@@ -13,8 +13,8 @@ export async function checkAdmin(requiredLevel: PermissionLevel = 'CONTENT_EDITO
     console.error('[checkAdmin] Auth error:', authError);
   }
 
-  if (!user) {
-    console.warn('[checkAdmin] No user found, redirecting to login');
+  if (!user || !user.email_confirmed_at) {
+    console.warn('[checkAdmin] No verified user found, redirecting to login');
     redirect('/login');
   }
 
@@ -66,7 +66,7 @@ export async function getUserRole() {
     console.error('[getUserRole] Auth error:', authError);
   }
 
-  if (!user) return 'USER';
+  if (!user || !user.email_confirmed_at) return 'USER';
 
   const adminEmail = process.env.ADMIN_EMAIL;
   if (adminEmail && user.email === adminEmail) return 'SUPER_ADMIN';
