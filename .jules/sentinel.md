@@ -22,3 +22,8 @@
 **Vulnerability:** Scattered and inconsistent input validation and sanitization across various server actions (News, Impact, Inbox, etc.) leading to potential XSS and data integrity issues.
 **Learning:** Centralizing security logic ensures consistency and reduces the risk of overlooking validation in new features. Server actions must be hardened against both malicious input (XSS) and resource exhaustion (long strings).
 **Prevention:** Use a centralized utility like `src/lib/security.ts` for common validation (email) and sanitization (script removal). Enforce strict length limits on all user-provided fields in server actions.
+
+## 2025-05-15 - Missing Email Confirmation for Administrative Access
+**Vulnerability:** Core authentication utilities `checkAdmin` and `getUserRole` granted administrative privileges based on email and role metadata without verifying if the email was confirmed (`user.email_confirmed_at`).
+**Learning:** Relying solely on email identity or metadata for authorization is insufficient if the authentication provider allows unverified accounts. Attackers could potentially register unverified accounts with targeted emails to probe for access.
+**Prevention:** Always verify `email_confirmed_at` (or equivalent status) in core authorization guards before granting elevated permissions or returning sensitive roles.

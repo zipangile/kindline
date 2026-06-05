@@ -18,6 +18,12 @@ export async function checkAdmin(requiredLevel: PermissionLevel = 'CONTENT_EDITO
     redirect('/login');
   }
 
+  // Security: Ensure email is confirmed before granting administrative privileges
+  if (!user.email_confirmed_at) {
+    console.warn(`[checkAdmin] User ${user.email} has not confirmed their email`);
+    redirect('/login?error=Email+not+confirmed');
+  }
+
   const adminEmail = process.env.ADMIN_EMAIL;
   const userRole = user.app_metadata?.role as PermissionLevel || 'USER';
 
@@ -67,6 +73,9 @@ export async function getUserRole() {
   }
 
   if (!user) return 'USER';
+
+  // Security: Elevated roles require confirmed email
+  if (!user.email_confirmed_at) return 'USER';
 
   const adminEmail = process.env.ADMIN_EMAIL;
   if (adminEmail && user.email === adminEmail) return 'SUPER_ADMIN';
