@@ -22,3 +22,8 @@
 **Vulnerability:** Scattered and inconsistent input validation and sanitization across various server actions (News, Impact, Inbox, etc.) leading to potential XSS and data integrity issues.
 **Learning:** Centralizing security logic ensures consistency and reduces the risk of overlooking validation in new features. Server actions must be hardened against both malicious input (XSS) and resource exhaustion (long strings).
 **Prevention:** Use a centralized utility like `src/lib/security.ts` for common validation (email) and sanitization (script removal). Enforce strict length limits on all user-provided fields in server actions.
+
+## 2025-05-15 - Unverified Email Admin Access
+**Vulnerability:** Administrative authorization checks (`checkAdmin`, `getUserRole`) relied on email matching or metadata roles without verifying if the user's email was confirmed.
+**Learning:** In Supabase (and many other providers), a user can sign up with any email. If authorization only checks the email string or metadata that might be pre-set, unverified users could potentially access restricted areas if they sign up with a known admin email.
+**Prevention:** Always verify `user.email_confirmed_at` in authorization middleware or utility functions before granting elevated privileges.

@@ -3,6 +3,7 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
+import { isValidEmail, SECURITY_LIMITS } from '@/lib/security';
 
 export async function updatePaymentSettings(formData: FormData) {
   await checkAdmin('FINANCIAL_ADMIN');
@@ -30,7 +31,7 @@ export async function updatePaymentSettings(formData: FormData) {
     }
   }
 
-  if (notificationEmail && (notificationEmail.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(notificationEmail))) {
+  if (notificationEmail && (notificationEmail.length > SECURITY_LIMITS.EMAIL || !isValidEmail(notificationEmail))) {
     throw new Error('Invalid notification email');
   }
 

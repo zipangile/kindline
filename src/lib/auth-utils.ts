@@ -18,11 +18,13 @@ export async function checkAdmin(requiredLevel: PermissionLevel = 'CONTENT_EDITO
     redirect('/login');
   }
 
+  // Security: Ensure email is confirmed before granting any admin access
+  const isEmailConfirmed = !!user.email_confirmed_at;
   const adminEmail = process.env.ADMIN_EMAIL;
   const userRole = user.app_metadata?.role as PermissionLevel || 'USER';
 
-  // Super admin and hardcoded admin always have full access
-  const isSuperAdmin = userRole === 'SUPER_ADMIN' || (adminEmail && user.email === adminEmail);
+  // Super admin and hardcoded admin always have full access, but only if email is confirmed
+  const isSuperAdmin = isEmailConfirmed && (userRole === 'SUPER_ADMIN' || (adminEmail && user.email === adminEmail));
 
   if (isSuperAdmin) return user;
 
@@ -35,7 +37,7 @@ export async function checkAdmin(requiredLevel: PermissionLevel = 'CONTENT_EDITO
     'USER': ['SUPER_ADMIN', 'CONTENT_EDITOR', 'FINANCIAL_ADMIN', 'VOLUNTEER_COORD', 'USER']
   };
 
-  const hasPermission = permissions[requiredLevel].includes(userRole);
+  const hasPermission = isEmailConfirmed && permissions[requiredLevel].includes(userRole);
 
   if (!hasPermission) {
     console.warn(`[checkAdmin] User ${user.email} with role ${userRole} does not have required permission: ${requiredLevel}`);
@@ -67,6 +69,9 @@ export async function getUserRole() {
   }
 
   if (!user) return 'USER';
+
+  // Security: Return USER role if email is not confirmed
+  if (!user.email_confirmed_at) return 'USER';
 
   const adminEmail = process.env.ADMIN_EMAIL;
   if (adminEmail && user.email === adminEmail) return 'SUPER_ADMIN';
