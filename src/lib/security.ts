@@ -13,7 +13,11 @@ export const SECURITY_LIMITS = {
   URL: 500,
   PHONE: 50,
   DESCRIPTION: 500,
-  EXPERIENCE: 2000
+  EXPERIENCE: 2000,
+  LOCATION: 200,
+  AVAILABILITY: 500,
+  SKILLS: 1000,
+  INTERESTS: 1000
 };
 
 export function isValidEmail(email: string): boolean {
@@ -22,5 +26,11 @@ export function isValidEmail(email: string): boolean {
 
 export function sanitizeContent(content: string): string {
   if (!content) return '';
-  return content.replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gim, "");
+  // Remove <script> tags, on* event handlers, and javascript: URIs
+  return content
+    .replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gim, "")
+    .replace(/\bon\w+\s*=\s*(['"])[^'"]*\1/gim, "")
+    .replace(/\bon\w+\s*=\s*[^\s>]+/gim, "")
+    .replace(/href\s*=\s*(['"])javascript:[^'"]*\1/gim, 'href="#"')
+    .replace(/href\s*=\s*javascript:[^\s>]+/gim, 'href="#"');
 }

@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
+import { isValidEmail, SECURITY_LIMITS } from '@/lib/security'
 
 export async function login(formData: FormData) {
   const supabase = await createClient()
@@ -15,7 +16,7 @@ export async function login(formData: FormData) {
     redirect(`/login?error=${encodeURIComponent('Email and password are required')}`);
   }
 
-  if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  if (email.length > SECURITY_LIMITS.EMAIL || !isValidEmail(email)) {
     redirect(`/login?error=${encodeURIComponent('Invalid email address')}`);
   }
 
@@ -44,7 +45,7 @@ export async function signup(formData: FormData) {
     redirect(`/signup?error=${encodeURIComponent('Email and password are required')}${role ? `&role=${role}` : ''}`);
   }
 
-  if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  if (email.length > SECURITY_LIMITS.EMAIL || !isValidEmail(email)) {
     redirect(`/signup?error=${encodeURIComponent('Invalid email address')}${role ? `&role=${role}` : ''}`);
   }
 
@@ -91,13 +92,13 @@ export async function signup(formData: FormData) {
       redirect(`/signup?error=${encodeURIComponent('Name is required for volunteers')}&role=volunteer`);
     }
 
-    if (name.length > 200) throw new Error('Name is too long');
-    if (phone.length > 50) throw new Error('Phone number is too long');
-    if (location.length > 200) throw new Error('Location is too long');
-    if (availability.length > 500) throw new Error('Availability is too long');
-    if (skills.length > 1000) throw new Error('Skills description is too long');
-    if (experience.length > 2000) throw new Error('Experience description is too long');
-    if (interests.length > 1000) throw new Error('Interests description is too long');
+    if (name.length > SECURITY_LIMITS.NAME) throw new Error('Name is too long');
+    if (phone.length > SECURITY_LIMITS.PHONE) throw new Error('Phone number is too long');
+    if (location.length > SECURITY_LIMITS.LOCATION) throw new Error('Location is too long');
+    if (availability.length > SECURITY_LIMITS.AVAILABILITY) throw new Error('Availability is too long');
+    if (skills.length > SECURITY_LIMITS.SKILLS) throw new Error('Skills description is too long');
+    if (experience.length > SECURITY_LIMITS.EXPERIENCE) throw new Error('Experience description is too long');
+    if (interests.length > SECURITY_LIMITS.INTERESTS) throw new Error('Interests description is too long');
 
     signupData.options.data = {
       role: 'volunteer',
