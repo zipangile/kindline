@@ -3,9 +3,20 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
+import { SECURITY_LIMITS } from '@/lib/security';
 
 export async function updateSiteImage(key: string, url: string, alt?: string) {
   await checkAdmin('CONTENT_EDITOR');
+
+  // Security: Input validation and length limits
+  if (key.length > 100) throw new Error('Key is too long');
+  if (!url || url.length > SECURITY_LIMITS.URL) throw new Error('URL is invalid or too long');
+  if (alt && alt.length > SECURITY_LIMITS.DESCRIPTION) throw new Error('Alt text is too long');
+
+  // Validate URL format (relative or https)
+  if (!url.startsWith('/') && !url.startsWith('https://')) {
+    throw new Error('URL must be a relative path or an absolute https link');
+  }
 
   await prisma.siteImage.upsert({
     where: { key },

@@ -17,7 +17,11 @@ export const SECURITY_LIMITS = {
   LOCATION: 200,
   AVAILABILITY: 500,
   SKILLS: 1000,
-  INTERESTS: 1000
+  INTERESTS: 1000,
+  LABEL: 100,
+  VALUE: 50,
+  ICON: 100,
+  ROLE: 50
 };
 
 export function isValidEmail(email: string): boolean {
