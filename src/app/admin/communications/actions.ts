@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin, getUserEmail } from '@/lib/auth-utils';
 import { sendCommunicationEmail, sendVolunteerInvitation } from '@/lib/email';
-import { isValidEmail, sanitizeContent } from '@/lib/security';
+import { isValidEmail, sanitizeContent, SECURITY_LIMITS } from '@/lib/security';
 
 export async function sendManualEmail(formData: FormData) {
   const adminEmail = await getUserEmail();
@@ -19,11 +19,11 @@ export async function sendManualEmail(formData: FormData) {
   }
 
   // Security: Basic sanitization and length limits
-  if (recipient.length > 254 || !isValidEmail(recipient)) {
+  if (recipient.length > SECURITY_LIMITS.EMAIL || !isValidEmail(recipient)) {
     throw new Error('Invalid recipient email');
   }
 
-  if (rawSubject.length > 200) {
+  if (rawSubject.length > SECURITY_LIMITS.SUBJECT) {
     throw new Error('Subject is too long');
   }
 
@@ -62,21 +62,22 @@ export async function sendVolunteerInvite(formData: FormData) {
   await checkAdmin('VOLUNTEER_COORD');
 
   const recipient = (formData.get('recipient') as string || '').trim().toLowerCase();
-  const message = (formData.get('message') as string || '').trim();
+  const rawMessage = (formData.get('message') as string || '').trim();
 
   // Security: Input validation and length limits
   if (!recipient) {
     throw new Error('Recipient email is required.');
   }
 
-  if (recipient.length > 254 || !isValidEmail(recipient)) {
+  if (recipient.length > SECURITY_LIMITS.EMAIL || !isValidEmail(recipient)) {
     throw new Error('Invalid recipient email address');
   }
 
-  if (message.length > 5000) {
+  if (rawMessage.length > SECURITY_LIMITS.MESSAGE) {
     throw new Error('Message is too long');
   }
 
+  const message = sanitizeContent(rawMessage);
   const result = await sendVolunteerInvitation(recipient, message);
 
   if (result?.success) {
