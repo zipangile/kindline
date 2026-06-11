@@ -31,6 +31,25 @@ export async function updatePaymentSettings(formData: FormData) {
     }
   }
 
+  // Security: Validate Lenco Base URL to prevent SSRF or credential theft
+  if (lencoBaseUrl) {
+    try {
+      const url = new URL(lencoBaseUrl);
+      if (url.protocol !== 'https:') {
+        throw new Error('Lenco Base URL must use HTTPS');
+      }
+      // Allow lenco.co and subdomains
+      if (url.hostname !== 'lenco.co' && !url.hostname.endsWith('.lenco.co')) {
+        throw new Error('Lenco Base URL must be a valid lenco.co domain');
+      }
+    } catch (e) {
+      if (e instanceof Error && (e.message.includes('HTTPS') || e.message.includes('lenco.co'))) {
+        throw e;
+      }
+      throw new Error('Invalid Lenco Base URL format');
+    }
+  }
+
   if (notificationEmail && (notificationEmail.length > SECURITY_LIMITS.EMAIL || !isValidEmail(notificationEmail))) {
     throw new Error('Invalid notification email');
   }
