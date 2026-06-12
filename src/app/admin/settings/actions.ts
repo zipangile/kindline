@@ -26,8 +26,8 @@ export async function updatePaymentSettings(formData: FormData) {
   ];
 
   for (const field of fields) {
-    if (field && field.length > 500) {
-      throw new Error('Configuration field too long (max 500 characters)');
+    if (field && field.length > SECURITY_LIMITS.CONFIG_FIELD) {
+      throw new Error(`Configuration field too long (max ${SECURITY_LIMITS.CONFIG_FIELD} characters)`);
     }
   }
 
