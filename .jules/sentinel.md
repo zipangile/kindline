@@ -27,3 +27,13 @@
 **Vulnerability:** Administrative authorization checks (`checkAdmin`, `getUserRole`) relied on email matching or metadata roles without verifying if the user's email was confirmed.
 **Learning:** In Supabase (and many other providers), a user can sign up with any email. If authorization only checks the email string or metadata that might be pre-set, unverified users could potentially access restricted areas if they sign up with a known admin email.
 **Prevention:** Always verify `user.email_confirmed_at` in authorization middleware or utility functions before granting elevated privileges.
+
+## 2025-05-15 - SSRF Risk in Dynamic Gateway Configuration
+**Vulnerability:** Admin settings allowed providing a custom `lencoBaseUrl` without validation, potentially allowing an attacker with financial admin access to redirect internal payment verification requests to a malicious server (SSRF).
+**Learning:** Even administrative configuration fields must be validated if they influence server-side network requests. Restricting protocols (HTTPS) and domains (lenco.co) mitigates this risk.
+**Prevention:** Implement strict URL validation (protocol and domain whitelisting) for any configuration field used in `fetch` or other network requests.
+
+## 2025-05-15 - Unsanitized Input in Payment Callbacks
+**Vulnerability:** Payment verification routes accepted `supabaseUserId` and `phone` from client-side requests without validation, leading to potential data integrity issues or injection risks when these values were stored in the database.
+**Learning:** API routes that bridge external payment gateways and internal databases are critical boundaries. All data received from the client, even if it's supposed to be "metadata", must be validated.
+**Prevention:** Apply regex and length checks to all fields in API routes, especially those that identify users or are used in database operations.
