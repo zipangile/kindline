@@ -16,6 +16,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid reference' }, { status: 400 });
     }
 
+    if (supabaseUserId && (typeof supabaseUserId !== 'string' || supabaseUserId.length > 100 || !/^[a-zA-Z0-9-]+$/.test(supabaseUserId))) {
+        console.error('[Lenco API] Invalid supabaseUserId format:', supabaseUserId);
+        return NextResponse.json({ error: 'Invalid user ID' }, { status: 400 });
+    }
+
+    if (phone && (typeof phone !== 'string' || phone.length > 50 || !/^[0-9+-\s()]+$/.test(phone))) {
+        console.error('[Lenco API] Invalid phone format:', phone);
+        return NextResponse.json({ error: 'Invalid phone number' }, { status: 400 });
+    }
+
     const settings = await prisma.paymentSettings.findFirst();
     const secretKey = process.env.LENCO_SECRET_KEY || settings?.lencoSecret;
     let baseUrl = process.env.LENCO_BASE_URL || settings?.lencoBaseUrl || 'https://api.lenco.co/access/v2/';
