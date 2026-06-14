@@ -26,8 +26,23 @@ export async function updatePaymentSettings(formData: FormData) {
   ];
 
   for (const field of fields) {
-    if (field && field.length > 500) {
-      throw new Error('Configuration field too long (max 500 characters)');
+    if (field && field.length > SECURITY_LIMITS.CONFIG_FIELD) {
+      throw new Error(`Configuration field too long (max ${SECURITY_LIMITS.CONFIG_FIELD} characters)`);
+    }
+  }
+
+  // Security: Validate Lenco base URL to prevent SSRF
+  if (lencoBaseUrl) {
+    try {
+      const url = new URL(lencoBaseUrl);
+      if (url.protocol !== 'https:') {
+        throw new Error('Lenco base URL must use HTTPS');
+      }
+      if (url.hostname !== 'lenco.co' && !url.hostname.endsWith('.lenco.co')) {
+        throw new Error('Invalid Lenco base URL domain');
+      }
+    } catch (e: unknown) {
+      throw new Error(e instanceof Error ? e.message : 'Invalid Lenco base URL');
     }
   }
 
