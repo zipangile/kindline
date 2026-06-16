@@ -19,8 +19,10 @@ export async function createImpactStat(formData: FormData) {
   if (description.length > SECURITY_LIMITS.DESCRIPTION) throw new Error('Description is too long');
   if (icon.length > SECURITY_LIMITS.ICON) throw new Error('Icon is too long');
 
+  const sanitizedDescription = sanitizeContent(description);
+
   await prisma.impactStat.create({
-    data: { label, value, description, icon, order },
+    data: { label, value, description: sanitizedDescription, icon, order },
   });
 
   revalidatePath('/admin/impact');
@@ -42,9 +44,11 @@ export async function updateImpactStat(id: string, formData: FormData) {
   if (description.length > SECURITY_LIMITS.DESCRIPTION) throw new Error('Description is too long');
   if (icon.length > SECURITY_LIMITS.ICON) throw new Error('Icon is too long');
 
+  const sanitizedDescription = sanitizeContent(description);
+
   await prisma.impactStat.update({
     where: { id },
-    data: { label, value, description, icon, order },
+    data: { label, value, description: sanitizedDescription, icon, order },
   });
 
   revalidatePath('/admin/impact');
