@@ -27,3 +27,23 @@
 **Vulnerability:** Administrative authorization checks (`checkAdmin`, `getUserRole`) relied on email matching or metadata roles without verifying if the user's email was confirmed.
 **Learning:** In Supabase (and many other providers), a user can sign up with any email. If authorization only checks the email string or metadata that might be pre-set, unverified users could potentially access restricted areas if they sign up with a known admin email.
 **Prevention:** Always verify `user.email_confirmed_at` in authorization middleware or utility functions before granting elevated privileges.
+
+## 2025-05-15 - Inconsistent Sanitization across Admin Actions
+**Vulnerability:** Some administrative actions (Impact Stats) were missing  on multi-line text fields, while others (Programs, News) had it, creating inconsistent protection against XSS.
+**Learning:** Even with React's default escaping, multi-line descriptions that might be rendered in different contexts should be consistently sanitized at the source.
+**Prevention:** Audit all server actions that handle multi-line user input and ensure  is applied before database persistence.
+
+## 2025-05-15 - Partial Validation of External API Inputs
+**Vulnerability:** The Lenco payment verification route validated the transaction  but accepted  and  from the request body without format or length checks.
+**Learning:** Inputs used in database operations (especially updates) must be validated even if they are secondary to the main transaction verification.
+**Prevention:** Apply regex and length validation to all body parameters in API routes, using centralized `SECURITY_LIMITS` where applicable.
+
+## 2025-05-15 - Inconsistent Sanitization across Admin Actions
+**Vulnerability:** Some administrative actions (Impact Stats) were missing `sanitizeContent` on multi-line text fields, while others (Programs, News) had it, creating inconsistent protection against XSS.
+**Learning:** Even with React's default escaping, multi-line descriptions that might be rendered in different contexts should be consistently sanitized at the source.
+**Prevention:** Audit all server actions that handle multi-line user input and ensure `sanitizeContent` is applied before database persistence.
+
+## 2025-05-15 - Partial Validation of External API Inputs
+**Vulnerability:** The Lenco payment verification route validated the transaction `reference` but accepted `supabaseUserId` and `phone` from the request body without format or length checks.
+**Learning:** Inputs used in database operations (especially updates) must be validated even if they are secondary to the main transaction verification.
+**Prevention:** Apply regex and length validation to all body parameters in API routes, using centralized `SECURITY_LIMITS` where applicable.

@@ -9,15 +9,17 @@ export async function createImpactStat(formData: FormData) {
   await checkAdmin('CONTENT_EDITOR');
   const label = (formData.get('label') as string || '').trim();
   const value = (formData.get('value') as string || '').trim();
-  const description = (formData.get('description') as string || '').trim();
+  const rawDescription = (formData.get('description') as string || '').trim();
   const icon = (formData.get('icon') as string || '').trim();
   const order = parseInt(formData.get('order') as string || '0');
 
   // Security: Input validation and length limits
   if (label.length > SECURITY_LIMITS.LABEL) throw new Error('Label is too long');
   if (value.length > SECURITY_LIMITS.VALUE) throw new Error('Value is too long');
-  if (description.length > SECURITY_LIMITS.DESCRIPTION) throw new Error('Description is too long');
+  if (rawDescription.length > SECURITY_LIMITS.DESCRIPTION) throw new Error('Description is too long');
   if (icon.length > SECURITY_LIMITS.ICON) throw new Error('Icon is too long');
+
+  const description = sanitizeContent(rawDescription);
 
   await prisma.impactStat.create({
     data: { label, value, description, icon, order },
@@ -32,15 +34,17 @@ export async function updateImpactStat(id: string, formData: FormData) {
   await checkAdmin('CONTENT_EDITOR');
   const label = (formData.get('label') as string || '').trim();
   const value = (formData.get('value') as string || '').trim();
-  const description = (formData.get('description') as string || '').trim();
+  const rawDescription = (formData.get('description') as string || '').trim();
   const icon = (formData.get('icon') as string || '').trim();
   const order = parseInt(formData.get('order') as string || '0');
 
   // Security: Input validation and length limits
   if (label.length > SECURITY_LIMITS.LABEL) throw new Error('Label is too long');
   if (value.length > SECURITY_LIMITS.VALUE) throw new Error('Value is too long');
-  if (description.length > SECURITY_LIMITS.DESCRIPTION) throw new Error('Description is too long');
+  if (rawDescription.length > SECURITY_LIMITS.DESCRIPTION) throw new Error('Description is too long');
   if (icon.length > SECURITY_LIMITS.ICON) throw new Error('Icon is too long');
+
+  const description = sanitizeContent(rawDescription);
 
   await prisma.impactStat.update({
     where: { id },
