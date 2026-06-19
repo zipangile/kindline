@@ -92,13 +92,27 @@ export async function signup(formData: FormData) {
       redirect(`/signup?error=${encodeURIComponent('Name is required for volunteers')}&role=volunteer`);
     }
 
-    if (name.length > SECURITY_LIMITS.NAME) throw new Error('Name is too long');
-    if (phone.length > SECURITY_LIMITS.PHONE) throw new Error('Phone number is too long');
-    if (location.length > SECURITY_LIMITS.LOCATION) throw new Error('Location is too long');
-    if (availability.length > SECURITY_LIMITS.AVAILABILITY) throw new Error('Availability is too long');
-    if (skills.length > SECURITY_LIMITS.SKILLS) throw new Error('Skills description is too long');
-    if (experience.length > SECURITY_LIMITS.EXPERIENCE) throw new Error('Experience description is too long');
-    if (interests.length > SECURITY_LIMITS.INTERESTS) throw new Error('Interests description is too long');
+    if (name.length > SECURITY_LIMITS.NAME) {
+      redirect(`/signup?error=${encodeURIComponent('Name is too long')}&role=volunteer`);
+    }
+    if (phone.length > SECURITY_LIMITS.PHONE) {
+      redirect(`/signup?error=${encodeURIComponent('Phone number is too long')}&role=volunteer`);
+    }
+    if (location.length > SECURITY_LIMITS.LOCATION) {
+      redirect(`/signup?error=${encodeURIComponent('Location is too long')}&role=volunteer`);
+    }
+    if (availability.length > SECURITY_LIMITS.AVAILABILITY) {
+      redirect(`/signup?error=${encodeURIComponent('Availability is too long')}&role=volunteer`);
+    }
+    if (skills.length > SECURITY_LIMITS.SKILLS) {
+      redirect(`/signup?error=${encodeURIComponent('Skills description is too long')}&role=volunteer`);
+    }
+    if (experience.length > SECURITY_LIMITS.EXPERIENCE) {
+      redirect(`/signup?error=${encodeURIComponent('Experience description is too long')}&role=volunteer`);
+    }
+    if (interests.length > SECURITY_LIMITS.INTERESTS) {
+      redirect(`/signup?error=${encodeURIComponent('Interests description is too long')}&role=volunteer`);
+    }
 
     signupData.options.data = {
       role: 'volunteer',
