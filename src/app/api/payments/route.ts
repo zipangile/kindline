@@ -40,6 +40,12 @@ export async function POST(request: Request) {
             return NextResponse.json({ verified: false, error: 'Missing customer data' }, { status: 400 });
           }
 
+          // Security: Validate optional supabaseUserId from meta
+          if (meta?.supabaseUserId && (typeof meta.supabaseUserId !== 'string' || meta.supabaseUserId.length > 100 || !/^[a-zA-Z0-9.\-_]+$/.test(meta.supabaseUserId))) {
+            console.error('[Flutterwave API] Invalid supabaseUserId format in meta:', meta.supabaseUserId);
+            return NextResponse.json({ error: 'Invalid user ID' }, { status: 400 });
+          }
+
           // Check for existing donation to avoid duplicates and race conditions
           const existingDonation = await prisma.donation.findUnique({
             where: { transactionId: String(id) },
@@ -104,6 +110,12 @@ export async function POST(request: Request) {
           if (!customer?.email) {
             console.error('[Flutterwave API] Missing customer email in direct verification data');
             return NextResponse.json({ verified: false, error: 'Missing customer data' }, { status: 400 });
+          }
+
+          // Security: Validate optional supabaseUserId from meta
+          if (meta?.supabaseUserId && (typeof meta.supabaseUserId !== 'string' || meta.supabaseUserId.length > 100 || !/^[a-zA-Z0-9.\-_]+$/.test(meta.supabaseUserId))) {
+            console.error('[Flutterwave API] Invalid supabaseUserId format in meta (direct):', meta.supabaseUserId);
+            return NextResponse.json({ error: 'Invalid user ID' }, { status: 400 });
           }
 
           // Check for existing donation
