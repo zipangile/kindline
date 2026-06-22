@@ -23,7 +23,8 @@ export async function login(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword({ email, password })
 
   if (error) {
-    redirect(`/login?error=${encodeURIComponent(error.message)}`)
+    // Security: Do not leak specific auth error messages to prevent account enumeration or information leakage
+    redirect(`/login?error=${encodeURIComponent('Invalid login credentials')}`)
   }
 
   revalidatePath('/', 'layout')
@@ -115,7 +116,8 @@ export async function signup(formData: FormData) {
   const { data: authData, error } = await supabase.auth.signUp(signupData)
 
   if (error) {
-    redirect(`/signup?error=${encodeURIComponent(error.message)}${role ? `&role=${role}` : ''}`)
+    // Security: Do not leak specific auth error messages
+    redirect(`/signup?error=${encodeURIComponent('Signup failed. Please try again.')}${role ? `&role=${role}` : ''}`)
   }
 
   if (isVolunteer && authData.user) {

@@ -35,6 +35,12 @@ export async function POST(request: Request) {
         if (verificationData?.status === 'success' && verificationData?.data?.status?.toLowerCase() === 'successful') {
           const { amount, currency, customer, meta, tx_ref, id } = verificationData.data;
 
+          // Security: Validate metadata to prevent injection
+          if (meta?.supabaseUserId && (typeof meta.supabaseUserId !== 'string' || meta.supabaseUserId.length > 100 || !/^[a-zA-Z0-9.:_/-]+$/.test(meta.supabaseUserId))) {
+            console.error('[Flutterwave API] Invalid supabaseUserId in metadata:', meta.supabaseUserId);
+            return NextResponse.json({ verified: false, error: 'Invalid transaction metadata' }, { status: 400 });
+          }
+
           if (!customer?.email) {
             console.error('[Flutterwave API] Missing customer email in verification data');
             return NextResponse.json({ verified: false, error: 'Missing customer data' }, { status: 400 });
@@ -100,6 +106,12 @@ export async function POST(request: Request) {
 
         if (verificationData?.status === 'success' && verificationData?.data?.status?.toLowerCase() === 'successful') {
           const { amount, currency, customer, meta, tx_ref, id } = verificationData.data;
+
+          // Security: Validate metadata to prevent injection
+          if (meta?.supabaseUserId && (typeof meta.supabaseUserId !== 'string' || meta.supabaseUserId.length > 100 || !/^[a-zA-Z0-9.:_/-]+$/.test(meta.supabaseUserId))) {
+            console.error('[Flutterwave API] Invalid supabaseUserId in direct verification metadata:', meta.supabaseUserId);
+            return NextResponse.json({ verified: false, error: 'Invalid transaction metadata' }, { status: 400 });
+          }
 
           if (!customer?.email) {
             console.error('[Flutterwave API] Missing customer email in direct verification data');
