@@ -27,3 +27,8 @@
 **Vulnerability:** Administrative authorization checks (`checkAdmin`, `getUserRole`) relied on email matching or metadata roles without verifying if the user's email was confirmed.
 **Learning:** In Supabase (and many other providers), a user can sign up with any email. If authorization only checks the email string or metadata that might be pre-set, unverified users could potentially access restricted areas if they sign up with a known admin email.
 **Prevention:** Always verify `user.email_confirmed_at` in authorization middleware or utility functions before granting elevated privileges.
+
+## 2025-05-15 - Information Leakage and Account Enumeration in Auth Redirects
+**Vulnerability:** Server actions for login and signup were redirecting back to the UI with raw Supabase error messages in query parameters.
+**Learning:** Specific error messages like "User not found" or "Invalid password" allow attackers to enumerate valid email addresses. Technical details in errors can also leak internal architecture or configuration.
+**Prevention:** Always use generic error messages (e.g., "Invalid login credentials") for authentication failures and ensure they are sanitized before being passed to redirect URLs.
