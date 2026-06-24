@@ -41,6 +41,10 @@ export async function sendNewsletter(formData: FormData) {
     throw new Error('Subject is too long');
   }
 
+  if (rawContent.length > SECURITY_LIMITS.CONTENT_LONG) {
+    throw new Error('Newsletter content is too long');
+  }
+
   // Remove <script> tags to prevent basic XSS in email clients that might execute them
   const content = sanitizeContent(rawContent);
   const subject = rawSubject;
