@@ -24,7 +24,9 @@ export const SECURITY_LIMITS = {
   AUTHOR: 100,
   AUTHOR_ROLE: 100,
   EXCERPT: 500,
-  CONFIG_FIELD: 500
+  CONFIG_FIELD: 500,
+  ID: 50,
+  SUPABASE_USER_ID: 100
 };
 
 export function isValidEmail(email: string): boolean {
