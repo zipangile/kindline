@@ -6,7 +6,8 @@ import { checkAdmin } from '@/lib/auth-utils';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { isValidEmail, SECURITY_LIMITS } from '@/lib/security';
 
-export type AdminRole = 'SUPER_ADMIN' | 'CONTENT_EDITOR' | 'FINANCIAL_ADMIN' | 'VOLUNTEER_COORD';
+const ALLOWED_ROLES = ['SUPER_ADMIN', 'CONTENT_EDITOR', 'FINANCIAL_ADMIN', 'VOLUNTEER_COORD'] as const;
+export type AdminRole = (typeof ALLOWED_ROLES)[number];
 
 // Helper to get Supabase Admin client
 const getSupabaseAdmin = () => {
@@ -57,6 +58,10 @@ async function syncUserRole(email: string, role: AdminRole | null) {
 export async function addAdmin(email: string, name: string, role: AdminRole) {
   await checkAdmin('SUPER_ADMIN');
 
+  if (!ALLOWED_ROLES.includes(role)) {
+    throw new Error('Invalid admin role');
+  }
+
   const trimmedEmail = email.trim().toLowerCase();
   const trimmedName = name.trim();
 
@@ -83,6 +88,10 @@ export async function addAdmin(email: string, name: string, role: AdminRole) {
 
 export async function updateAdminRole(id: string, role: AdminRole) {
   await checkAdmin('SUPER_ADMIN');
+
+  if (!ALLOWED_ROLES.includes(role)) {
+    throw new Error('Invalid admin role');
+  }
 
   const admin = await prisma.managedAdmin.update({
     where: { id },
