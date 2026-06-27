@@ -4,10 +4,16 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin, getUserEmail } from '@/lib/auth-utils';
 import { sendCommunicationEmail } from '@/lib/email';
-import { isValidEmail, sanitizeContent } from '@/lib/security';
+import { isValidEmail, sanitizeContent, SECURITY_LIMITS } from '@/lib/security';
 
 export async function markMessageAsRead(id: string) {
   await checkAdmin('CONTENT_EDITOR');
+
+  // Security: Validate ID
+  if (!id || typeof id !== 'string' || id.length > SECURITY_LIMITS.ID || !/^[a-zA-Z0-9_-]+$/.test(id)) {
+    throw new Error('Invalid ID format');
+  }
+
   await prisma.contactMessage.update({
     where: { id },
     data: { status: 'read' },
@@ -17,6 +23,12 @@ export async function markMessageAsRead(id: string) {
 
 export async function deleteMessage(id: string) {
   await checkAdmin('CONTENT_EDITOR');
+
+  // Security: Validate ID
+  if (!id || typeof id !== 'string' || id.length > SECURITY_LIMITS.ID || !/^[a-zA-Z0-9_-]+$/.test(id)) {
+    throw new Error('Invalid ID format');
+  }
+
   await prisma.contactMessage.delete({
     where: { id },
   });
@@ -26,6 +38,11 @@ export async function deleteMessage(id: string) {
 export async function replyToMessage(id: string, formData: FormData) {
   const adminEmail = await getUserEmail();
   await checkAdmin('CONTENT_EDITOR');
+
+  // Security: Validate ID
+  if (!id || typeof id !== 'string' || id.length > SECURITY_LIMITS.ID || !/^[a-zA-Z0-9_-]+$/.test(id)) {
+    throw new Error('Invalid ID format');
+  }
 
   const recipient = (formData.get('recipient') as string || '').trim().toLowerCase();
   const rawSubject = (formData.get('subject') as string || '').trim();

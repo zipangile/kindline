@@ -27,3 +27,8 @@
 **Vulnerability:** Administrative authorization checks (`checkAdmin`, `getUserRole`) relied on email matching or metadata roles without verifying if the user's email was confirmed.
 **Learning:** In Supabase (and many other providers), a user can sign up with any email. If authorization only checks the email string or metadata that might be pre-set, unverified users could potentially access restricted areas if they sign up with a known admin email.
 **Prevention:** Always verify `user.email_confirmed_at` in authorization middleware or utility functions before granting elevated privileges.
+
+## 2025-05-15 - Account Enumeration in Auth Flows
+**Vulnerability:** The `login` and `signup` server actions were returning raw error messages from Supabase Auth (e.g., "User not found", "Email already in use"), allowing attackers to verify the existence of accounts.
+**Learning:** Server actions used for authentication must prioritize generic error messages (e.g., "Invalid login credentials") over specific technical details to prevent account enumeration.
+**Prevention:** Wrap authentication library calls and return standardized, non-specific error messages to the client.
