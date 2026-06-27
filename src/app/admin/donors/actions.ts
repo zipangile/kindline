@@ -5,9 +5,16 @@ import { revalidatePath } from 'next/cache';
 // @ts-expect-error flutterwave-node-v3 does not have types
 import Flutterwave from 'flutterwave-node-v3';
 import { checkAdmin } from '@/lib/auth-utils';
+import { SECURITY_LIMITS } from '@/lib/security';
 
 export async function verifyDonation(id: string) {
   await checkAdmin('FINANCIAL_ADMIN');
+
+  // Security: Validate ID to prevent injection or malformed requests
+  if (!id || typeof id !== 'string' || id.length > SECURITY_LIMITS.ID || !/^[a-zA-Z0-9_-]+$/.test(id)) {
+    throw new Error('Invalid ID format');
+  }
+
   const donation = await prisma.donation.findUnique({
     where: { id },
   });
@@ -83,6 +90,12 @@ export async function verifyDonation(id: string) {
 
 export async function deleteDonation(id: string) {
     await checkAdmin('FINANCIAL_ADMIN');
+
+    // Security: Validate ID
+    if (!id || typeof id !== 'string' || id.length > SECURITY_LIMITS.ID || !/^[a-zA-Z0-9_-]+$/.test(id)) {
+      throw new Error('Invalid ID format');
+    }
+
     await prisma.donation.delete({
         where: { id }
     });
