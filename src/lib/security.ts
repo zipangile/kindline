@@ -24,11 +24,18 @@ export const SECURITY_LIMITS = {
   AUTHOR: 100,
   AUTHOR_ROLE: 100,
   EXCERPT: 500,
-  CONFIG_FIELD: 500
+  CONFIG_FIELD: 500,
+  ID: 50,
+  SUPABASE_USER_ID: 50
 };
 
 export function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+export function isValidId(id: string | null | undefined): id is string {
+  if (!id || typeof id !== 'string') return false;
+  return id.length <= SECURITY_LIMITS.ID && /^[a-zA-Z0-9.\-_]+$/.test(id);
 }
 
 export function sanitizeContent(content: string): string {
