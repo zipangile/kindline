@@ -3,12 +3,13 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
-import { SECURITY_LIMITS } from '@/lib/security';
+import { SECURITY_LIMITS, isValidId } from '@/lib/security';
 
 export async function updateSiteImage(key: string, url: string, alt?: string) {
   await checkAdmin('CONTENT_EDITOR');
 
   // Security: Input validation and length limits
+  if (!isValidId(key)) throw new Error('Invalid image key');
   if (url.length > SECURITY_LIMITS.URL) throw new Error('URL is too long');
   if (alt && alt.length > SECURITY_LIMITS.DESCRIPTION) throw new Error('Description is too long');
 
