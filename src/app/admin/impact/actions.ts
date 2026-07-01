@@ -3,7 +3,7 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
-import { sanitizeContent, SECURITY_LIMITS } from '@/lib/security';
+import { sanitizeContent, SECURITY_LIMITS, isValidId } from '@/lib/security';
 
 export async function createImpactStat(formData: FormData) {
   await checkAdmin('CONTENT_EDITOR');
@@ -30,6 +30,12 @@ export async function createImpactStat(formData: FormData) {
 
 export async function updateImpactStat(id: string, formData: FormData) {
   await checkAdmin('CONTENT_EDITOR');
+
+  // Security: ID validation
+  if (!id || id.length > SECURITY_LIMITS.ID || !isValidId(id)) {
+    throw new Error('Invalid impact stat ID');
+  }
+
   const label = (formData.get('label') as string || '').trim();
   const value = (formData.get('value') as string || '').trim();
   const description = (formData.get('description') as string || '').trim();
@@ -54,6 +60,12 @@ export async function updateImpactStat(id: string, formData: FormData) {
 
 export async function deleteImpactStat(id: string) {
   await checkAdmin('CONTENT_EDITOR');
+
+  // Security: ID validation
+  if (!id || id.length > SECURITY_LIMITS.ID || !isValidId(id)) {
+    throw new Error('Invalid impact stat ID');
+  }
+
   await prisma.impactStat.delete({
     where: { id },
   });
@@ -93,6 +105,12 @@ export async function createImpactStory(formData: FormData) {
 
 export async function deleteImpactStory(id: string) {
   await checkAdmin('CONTENT_EDITOR');
+
+  // Security: ID validation
+  if (!id || id.length > SECURITY_LIMITS.ID || !isValidId(id)) {
+    throw new Error('Invalid impact story ID');
+  }
+
   await prisma.impactStory.delete({
     where: { id },
   });

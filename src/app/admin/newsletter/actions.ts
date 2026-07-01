@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
 import { Resend } from 'resend';
-import { isValidEmail, sanitizeContent, SECURITY_LIMITS } from '@/lib/security';
+import { isValidEmail, sanitizeContent, SECURITY_LIMITS, isValidId } from '@/lib/security';
 
 const resend = new Resend(process.env.RESEND_API_KEY || 're_placeholder');
 
@@ -33,12 +33,20 @@ export async function subscribe(formData: FormData) {
 
 export async function sendNewsletter(formData: FormData) {
   await checkAdmin('CONTENT_EDITOR');
-  const rawSubject = formData.get('subject') as string;
-  const rawContent = formData.get('content') as string;
+  const rawSubject = (formData.get('subject') as string || '').trim();
+  const rawContent = (formData.get('content') as string || '').trim();
+
+  if (!rawSubject || !rawContent) {
+    throw new Error('Subject and content are required');
+  }
 
   // Security: Basic sanitization and length limits
   if (rawSubject.length > SECURITY_LIMITS.SUBJECT) {
     throw new Error('Subject is too long');
+  }
+
+  if (rawContent.length > SECURITY_LIMITS.CONTENT_LONG) {
+    throw new Error('Content is too long');
   }
 
   // Remove <script> tags to prevent basic XSS in email clients that might execute them
@@ -70,6 +78,12 @@ export async function sendNewsletter(formData: FormData) {
 
 export async function deleteSubscriber(id: string) {
   await checkAdmin('CONTENT_EDITOR');
+
+  // Security: ID validation
+  if (!id || id.length > SECURITY_LIMITS.ID || !isValidId(id)) {
+    throw new Error('Invalid subscriber ID');
+  }
+
   await prisma.subscriber.delete({
     where: { id },
   });
