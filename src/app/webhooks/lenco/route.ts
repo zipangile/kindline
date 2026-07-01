@@ -40,6 +40,13 @@ export async function POST(request: Request) {
     }
 
     const payload = JSON.parse(bodyText);
+
+    // Security: Validate payload is a non-array object
+    if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+      console.error('[Lenco Webhook] Invalid payload format');
+      return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
+    }
+
     const { event, data } = payload;
 
     console.log(`[Lenco Webhook] Received event: ${event}`);

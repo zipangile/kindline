@@ -4,9 +4,10 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
-import { isValidEmail, SECURITY_LIMITS } from '@/lib/security';
+import { isValidEmail, SECURITY_LIMITS, isValidId } from '@/lib/security';
 
-export type AdminRole = 'SUPER_ADMIN' | 'CONTENT_EDITOR' | 'FINANCIAL_ADMIN' | 'VOLUNTEER_COORD';
+export const ALLOWED_ROLES = ['SUPER_ADMIN', 'CONTENT_EDITOR', 'FINANCIAL_ADMIN', 'VOLUNTEER_COORD'] as const;
+export type AdminRole = (typeof ALLOWED_ROLES)[number];
 
 // Helper to get Supabase Admin client
 const getSupabaseAdmin = () => {
@@ -57,6 +58,11 @@ async function syncUserRole(email: string, role: AdminRole | null) {
 export async function addAdmin(email: string, name: string, role: AdminRole) {
   await checkAdmin('SUPER_ADMIN');
 
+  // Security: Runtime role validation
+  if (!ALLOWED_ROLES.includes(role)) {
+    throw new Error('Invalid admin role');
+  }
+
   const trimmedEmail = email.trim().toLowerCase();
   const trimmedName = name.trim();
 
@@ -84,6 +90,16 @@ export async function addAdmin(email: string, name: string, role: AdminRole) {
 export async function updateAdminRole(id: string, role: AdminRole) {
   await checkAdmin('SUPER_ADMIN');
 
+  // Security: ID validation
+  if (!id || id.length > SECURITY_LIMITS.ID || !isValidId(id)) {
+    throw new Error('Invalid admin ID');
+  }
+
+  // Security: Runtime role validation
+  if (!ALLOWED_ROLES.includes(role)) {
+    throw new Error('Invalid admin role');
+  }
+
   const admin = await prisma.managedAdmin.update({
     where: { id },
     data: { role },
@@ -97,6 +113,11 @@ export async function updateAdminRole(id: string, role: AdminRole) {
 
 export async function removeAdmin(id: string) {
   await checkAdmin('SUPER_ADMIN');
+
+  // Security: ID validation
+  if (!id || id.length > SECURITY_LIMITS.ID || !isValidId(id)) {
+    throw new Error('Invalid admin ID');
+  }
 
   const admin = await prisma.managedAdmin.delete({
     where: { id },
