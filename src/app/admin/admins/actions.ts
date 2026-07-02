@@ -4,9 +4,10 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
-import { isValidEmail, SECURITY_LIMITS } from '@/lib/security';
+import { isValidEmail, isValidId, SECURITY_LIMITS } from '@/lib/security';
 
-export type AdminRole = 'SUPER_ADMIN' | 'CONTENT_EDITOR' | 'FINANCIAL_ADMIN' | 'VOLUNTEER_COORD';
+export const ALLOWED_ROLES = ['SUPER_ADMIN', 'CONTENT_EDITOR', 'FINANCIAL_ADMIN', 'VOLUNTEER_COORD'] as const;
+export type AdminRole = (typeof ALLOWED_ROLES)[number];
 
 // Helper to get Supabase Admin client
 const getSupabaseAdmin = () => {
@@ -69,6 +70,10 @@ export async function addAdmin(email: string, name: string, role: AdminRole) {
     throw new Error('Name is too long');
   }
 
+  if (!ALLOWED_ROLES.includes(role)) {
+    throw new Error('Invalid role');
+  }
+
   const admin = await prisma.managedAdmin.upsert({
     where: { email: trimmedEmail },
     update: { name: trimmedName, role },
@@ -84,6 +89,9 @@ export async function addAdmin(email: string, name: string, role: AdminRole) {
 export async function updateAdminRole(id: string, role: AdminRole) {
   await checkAdmin('SUPER_ADMIN');
 
+  if (!isValidId(id)) throw new Error('Invalid ID format');
+  if (!ALLOWED_ROLES.includes(role)) throw new Error('Invalid role');
+
   const admin = await prisma.managedAdmin.update({
     where: { id },
     data: { role },
@@ -97,6 +105,8 @@ export async function updateAdminRole(id: string, role: AdminRole) {
 
 export async function removeAdmin(id: string) {
   await checkAdmin('SUPER_ADMIN');
+
+  if (!isValidId(id)) throw new Error('Invalid ID format');
 
   const admin = await prisma.managedAdmin.delete({
     where: { id },

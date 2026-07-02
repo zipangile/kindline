@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { sendDonationEmails } from '@/lib/email';
+import { isValidId, SECURITY_LIMITS } from '@/lib/security';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,9 +12,14 @@ export async function POST(request: Request) {
     console.log('[Lenco API] Received verification request for reference:', reference);
 
     // Security: Validate reference to prevent injection or SSRF-like behavior
-    if (!reference || typeof reference !== 'string' || reference.length > 100 || !/^[a-zA-Z0-9.:_/-]+$/.test(reference)) {
+    if (!isValidId(reference)) {
       console.error('[Lenco API] Invalid reference format:', reference);
       return NextResponse.json({ error: 'Invalid reference' }, { status: 400 });
+    }
+
+    if (supabaseUserId && !isValidId(supabaseUserId)) {
+      console.error('[Lenco API] Invalid supabaseUserId format:', supabaseUserId);
+      return NextResponse.json({ error: 'Invalid user ID' }, { status: 400 });
     }
 
     const settings = await prisma.paymentSettings.findFirst();

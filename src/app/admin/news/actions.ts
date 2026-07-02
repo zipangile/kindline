@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
 import { redirect } from 'next/navigation';
-import { sanitizeContent, SECURITY_LIMITS } from '@/lib/security';
+import { sanitizeContent, SECURITY_LIMITS, isValidId } from '@/lib/security';
 
 export async function createNewsPost(data: {
   title: string;
@@ -53,6 +53,7 @@ export async function updateNewsPost(id: string, data: {
   published: boolean;
 }) {
   await checkAdmin('CONTENT_EDITOR');
+  if (!isValidId(id)) throw new Error('Invalid ID format');
 
   // Security: Input validation and length limits
   if (data.title.length > SECURITY_LIMITS.TITLE) throw new Error('Title is too long');
@@ -95,6 +96,7 @@ export async function updateNewsPost(id: string, data: {
 
 export async function deleteNewsPost(id: string) {
   await checkAdmin('CONTENT_EDITOR');
+  if (!isValidId(id)) throw new Error('Invalid ID format');
 
   const post = await prisma.newsPost.findUnique({ where: { id } });
 
