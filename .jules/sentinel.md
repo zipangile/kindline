@@ -27,3 +27,8 @@
 **Vulnerability:** Administrative authorization checks (`checkAdmin`, `getUserRole`) relied on email matching or metadata roles without verifying if the user's email was confirmed.
 **Learning:** In Supabase (and many other providers), a user can sign up with any email. If authorization only checks the email string or metadata that might be pre-set, unverified users could potentially access restricted areas if they sign up with a known admin email.
 **Prevention:** Always verify `user.email_confirmed_at` in authorization middleware or utility functions before granting elevated privileges.
+
+## 2025-05-16 - Consistent ID Validation and Reference Integrity
+**Vulnerability:** Administrative server actions for record deletion and updates lacked strict ID format validation, potentially allowing malformed database queries. Payment API routes also had inconsistent reference validation.
+**Learning:** Hardening record identifiers (CUIDs, UUIDs, or gateway references) with a centralized `isValidId` helper prevents injection and ensures data integrity across both internal admin actions and public payment webhooks/APIs.
+**Prevention:** Implement a centralized `isValidId` utility using a strict regex (e.g., `/^[a-zA-Z0-9_.:\/-]+$/`) and apply it to all functions that accept record identifiers. Ensure creation actions (which don't yet have an ID) are distinguished from update/delete actions.
