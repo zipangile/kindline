@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
 import { Resend } from 'resend';
-import { isValidEmail, sanitizeContent, SECURITY_LIMITS } from '@/lib/security';
+import { isValidEmail, sanitizeContent, SECURITY_LIMITS, isValidId } from '@/lib/security';
 
 const resend = new Resend(process.env.RESEND_API_KEY || 're_placeholder');
 
@@ -70,6 +70,7 @@ export async function sendNewsletter(formData: FormData) {
 
 export async function deleteSubscriber(id: string) {
   await checkAdmin('CONTENT_EDITOR');
+  if (!isValidId(id)) throw new Error('Invalid subscriber ID');
   await prisma.subscriber.delete({
     where: { id },
   });
