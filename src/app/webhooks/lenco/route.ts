@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import prisma from '@/lib/prisma';
 import { sendDonationEmails } from '@/lib/email';
+import { isValidId, SECURITY_LIMITS } from '@/lib/security';
 
 export const dynamic = 'force-dynamic';
 
@@ -46,6 +47,12 @@ export async function POST(request: Request) {
 
     if (event === 'collection.successful') {
       const { amount, currency, reference, mobileMoneyDetails, customer } = data;
+
+      // Security: Validate reference
+      if (!reference || typeof reference !== 'string' || reference.length > SECURITY_LIMITS.ID || !isValidId(reference)) {
+          console.error('[Lenco Webhook] Invalid reference format in payload:', reference);
+          return NextResponse.json({ error: 'Invalid reference' }, { status: 400 });
+      }
 
       // Check if donation already exists to avoid duplicates
       const existingDonation = await prisma.donation.findUnique({

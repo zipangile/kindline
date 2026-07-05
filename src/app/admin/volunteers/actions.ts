@@ -4,11 +4,17 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
 import { sendVolunteerStatusEmail } from '@/lib/email';
+import { isValidId, SECURITY_LIMITS } from '@/lib/security';
 
 const ALLOWED_STATUSES = ['pending', 'approved', 'rejected'];
 
 export async function approveVolunteer(id: string) {
   await checkAdmin('VOLUNTEER_COORD');
+
+  if (!id || id.length > SECURITY_LIMITS.ID || !isValidId(id)) {
+    throw new Error('Invalid volunteer ID');
+  }
+
   const volunteer = await prisma.volunteer.update({
     where: { id },
     data: { status: 'approved' },
@@ -23,6 +29,11 @@ export async function approveVolunteer(id: string) {
 
 export async function rejectVolunteer(id: string) {
   await checkAdmin('VOLUNTEER_COORD');
+
+  if (!id || id.length > SECURITY_LIMITS.ID || !isValidId(id)) {
+    throw new Error('Invalid volunteer ID');
+  }
+
   const volunteer = await prisma.volunteer.update({
     where: { id },
     data: { status: 'rejected' },
@@ -37,6 +48,11 @@ export async function rejectVolunteer(id: string) {
 
 export async function updateVolunteerStatus(id: string, status: string) {
     await checkAdmin('VOLUNTEER_COORD');
+
+    if (!id || id.length > SECURITY_LIMITS.ID || !isValidId(id)) {
+      throw new Error('Invalid volunteer ID');
+    }
+
     const normalizedStatus = status.toLowerCase();
 
     if (!ALLOWED_STATUSES.includes(normalizedStatus)) {
@@ -57,6 +73,11 @@ export async function updateVolunteerStatus(id: string, status: string) {
 
   export async function deleteVolunteer(id: string) {
     await checkAdmin('VOLUNTEER_COORD');
+
+    if (!id || id.length > SECURITY_LIMITS.ID || !isValidId(id)) {
+      throw new Error('Invalid volunteer ID');
+    }
+
     await prisma.volunteer.delete({
       where: { id },
     });
