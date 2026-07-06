@@ -4,6 +4,7 @@ import { Calendar, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
+import { isValidSlug } from '@/lib/security';
 
 export const dynamic = "force-dynamic";
 
@@ -17,6 +18,11 @@ export default async function NewsPostDetailPage({
   const { slug: rawSlug } = await params;
   const slug = rawSlug.trim();
   await searchParams;
+
+  if (!isValidSlug(slug)) {
+    console.error(`[NewsPostDetailPage] Invalid slug format: ${slug}`);
+    notFound();
+  }
 
   console.log(`[NewsPostDetailPage] Fetching post with slug: ${slug}`);
 
