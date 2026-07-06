@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin, getUserEmail } from '@/lib/auth-utils';
 import { sendCommunicationEmail, sendVolunteerInvitation } from '@/lib/email';
-import { isValidEmail, sanitizeContent } from '@/lib/security';
+import { isValidEmail, sanitizeContent, isValidId } from '@/lib/security';
 
 export async function sendManualEmail(formData: FormData) {
   const adminEmail = await getUserEmail();
@@ -51,6 +51,7 @@ export async function sendManualEmail(formData: FormData) {
 
 export async function deleteCommunication(id: string) {
     await checkAdmin('CONTENT_EDITOR');
+    if (!isValidId(id)) throw new Error('Invalid communication ID');
     await prisma.communication.delete({
       where: { id },
     });
