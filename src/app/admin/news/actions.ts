@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
 import { redirect } from 'next/navigation';
-import { sanitizeContent, SECURITY_LIMITS } from '@/lib/security';
+import { isValidId, sanitizeContent, SECURITY_LIMITS } from '@/lib/security';
 
 export async function createNewsPost(data: {
   title: string;
@@ -54,6 +54,9 @@ export async function updateNewsPost(id: string, data: {
 }) {
   await checkAdmin('CONTENT_EDITOR');
 
+  // Security: ID and Input validation
+  if (!isValidId(id) || id.length > SECURITY_LIMITS.ID) throw new Error('Invalid ID');
+
   // Security: Input validation and length limits
   if (data.title.length > SECURITY_LIMITS.TITLE) throw new Error('Title is too long');
   if (data.slug.length > SECURITY_LIMITS.SLUG) throw new Error('Slug is too long');
@@ -95,6 +98,9 @@ export async function updateNewsPost(id: string, data: {
 
 export async function deleteNewsPost(id: string) {
   await checkAdmin('CONTENT_EDITOR');
+
+  // Security: ID validation
+  if (!isValidId(id) || id.length > SECURITY_LIMITS.ID) throw new Error('Invalid ID');
 
   const post = await prisma.newsPost.findUnique({ where: { id } });
 

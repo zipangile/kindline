@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { sendDonationEmails } from '@/lib/email';
+import { isValidId, SECURITY_LIMITS } from '@/lib/security';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,8 +11,8 @@ export async function POST(request: Request) {
     const { reference, supabaseUserId, phone } = body;
     console.log('[Lenco API] Received verification request for reference:', reference);
 
-    // Security: Validate reference to prevent injection or SSRF-like behavior
-    if (!reference || typeof reference !== 'string' || reference.length > 100 || !/^[a-zA-Z0-9.:_/-]+$/.test(reference)) {
+    // Security: Validate reference using centralized helper to prevent injection or SSRF-like behavior
+    if (!reference || typeof reference !== 'string' || reference.length > SECURITY_LIMITS.ID || !isValidId(reference)) {
       console.error('[Lenco API] Invalid reference format:', reference);
       return NextResponse.json({ error: 'Invalid reference' }, { status: 400 });
     }

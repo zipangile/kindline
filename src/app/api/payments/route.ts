@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma';
 // @ts-expect-error flutterwave-node-v3 does not have types
 import Flutterwave from 'flutterwave-node-v3';
 import { sendDonationEmails } from '@/lib/email';
+import { isValidId, SECURITY_LIMITS } from '@/lib/security';
 
 export async function POST(request: Request) {
   try {
@@ -11,8 +12,9 @@ export async function POST(request: Request) {
     console.log('[Flutterwave API] Received verification request for ID:', transaction_id);
     const status = body.status;
 
-    // Security: Validate transaction_id to prevent injection
-    if (!transaction_id || (typeof transaction_id !== 'string' && typeof transaction_id !== 'number') || String(transaction_id).length > 100 || !/^[a-zA-Z0-9.:_/-]+$/.test(String(transaction_id))) {
+    // Security: Validate transaction_id using centralized helper to prevent injection
+    const tidStr = String(transaction_id || '');
+    if (!transaction_id || tidStr.length > SECURITY_LIMITS.ID || !isValidId(tidStr)) {
       console.error('[Flutterwave API] Invalid transaction ID format:', transaction_id);
       return NextResponse.json({ error: 'Invalid transaction ID' }, { status: 400 });
     }
