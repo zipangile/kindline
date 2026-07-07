@@ -4,6 +4,7 @@ import { Calendar, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
+import { isValidSlug, SECURITY_LIMITS } from '@/lib/security';
 
 export const dynamic = "force-dynamic";
 
@@ -15,8 +16,14 @@ export default async function NewsPostDetailPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { slug: rawSlug } = await params;
-  const slug = rawSlug.trim();
+  const slug = (rawSlug || '').trim();
   await searchParams;
+
+  // Security: Validate slug format and length before DB query
+  if (!slug || slug.length > SECURITY_LIMITS.SLUG || !isValidSlug(slug)) {
+    console.warn(`[NewsPostDetailPage] Invalid slug attempt: ${slug}`);
+    notFound();
+  }
 
   console.log(`[NewsPostDetailPage] Fetching post with slug: ${slug}`);
 
