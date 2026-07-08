@@ -3,7 +3,7 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
-import { sanitizeContent, SECURITY_LIMITS } from '@/lib/security';
+import { sanitizeContent, SECURITY_LIMITS, isValidId } from '@/lib/security';
 
 const ALLOWED_STATUSES = ['live', 'archived'];
 
@@ -41,6 +41,12 @@ export async function createProgram(formData: FormData) {
 
 export async function updateProgram(id: string, formData: FormData) {
   await checkAdmin('CONTENT_EDITOR');
+
+  // Security: Validate ID to prevent malformed queries
+  if (!id || id.length > SECURITY_LIMITS.ID || !isValidId(id)) {
+    throw new Error('Invalid ID format');
+  }
+
   const title = (formData.get('title') as string || '').trim();
   const rawDescription = (formData.get('description') as string || '').trim();
   const category = (formData.get('category') as string || '').trim();
@@ -74,6 +80,12 @@ export async function updateProgram(id: string, formData: FormData) {
 
 export async function updateProgramStatus(id: string, status: string) {
   await checkAdmin('CONTENT_EDITOR');
+
+  // Security: Validate ID to prevent malformed queries
+  if (!id || id.length > SECURITY_LIMITS.ID || !isValidId(id)) {
+    throw new Error('Invalid ID format');
+  }
+
   const normalizedStatus = status.toLowerCase();
 
   if (!ALLOWED_STATUSES.includes(normalizedStatus)) {
@@ -91,6 +103,12 @@ export async function updateProgramStatus(id: string, status: string) {
 
 export async function deleteProgram(id: string) {
   await checkAdmin('CONTENT_EDITOR');
+
+  // Security: Validate ID to prevent malformed queries
+  if (!id || id.length > SECURITY_LIMITS.ID || !isValidId(id)) {
+    throw new Error('Invalid ID format');
+  }
+
   await prisma.program.delete({
     where: { id },
   });
