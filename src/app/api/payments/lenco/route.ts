@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { sendDonationEmails } from '@/lib/email';
+import { getOrganization } from '@/lib/features';
 
 export const dynamic = 'force-dynamic';
 
@@ -72,6 +73,10 @@ export async function POST(request: Request) {
             donorName = mobileMoneyDetails.accountName;
         }
 
+        const org = await getOrganization();
+        const feePercent = org ? parseFloat(org.donationFeePercent.toString()) : 2.0;
+        const calculatedFee = parseFloat((parseFloat(amount) * feePercent / 100).toFixed(2));
+
         finalDonation = await prisma.donation.create({
           data: {
             donorName,
@@ -83,7 +88,8 @@ export async function POST(request: Request) {
             gateway: 'lenco',
             transactionId: String(transactionId),
             supabaseUserId: supabaseUserId || null,
-            type: 'one-time'
+            type: 'one-time',
+            feeCharged: calculatedFee
           }
         });
         console.log(`[Lenco API] Donation record created: ${finalDonation.id}`);

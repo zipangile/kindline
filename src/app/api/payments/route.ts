@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma';
 // @ts-expect-error flutterwave-node-v3 does not have types
 import Flutterwave from 'flutterwave-node-v3';
 import { sendDonationEmails } from '@/lib/email';
+import { getOrganization, hasFeature } from '@/lib/features';
 
 export async function POST(request: Request) {
   try {
@@ -40,12 +41,23 @@ export async function POST(request: Request) {
             return NextResponse.json({ verified: false, error: 'Missing customer data' }, { status: 400 });
           }
 
+          const isMonthly = tx_ref?.includes('monthly') || false;
+          const org = await getOrganization();
+
+          if (isMonthly && !hasFeature(org, "RECURRING_DONATIONS")) {
+            console.error('[Flutterwave API] Gated feature attempted: RECURRING_DONATIONS');
+            return NextResponse.json({ error: 'Recurring donations require the PRO tier' }, { status: 403 });
+          }
+
           // Check for existing donation to avoid duplicates and race conditions
           const existingDonation = await prisma.donation.findUnique({
             where: { transactionId: String(id) },
           });
 
           if (!existingDonation) {
+            const feePercent = org ? parseFloat(org.donationFeePercent.toString()) : 2.0;
+            const calculatedFee = parseFloat((amount * feePercent / 100).toFixed(2));
+
             const donation = await prisma.donation.create({
               data: {
                 donorName: customer.name || 'Anonymous',
@@ -56,7 +68,8 @@ export async function POST(request: Request) {
                 gateway: 'flutterwave',
                 transactionId: String(id),
                 supabaseUserId: meta?.supabaseUserId || null,
-                type: tx_ref.includes('monthly') ? 'monthly' : 'one-time'
+                type: isMonthly ? 'monthly' : 'one-time',
+                feeCharged: calculatedFee
               }
             });
 
@@ -106,12 +119,23 @@ export async function POST(request: Request) {
             return NextResponse.json({ verified: false, error: 'Missing customer data' }, { status: 400 });
           }
 
+          const isMonthly = tx_ref?.includes('monthly') || false;
+          const org = await getOrganization();
+
+          if (isMonthly && !hasFeature(org, "RECURRING_DONATIONS")) {
+            console.error('[Flutterwave API] Gated feature attempted: RECURRING_DONATIONS');
+            return NextResponse.json({ error: 'Recurring donations require the PRO tier' }, { status: 403 });
+          }
+
           // Check for existing donation
           const existingDonation = await prisma.donation.findUnique({
             where: { transactionId: String(id) },
           });
 
           if (!existingDonation) {
+            const feePercent = org ? parseFloat(org.donationFeePercent.toString()) : 2.0;
+            const calculatedFee = parseFloat((amount * feePercent / 100).toFixed(2));
+
             const donation = await prisma.donation.create({
               data: {
                 donorName: customer.name || 'Anonymous',
@@ -122,7 +146,8 @@ export async function POST(request: Request) {
                 gateway: 'flutterwave',
                 transactionId: String(id),
                 supabaseUserId: meta?.supabaseUserId || null,
-                type: (tx_ref && tx_ref.includes('monthly')) ? 'monthly' : 'one-time'
+                type: isMonthly ? 'monthly' : 'one-time',
+                feeCharged: calculatedFee
               }
             });
 

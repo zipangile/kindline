@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import prisma from '@/lib/prisma';
 import { sendDonationEmails } from '@/lib/email';
+import { getOrganization } from '@/lib/features';
 
 export const dynamic = 'force-dynamic';
 
@@ -65,6 +66,10 @@ export async function POST(request: Request) {
             donorName = mobileMoneyDetails.accountName;
         }
 
+        const org = await getOrganization();
+        const feePercent = org ? parseFloat(org.donationFeePercent.toString()) : 2.0;
+        const calculatedFee = parseFloat((parseFloat(amount) * feePercent / 100).toFixed(2));
+
         finalDonation = await prisma.donation.create({
           data: {
             donorName,
@@ -76,6 +81,7 @@ export async function POST(request: Request) {
             gateway: 'lenco',
             transactionId: String(reference),
             type: 'one-time',
+            feeCharged: calculatedFee
           },
         });
         console.log(`[Lenco Webhook] Donation created for reference: ${reference}`);

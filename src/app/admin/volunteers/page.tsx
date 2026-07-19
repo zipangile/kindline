@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma';
 import { updateVolunteerStatus, deleteVolunteer } from './actions';
 import { Prisma } from '@prisma/client';
 import { checkAdmin } from '@/lib/auth-utils';
+import { getOrganization } from '@/lib/features';
 
 export default async function AdminVolunteersPage({
   params,
@@ -14,6 +15,9 @@ export default async function AdminVolunteersPage({
   await params;
   const p = await searchParams;
   await checkAdmin('VOLUNTEER_COORD');
+
+  const org = await getOrganization();
+  const cap = org.volunteerCap;
 
   const search = p.search || '';
   const skill = p.skill || '';
@@ -32,20 +36,66 @@ export default async function AdminVolunteersPage({
     ],
   };
 
-  let volunteers: Awaited<ReturnType<typeof prisma.volunteer.findMany>> = [];
+  let rawVolunteers: Awaited<ReturnType<typeof prisma.volunteer.findMany>> = [];
   try {
-    volunteers = await prisma.volunteer.findMany({
+    rawVolunteers = await prisma.volunteer.findMany({
       where,
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: 'asc' }, // Order by asc to handle N oldest approved volunteers
     });
   } catch (error) {
     console.error('[AdminVolunteersPage] Error fetching volunteers:', error);
   }
 
+  let approvedCount = 0;
+  const volunteers = rawVolunteers.map((v) => {
+    let isOver = false;
+    if (v.status === 'approved') {
+      approvedCount++;
+      if (cap !== null && approvedCount > cap) {
+        isOver = true;
+      }
+    } else if (v.status === 'pending') {
+      if (cap !== null && approvedCount >= cap) {
+        isOver = true;
+      }
+    }
+
+    if (isOver) {
+      return {
+        ...v,
+        isOverCap: true,
+        email: '***@***.*** (Upgrade to unlock)',
+        phone: v.phone ? '***-***-*** (Upgrade to unlock)' : null,
+        skills: 'Locked. Upgrade subscription to view skills.',
+        experience: 'Locked. Upgrade subscription to view experience.',
+      };
+    }
+    return { ...v, isOverCap: false };
+  });
+
+  // Sort back to desc for display
+  volunteers.reverse();
+
+  const activeApprovedCount = rawVolunteers.filter(v => v.status === 'approved').length;
+  const isOverCap = cap !== null && activeApprovedCount > cap;
+
   return (
     <div className="space-y-8">
+      {isOverCap && (
+        <div className="p-4 bg-amber-50 border-l-4 border-amber-500 text-amber-800 text-sm font-medium rounded-r-xl">
+          Overage Warning: Your organization currently has {activeApprovedCount} approved/active volunteers, which exceeds your subscription tier cap of {cap}. Sensitive details for over-cap volunteers are masked. Please upgrade your tier or unlock features in Platform Settings!
+        </div>
+      )}
+
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h1 className="text-2xl font-bold text-gray-900">Manage Volunteers</h1>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Manage Volunteers</h1>
+          {cap !== null && (
+            <p className="text-xs text-gray-500 mt-1">
+              Active/Approved Usage: <strong className={isOverCap ? "text-amber-600" : "text-brand-blue"}>{activeApprovedCount} / {cap}</strong>
+            </p>
+          )}
+        </div>
 
         <form className="flex flex-col md:flex-row gap-4 flex-1 max-w-2xl">
           <div className="relative flex-1">

@@ -9,7 +9,7 @@ import { User } from '@supabase/supabase-js';
 
 const supabase = createClient();
 
-export default function VolunteerForm() {
+export default function VolunteerForm({ signupFee = 0 }: { signupFee?: number }) {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -37,6 +37,11 @@ export default function VolunteerForm() {
         </div>
       ) : (
         <form action={registerVolunteer} className="space-y-4">
+          {signupFee > 0 && (
+            <div className="p-4 bg-blue-50 border-l-4 border-blue-600 rounded-r-xl text-blue-900 text-sm font-semibold mb-4">
+              Note: There is a one-time volunteer application processing fee of <strong>ZMW {signupFee}</strong> to cover administrative costs. You will be automatically redirected to complete this secure payment upon submitting this form.
+            </div>
+          )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700">Name</label>

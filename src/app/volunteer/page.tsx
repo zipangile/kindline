@@ -1,6 +1,7 @@
 import VolunteerForm from "./VolunteerForm";
 import Image from 'next/image';
 import prisma from "@/lib/prisma";
+import { getOrganization } from "@/lib/features";
 
 export const dynamic = "force-dynamic";
 
@@ -10,6 +11,9 @@ export default async function VolunteerPage(props: {
 }) {
   await props.params;
   await props.searchParams;
+
+  const org = await getOrganization();
+  const signupFee = org.volunteerSignupFee;
 
   let actionImage: string | undefined;
   try {
@@ -38,7 +42,7 @@ export default async function VolunteerPage(props: {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">Become a Volunteer</h2>
-            <VolunteerForm />
+            <VolunteerForm signupFee={signupFee} />
           </div>
         </div>
       </section>

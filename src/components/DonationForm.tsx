@@ -28,7 +28,7 @@ declare global {
   }
 }
 
-export default function DonationForm({ settings }: { settings: { lencoPublic?: string; lencoBaseUrl?: string; lencoName?: string; flutterwavePublic?: string; flutterwavePlanZMW?: string; flutterwavePlanUSD?: string } }) {
+export default function DonationForm({ settings, recurringDonationsEnabled = false }: { settings: { lencoPublic?: string; lencoBaseUrl?: string; lencoName?: string; flutterwavePublic?: string; flutterwavePlanZMW?: string; flutterwavePlanUSD?: string }; recurringDonationsEnabled?: boolean }) {
   const [userId, setUserId] = useState<string | null>(null);
   const [amount, setAmount] = useState('500');
   const [currency, setCurrency] = useState('ZMW');
@@ -38,6 +38,17 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const supabase = createClient();
+
+  const handleFrequencyChange = (newFreq: string) => {
+    if (newFreq === 'monthly' && !recurringDonationsEnabled) {
+      alert("Recurring Donations (Monthly) is only available on our PRO Plan. Please upgrade your subscription to unlock this premium capability!");
+      return;
+    }
+    setFrequency(newFreq);
+    if (newFreq === 'monthly') {
+      setMethod('flutterwave');
+    }
+  };
 
   useEffect(() => {
     const getUser = async () => {
@@ -295,18 +306,22 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
             <div className="flex gap-8">
               <label className="flex items-center gap-3 cursor-pointer group">
                 <div className="relative flex items-center">
-                  <input type="radio" name="frequency" checked={frequency === 'one-time'} onChange={() => setFrequency('one-time')} className="w-5 h-5 text-brand-blue border-2 border-gray-300 dark:border-gray-600 focus:ring-brand-blue" />
+                  <input type="radio" name="frequency" checked={frequency === 'one-time'} onChange={() => handleFrequencyChange('one-time')} className="w-5 h-5 text-brand-blue border-2 border-gray-300 dark:border-gray-600 focus:ring-brand-blue" />
                 </div>
                 <span className="text-lg font-bold text-gray-900 dark:text-gray-100 group-hover:text-brand-blue transition-colors">One-time</span>
               </label>
               <label className="flex items-center gap-3 cursor-pointer group">
                 <div className="relative flex items-center">
-                  <input type="radio" name="frequency" checked={frequency === 'monthly'} onChange={() => {
-                      setFrequency('monthly');
-                      setMethod('flutterwave');
-                  }} className="w-5 h-5 text-brand-blue border-2 border-gray-300 dark:border-gray-600 focus:ring-brand-blue" />
+                  <input type="radio" name="frequency" checked={frequency === 'monthly'} onChange={() => handleFrequencyChange('monthly')} className="w-5 h-5 text-brand-blue border-2 border-gray-300 dark:border-gray-600 focus:ring-brand-blue" />
                 </div>
-                <span className="text-lg font-bold text-gray-900 dark:text-gray-100 group-hover:text-brand-blue transition-colors">Monthly</span>
+                <span className="text-lg font-bold text-gray-900 dark:text-gray-100 group-hover:text-brand-blue transition-colors flex items-center gap-2">
+                  Monthly
+                  {!recurringDonationsEnabled && (
+                    <span className="bg-amber-100 text-amber-800 text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full border border-amber-200">
+                      PRO
+                    </span>
+                  )}
+                </span>
               </label>
             </div>
             {frequency === 'monthly' && (

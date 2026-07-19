@@ -31,8 +31,16 @@ export async function subscribe(formData: FormData) {
   }
 }
 
+import { getOrganization, hasFeature } from '@/lib/features';
+
 export async function sendNewsletter(formData: FormData) {
   await checkAdmin('CONTENT_EDITOR');
+  const org = await getOrganization();
+
+  if (!hasFeature(org, "NEWSLETTER")) {
+    throw new Error("Newsletter features are locked on your current tier. Please upgrade to unlock!");
+  }
+
   const rawSubject = formData.get('subject') as string;
   const rawContent = formData.get('content') as string;
 
@@ -49,6 +57,10 @@ export async function sendNewsletter(formData: FormData) {
     where: { status: 'active' },
     select: { email: true },
   });
+
+  if (org.tier === 'GROWTH' && org.newsletterSubCap !== null && subscribers.length > org.newsletterSubCap) {
+    throw new Error(`Your active subscriber count (${subscribers.length}) exceeds your tier's cap of ${org.newsletterSubCap}. Please upgrade to PRO to send campaigns!`);
+  }
 
   const emails = subscribers.map(s => s.email);
 

@@ -2,6 +2,7 @@
 
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
+import prisma from '@/lib/prisma';
 
 export type PermissionLevel = 'SUPER_ADMIN' | 'CONTENT_EDITOR' | 'FINANCIAL_ADMIN' | 'VOLUNTEER_COORD' | 'USER';
 
@@ -20,11 +21,10 @@ export async function checkAdmin(requiredLevel: PermissionLevel = 'CONTENT_EDITO
 
   // Security: Ensure email is confirmed before granting any admin access
   const isEmailConfirmed = !!user.email_confirmed_at;
-  const adminEmail = process.env.ADMIN_EMAIL;
-  const userRole = user.app_metadata?.role as PermissionLevel || 'USER';
+  const userRole = await getUserRole();
 
   // Super admin and hardcoded admin always have full access, but only if email is confirmed
-  const isSuperAdmin = isEmailConfirmed && (userRole === 'SUPER_ADMIN' || (adminEmail && user.email === adminEmail));
+  const isSuperAdmin = isEmailConfirmed && userRole === 'SUPER_ADMIN';
 
   if (isSuperAdmin) return user;
 
@@ -42,10 +42,7 @@ export async function checkAdmin(requiredLevel: PermissionLevel = 'CONTENT_EDITO
   if (!hasPermission) {
     console.warn(`[checkAdmin] User ${user.email} with role ${userRole} does not have required permission: ${requiredLevel}`);
     // If they have any admin role, send to admin dashboard but maybe with limited view
-    // For now, if they don't have the specific permission, redirect to overview
     if (userRole !== 'USER') {
-        // Allow them to stay in admin if they have any admin role, but this function is usually called in specific pages
-        // So we redirect them to the main admin page
         redirect('/admin');
     }
     redirect('/');
@@ -73,9 +70,50 @@ export async function getUserRole() {
   // Security: Return USER role if email is not confirmed
   if (!user.email_confirmed_at) return 'USER';
 
+  // Sync developer/superadmin role from DEVELOPER_EMAILS
+  const developerEmails = (process.env.DEVELOPER_EMAILS || '')
+    .split(',')
+    .map(e => e.trim().toLowerCase())
+    .filter(Boolean);
+
+  const email = user.email ? user.email.toLowerCase() : '';
+  const isDeveloper = email && developerEmails.includes(email);
+
+  if (isDeveloper && email) {
+    try {
+      await prisma.user.upsert({
+        where: { supabaseUserId: user.id },
+        update: { email: email, role: 'SUPERADMIN' },
+        create: { supabaseUserId: user.id, email: email, role: 'SUPERADMIN' },
+      });
+    } catch (err) {
+      console.error('[getUserRole] Error syncing developer user in DB:', err);
+    }
+    return 'SUPER_ADMIN';
+  }
+
   const adminEmail = process.env.ADMIN_EMAIL;
   if (adminEmail && user.email === adminEmail) return 'SUPER_ADMIN';
 
+  // Check local DB User role
+  try {
+    const dbUser = await prisma.user.findUnique({
+      where: { supabaseUserId: user.id }
+    });
+    if (dbUser?.role === 'SUPERADMIN') {
+      return 'SUPER_ADMIN';
+    }
+  } catch (err) {
+    console.error('[getUserRole] Error fetching user role from DB:', err);
+  }
+
   const role = user.app_metadata?.role as PermissionLevel || 'USER';
   return role;
+}
+
+export async function requireSuperadmin() {
+  const role = await getUserRole();
+  if (role !== 'SUPER_ADMIN') {
+    redirect('/admin');
+  }
 }

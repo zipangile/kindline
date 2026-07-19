@@ -8,6 +8,8 @@ import { checkAdmin } from '@/lib/auth-utils';
 import { Subscriber } from '@prisma/client';
 import { ConfirmButton } from '@/components/ConfirmButton';
 
+import { getOrganization, hasFeature } from '@/lib/features';
+
 export default async function AdminNewsletterPage(props: {
   params: Promise<Record<string, string | string[] | undefined>>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -15,6 +17,9 @@ export default async function AdminNewsletterPage(props: {
   await props.params;
   await props.searchParams;
   await checkAdmin('CONTENT_EDITOR');
+
+  const org = await getOrganization();
+  const newsletterEnabled = hasFeature(org, "NEWSLETTER");
 
   let subscribers: Subscriber[] = [];
   try {
@@ -27,9 +32,53 @@ export default async function AdminNewsletterPage(props: {
 
   const activeCount = subscribers.filter(s => s.status === 'active').length;
 
+  if (!newsletterEnabled) {
+    return (
+      <div className="max-w-4xl mx-auto py-12 px-4 text-center">
+        <Card className="border border-amber-200 shadow-xl bg-white rounded-3xl p-10 space-y-6">
+          <div className="mx-auto w-16 h-16 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center">
+            <Send className="h-8 w-8" />
+          </div>
+          <div className="space-y-2">
+            <h1 className="text-2xl font-extrabold text-gray-900">Upgrade to Unlocked Newsletter Features</h1>
+            <p className="text-gray-500 max-w-lg mx-auto">
+              Newsletter campaign sending, audience building, and subscription features are premium capabilities available on <strong>GROWTH</strong> and <strong>PRO</strong> plans.
+            </p>
+          </div>
+          <div className="pt-4 flex justify-center gap-4">
+            <Button className="bg-brand-blue text-white font-bold px-8 h-12 rounded-xl shadow">
+              Upgrade Subscription
+            </Button>
+          </div>
+        </Card>
+      </div>
+    );
+  }
+
+  const isOverCap = org.newsletterSubCap !== null && activeCount > org.newsletterSubCap;
+
   return (
     <div className="space-y-8">
-      <h1 className="text-2xl font-bold text-gray-900">Newsletter Management</h1>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Newsletter Management</h1>
+          <p className="text-sm text-gray-500 mt-1">Compose newsletters and manage your subscriber lists.</p>
+        </div>
+        {org.newsletterSubCap !== null && (
+          <div className="bg-gray-100 px-4 py-2 rounded-xl border border-gray-200 flex items-center gap-2.5 text-sm font-semibold">
+            <span className="text-gray-500">Subscriber Usage:</span>
+            <span className={isOverCap ? "text-red-600" : "text-brand-blue"}>
+              {activeCount} / {org.newsletterSubCap}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {isOverCap && (
+        <div className="p-4 bg-red-50 border-l-4 border-red-500 text-red-800 text-sm font-medium rounded-r-xl">
+          Warning: Your active subscriber count exceeds your tier cap of {org.newsletterSubCap}. Campaign sending is locked until you clean the list or upgrade to PRO.
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="md:col-span-1">
@@ -59,7 +108,9 @@ export default async function AdminNewsletterPage(props: {
                         <label className="block text-sm font-medium">Content (HTML allowed)</label>
                         <textarea name="content" required className="w-full p-2 border rounded mt-1 h-48" placeholder="<h1>Hello!</h1><p>Here is what we have been up to...</p>" />
                     </div>
-                    <Button type="submit" className="w-full">Send to {activeCount} Subscribers</Button>
+                    <Button type="submit" disabled={isOverCap} className="w-full">
+                      {isOverCap ? "Sending Locked (Cap Exceeded)" : `Send to ${activeCount} Subscribers`}
+                    </Button>
                 </form>
             </CardContent>
         </Card>
