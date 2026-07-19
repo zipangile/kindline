@@ -11,6 +11,70 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+enum PlanTier {
+  STARTER
+  GROWTH
+  PRO
+}
+
+enum UserRole {
+  DONOR
+  VOLUNTEER
+  ORG_ADMIN
+  SUPERADMIN
+}
+
+enum PostType {
+  STANDARD
+  IMPACT_STORY
+}
+
+model Organization {
+  id                  String       @id @default(cuid())
+  name                String       @default("Kindline Care Foundation")
+  tier                PlanTier     @default(STARTER)
+  featureOverrides    Json?                  // per-org manual overrides, e.g. {"newsletter": true}
+  donationFeePercent  Decimal      @default(2.0)   // 2.0 / 1.5 / 1.0 by tier, editable per-org by superadmin
+  volunteerCap        Int?         @default(15)    // 15 / 50 / null(unlimited) by tier
+  newsletterSubCap    Int?         @default(0)     // 0 / 500 / null(unlimited) by tier
+  volunteerSignupFee  Float        @default(0.0)   // volunteer signup fee (one-time fee)
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+}
+
+model User {
+  id             String   @id @default(cuid())
+  supabaseUserId String   @unique
+  email          String   @unique
+  role           UserRole @default(DONOR)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model AdminAuditLog {
+  id        String   @id @default(cuid())
+  actorId   String
+  orgId     String
+  field     String
+  oldValue  String?
+  newValue  String?
+  createdAt DateTime @default(now())
+}
+
+model Post {
+  id          String    @id @default(cuid())
+  orgId       String    @default("default")
+  title       String
+  slug        String    @unique
+  body        String
+  type        PostType  @default(STANDARD)
+  featured    Boolean   @default(false)
+  image       String?
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
 model Program {
   id          String   @id @default(cuid())
   title       String
@@ -46,8 +110,8 @@ model ManagedAdmin {
   email     String    @unique
   name      String?
   role      String    @default("CONTENT_EDITOR") // SUPER_ADMIN, CONTENT_EDITOR, FINANCIAL_ADMIN, VOLUNTEER_COORD
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }
 
 model NewsPost {
@@ -91,6 +155,7 @@ model Donation {
   gateway       String
   transactionId String?  @unique
   donorPhone    String?
+  feeCharged    Float?   // Platform fee charged
   createdAt     DateTime @default(now())
 }
 
@@ -128,11 +193,13 @@ model SiteImage {
 }
 
 model Subscriber {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  status    String   @default("active") // "active", "unsubscribed"
-  createdAt DateTime @default(now())
+  id             String    @id @default(cuid())
+  email          String    @unique
+  name           String?
+  status         String    @default("active") // "active", "unsubscribed"
+  subscribedAt   DateTime  @default(now())
+  unsubscribedAt DateTime?
+  createdAt      DateTime  @default(now())
 }
 
 model ImpactStory {

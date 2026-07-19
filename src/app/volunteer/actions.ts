@@ -57,6 +57,12 @@ export async function registerVolunteer(formData: FormData) {
 
     revalidatePath('/admin/volunteers');
     revalidatePath('/dashboard/volunteer');
+
+    const org = await prisma.organization.findFirst();
+    if (org && org.volunteerSignupFee > 0) {
+      redirect('/volunteer/pay');
+    }
+
     redirect('/dashboard/volunteer');
   } catch (error) {
     if (isRedirectError(error)) {

@@ -5,6 +5,7 @@ import LoveCareShare from "@/components/LoveCareShare";
 import prisma from "@/lib/prisma";
 import Script from "next/script";
 import Link from "next/link";
+import { getOrganization, hasFeature } from "@/lib/features";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +21,9 @@ export default async function GetInvolvedPage(props: {
   } catch (error) {
     console.error("Error fetching payment settings:", error);
   }
+
+  const org = await getOrganization();
+  const recurringDonationsEnabled = hasFeature(org, "RECURRING_DONATIONS");
 
   const donationSettings = {
     lencoPublic: process.env.LENCO_PUBLIC_KEY || settings?.lencoPublic || undefined,
@@ -125,7 +129,7 @@ export default async function GetInvolvedPage(props: {
               </div>
             </div>
             <div className="lg:sticky lg:top-8">
-              <DonationForm settings={donationSettings} />
+              <DonationForm settings={donationSettings} recurringDonationsEnabled={recurringDonationsEnabled} />
             </div>
           </div>
         </div>

@@ -14,7 +14,8 @@ import {
   Newspaper,
   ShieldCheck,
   Settings,
-  ExternalLink
+  ExternalLink,
+  FileText
 } from 'lucide-react';
 
 export default async function AdminLayout({
@@ -140,6 +141,11 @@ function SidebarContent({ hasAccess }: { hasAccess: (required: PermissionLevel[]
             <span className="font-medium">Site Images</span>
           </Link>
 
+          <Link href="/admin/blog" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
+            <FileText size={20} className="text-pink-400 group-hover:scale-110 transition-transform" />
+            <span className="font-medium">Blog CMS</span>
+          </Link>
+
           <Link href="/admin/news" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
             <Newspaper size={20} className="text-orange-400 group-hover:scale-110 transition-transform" />
             <span className="font-medium">News & Blog</span>
@@ -171,10 +177,16 @@ function SidebarContent({ hasAccess }: { hasAccess: (required: PermissionLevel[]
       </div>
 
       {hasAccess(['SUPER_ADMIN']) && (
-        <Link href="/admin/admins" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
-          <ShieldCheck size={20} className="text-purple-400 group-hover:scale-110 transition-transform" />
-          <span className="font-medium">Permissions</span>
-        </Link>
+        <>
+          <Link href="/admin/platform" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
+            <ShieldCheck size={20} className="text-pink-400 group-hover:scale-110 transition-transform" />
+            <span className="font-medium">Platform Admin</span>
+          </Link>
+          <Link href="/admin/admins" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
+            <ShieldCheck size={20} className="text-purple-400 group-hover:scale-110 transition-transform" />
+            <span className="font-medium">Permissions</span>
+          </Link>
+        </>
       )}
 
       {hasAccess(['SUPER_ADMIN', 'FINANCIAL_ADMIN']) && (
