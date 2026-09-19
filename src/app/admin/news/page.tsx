@@ -31,7 +31,7 @@ export default async function AdminNewsPage(props: {
 
   return (
     <div className="space-y-8">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-wrap gap-4 justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Manage News & Updates</h1>
           <p className="text-gray-500">Create and manage blog posts and announcements.</p>
@@ -43,7 +43,7 @@ export default async function AdminNewsPage(props: {
         </Button>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="table-scroll bg-white rounded-2xl shadow-sm border border-gray-100" role="region" aria-label="News posts table" tabIndex={0}>
         <table className="w-full text-left">
           <thead className="bg-gray-50 border-b border-gray-100">
             <tr>
@@ -67,11 +67,11 @@ export default async function AdminNewsPage(props: {
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-4">
                       {post.image ? (
-                        <div className="relative w-12 h-12 rounded-lg overflow-hidden">
+                        <div className="relative shrink-0 w-12 h-12 rounded-lg overflow-hidden">
                           <Image src={post.image} fill className="object-cover" alt="" />
                         </div>
                       ) : (
-                        <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">
+                        <div className="shrink-0 w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">
                           <Calendar size={20} />
                         </div>
                       )}
@@ -93,7 +93,7 @@ export default async function AdminNewsPage(props: {
                         Published
                       </span>
                     ) : (
-                      <span className="flex items-center gap-1.5 text-xs font-bold text-gray-400">
+                      <span className="flex items-center gap-1.5 text-xs font-bold text-gray-600">
                         <div className="w-1.5 h-1.5 rounded-full bg-gray-400" />
                         Draft
                       </span>
@@ -105,12 +105,12 @@ export default async function AdminNewsPage(props: {
                   <td className="px-6 py-4 text-right">
                     <div className="flex justify-end gap-2">
                       <Button variant="outline" size="sm" asChild>
-                        <Link href={`/admin/news/edit/${post.id}`}>
+                        <Link href={`/admin/news/edit/${post.id}`} aria-label={`Edit ${post.title}`}>
                           <Edit size={16} />
                         </Link>
                       </Button>
                       <form action={deleteNewsPost.bind(null, post.id)}>
-                        <Button variant="outline" size="sm" className="text-red-500 hover:text-red-600">
+                        <Button variant="outline" size="sm" aria-label={`Delete ${post.title}`} className="text-red-700 hover:text-red-800">
                           <Trash2 size={16} />
                         </Button>
                       </form>

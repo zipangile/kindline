@@ -3,9 +3,18 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
+import { isSiteImageKey, PARTNER_KEY } from '@/lib/site-images';
+import { IMAGE_MAX_BYTES, validateImageUrl } from '@/lib/image-validation';
+import { prepareRasterUpload } from '@/lib/raster-upload';
 
 export async function updateSiteImage(key: string, url: string, alt?: string) {
   await checkAdmin('CONTENT_EDITOR');
+  if (typeof key !== 'string' || !isSiteImageKey(key)) throw new Error('Unknown image slot');
+  if (alt !== undefined && typeof alt !== 'string') throw new Error('Invalid image description');
+  alt = alt?.trim();
+  if (alt && alt.length > 500) throw new Error('Description is too long');
+  url = validateImageUrl(url);
+  if (PARTNER_KEY.test(key) && url && !alt) throw new Error('Partner name is required');
 
   await prisma.siteImage.upsert({
     where: { key },
@@ -13,18 +22,22 @@ export async function updateSiteImage(key: string, url: string, alt?: string) {
     create: { key, url, alt },
   });
 
-  revalidatePath('/');
-  revalidatePath('/about');
+  revalidatePath('/', 'layout');
   revalidatePath('/admin/images');
+}
+
+export async function removeSiteImage(key: string) {
+  // Persist a tombstone rather than deleting: absence means use the original default.
+  await updateSiteImage(key, '');
 }
 
 export async function uploadImage(formData: FormData) {
   await checkAdmin('CONTENT_EDITOR');
-  const file = formData.get('file') as File;
-  if (!file) throw new Error('No file provided');
+  const file = formData.get('file');
+  if (!(file instanceof File) || !file.size) throw new Error('No image provided');
 
   // Security: File size and type validation
-  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+  const MAX_FILE_SIZE = IMAGE_MAX_BYTES;
   const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
   if (file.size > MAX_FILE_SIZE) {
@@ -35,6 +48,7 @@ export async function uploadImage(formData: FormData) {
     throw new Error('Invalid file type. Only JPG, PNG, WEBP, and GIF are allowed.');
   }
 
+  const raster = await prepareRasterUpload(new Uint8Array(await file.arrayBuffer()), file.type);
   const { createClient } = await import('@supabase/supabase-js');
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -47,13 +61,13 @@ export async function uploadImage(formData: FormData) {
   // Use service role key to bypass RLS in this admin-only server action
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-  const fileExt = file.name.split('.').pop();
+  const fileExt = raster.extension;
   const fileName = `${crypto.randomUUID()}.${fileExt}`;
   const filePath = `site-images/${fileName}`;
 
   const { error } = await supabase.storage
     .from('images')
-    .upload(filePath, file);
+    .upload(filePath, raster.bytes, { contentType: raster.contentType, upsert: false });
 
   if (error) {
     console.error('[uploadImage] Supabase storage error:', error);
@@ -67,5 +81,5 @@ export async function uploadImage(formData: FormData) {
     .from('images')
     .getPublicUrl(filePath);
 
-  return publicUrl;
+  return validateImageUrl(publicUrl, false);
 }

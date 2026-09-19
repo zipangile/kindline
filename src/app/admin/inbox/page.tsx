@@ -24,9 +24,9 @@ export default async function AdminInboxPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-wrap gap-4 justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-900">Contact Inbox</h1>
-        <div className="bg-brand-blue/10 text-brand-blue px-4 py-2 rounded-lg font-bold">
+        <div className="bg-brand-blue/10 text-brand-purple px-4 py-2 rounded-lg font-bold">
           {unreadCount} Unread Messages
         </div>
       </div>
@@ -34,10 +34,10 @@ export default async function AdminInboxPage() {
       <div className="space-y-4">
         {messages.map((msg) => (
           <Card key={msg.id} className={`${msg.status === 'unread' ? 'border-l-4 border-l-brand-blue' : ''}`}>
-            <CardHeader className="flex flex-row items-start justify-between">
+            <CardHeader className="flex flex-col sm:flex-row gap-4 items-start justify-between">
               <div>
                 <CardTitle className="text-lg">{msg.name}</CardTitle>
-                <div className="text-sm text-gray-500 flex items-center gap-2">
+                <div className="text-sm text-gray-500 flex flex-wrap items-center gap-2">
                   <Mail size={14} /> {msg.email}
                   <Clock size={14} className="ml-2" /> {new Date(msg.createdAt).toLocaleString()}
                 </div>

@@ -111,6 +111,7 @@ export default function ProgramForm({ program, onComplete }: { program?: Program
             <Image src={image} alt="Preview" fill className="object-cover" />
             <button
               type="button"
+              aria-label="Remove programme image"
               onClick={() => setImage('')}
               className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full text-[10px]"
             >

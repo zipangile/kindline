@@ -12,7 +12,7 @@ export default async function LoginPage({
   const p = await searchParams;
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 p-10 bg-white rounded-xl shadow-lg border border-gray-100">
+      <div className="max-w-md w-full space-y-8 p-6 sm:p-10 bg-white rounded-xl shadow-lg border border-gray-100">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Log in to your account
@@ -36,13 +36,13 @@ export default async function LoginPage({
           </div>
 
           <div className="flex flex-col gap-4">
-            <button formAction={login} className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-brand-blue hover:bg-brand-blue/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-blue">
+            <button formAction={login} className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-brand-blue hover:bg-brand-orange focus:ring-2 focus:ring-offset-2 focus:ring-brand-blue">
               Log in
             </button>
             <div className="text-center">
               <p className="text-sm text-gray-600">
                 Don&apos;t have an account?{' '}
-                <Link href="/signup" className="font-medium text-brand-blue hover:text-brand-blue/80">
+                <Link href="/signup" className="font-medium text-brand-blue hover:text-brand-purple hover:underline">
                   Sign up
                 </Link>
               </p>

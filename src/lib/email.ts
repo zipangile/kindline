@@ -1,5 +1,6 @@
 import { Resend } from 'resend';
 import prisma from '@/lib/prisma';
+import { renderCommunicationEmail, EMAIL_PANEL_STYLE } from '@/lib/email-template';
 
 const resend = new Resend(process.env.RESEND_API_KEY || 're_placeholder');
 
@@ -29,8 +30,8 @@ export async function sendDonationEmails(donation: DonationData) {
       to: donation.donorEmail,
       subject: 'Thank you for your life-changing gift',
       html: `
-        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-          <h1 style="color: #8B438E;">Thank you, ${donation.donorName || 'Friend'}!</h1>
+        <div style="${EMAIL_PANEL_STYLE}">
+          <h1 style="color: #005a9c;">Thank you, ${donation.donorName || 'Friend'}!</h1>
           <p style="font-size: 16px; line-height: 1.6; color: #333;">
             Your donation of <strong>${donation.currency} ${donation.amount}</strong> has been received and is already being put to work.
           </p>
@@ -43,7 +44,7 @@ export async function sendDonationEmails(donation: DonationData) {
             <strong>The Kindline Care Team</strong>
           </p>
           <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-          <p style="font-size: 12px; color: #999; text-align: center;">
+          <p style="font-size: 12px; color: #4b5563; text-align: center;">
             Transaction ID: ${donation.transactionId} | Gateway: ${donation.gateway}
           </p>
         </div>
@@ -56,8 +57,8 @@ export async function sendDonationEmails(donation: DonationData) {
       to: donation.donorEmail,
       subject: 'Access your Friends of Kindline Dashboard',
       html: `
-        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-          <h2 style="color: #00A651;">Your Impact, At Your Fingertips</h2>
+        <div style="${EMAIL_PANEL_STYLE}">
+          <h2 style="color: #005a9c;">Your Impact, At Your Fingertips</h2>
           <p style="font-size: 16px; line-height: 1.6; color: #333;">
             Did you know you can track your impact through our Friends Dashboard?
           </p>
@@ -68,7 +69,7 @@ export async function sendDonationEmails(donation: DonationData) {
           </p>
           <div style="text-align: center; margin: 30px 0;">
             <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://kindlinecare.org'}/dashboard"
-               style="background-color: #8B438E; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+               style="display:inline-block;background-color:#0071bc;color:#ffffff;padding:12px 24px;text-decoration:underline;border-radius:5px;font-weight:bold;">
                Go to Dashboard
             </a>
           </div>
@@ -86,7 +87,7 @@ export async function sendDonationEmails(donation: DonationData) {
       to: adminEmailList,
       subject: `New Donation: ${donation.currency} ${donation.amount} from ${donation.donorName}`,
       html: `
-        <div style="font-family: sans-serif; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
+        <div style="${EMAIL_PANEL_STYLE}">
           <h2 style="color: #333;">New Transaction Notification</h2>
           <p><strong>Donor:</strong> ${donation.donorName} (${donation.donorEmail})</p>
           <p><strong>Amount:</strong> ${donation.currency} ${donation.amount}</p>
@@ -95,7 +96,7 @@ export async function sendDonationEmails(donation: DonationData) {
           <p><strong>Status:</strong> Successful</p>
           <div style="margin-top: 20px;">
             <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://kindlinecare.org'}/admin/donors"
-               style="color: #8B438E; font-weight: bold;">
+               style="color:#005a9c;font-weight:bold;text-decoration:underline;">
                View in Admin Dashboard
             </a>
           </div>
@@ -118,8 +119,8 @@ export async function sendVolunteerStatusEmail(email: string, name: string, stat
 
   const html = status === 'approved'
     ? `
-      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-        <h1 style="color: #00A651;">Welcome Aboard, ${name}!</h1>
+      <div style="${EMAIL_PANEL_STYLE}">
+        <h1 style="color: #005a9c;">Welcome Aboard, ${name}!</h1>
         <p style="font-size: 16px; line-height: 1.6; color: #333;">
           We are thrilled to inform you that your volunteer application has been approved. Your skills and passion are exactly what we need to continue our mission.
         </p>
@@ -128,7 +129,7 @@ export async function sendVolunteerStatusEmail(email: string, name: string, stat
         </p>
         <div style="text-align: center; margin: 30px 0;">
           <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://kindlinecare.org'}/dashboard"
-             style="background-color: #8B438E; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+             style="display:inline-block;background-color:#0071bc;color:#ffffff;padding:12px 24px;text-decoration:underline;border-radius:5px;font-weight:bold;">
              Go to Volunteer Dashboard
           </a>
         </div>
@@ -139,7 +140,7 @@ export async function sendVolunteerStatusEmail(email: string, name: string, stat
       </div>
     `
     : `
-      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+      <div style="${EMAIL_PANEL_STYLE}">
         <h1 style="color: #333;">Volunteer Application Update</h1>
         <p style="font-size: 16px; line-height: 1.6; color: #333;">
           Dear ${name}, thank you for your interest in volunteering with Kindline Care.
@@ -179,14 +180,14 @@ export async function sendNewVolunteerNotification(volunteer: { name: string, em
       to: adminEmailList,
       subject: `New Volunteer Application: ${volunteer.name}`,
       html: `
-        <div style="font-family: sans-serif; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
+        <div style="${EMAIL_PANEL_STYLE}">
           <h2 style="color: #333;">New Volunteer Application</h2>
           <p><strong>Name:</strong> ${volunteer.name}</p>
           <p><strong>Email:</strong> ${volunteer.email}</p>
           <p><strong>Skills:</strong> ${volunteer.skills || 'Not specified'}</p>
           <div style="margin-top: 20px;">
             <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://kindlinecare.org'}/admin/volunteers"
-               style="color: #8B438E; font-weight: bold;">
+               style="color:#005a9c;font-weight:bold;text-decoration:underline;">
                Review Application in Admin Panel
             </a>
           </div>
@@ -211,14 +212,14 @@ export async function sendContactNotification(message: { name: string, email: st
       to: adminEmailList,
       subject: `New Contact Message from ${message.name}`,
       html: `
-        <div style="font-family: sans-serif; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
+        <div style="${EMAIL_PANEL_STYLE}">
           <h2 style="color: #333;">New Contact Form Submission</h2>
           <p><strong>From:</strong> ${message.name} (${message.email})</p>
           <p><strong>Message:</strong></p>
           <p style="background: #f9f9f9; padding: 15px; border-radius: 5px;">${message.message}</p>
           <div style="margin-top: 20px;">
             <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://kindlinecare.org'}/admin/inbox"
-               style="color: #8B438E; font-weight: bold;">
+               style="color:#005a9c;font-weight:bold;text-decoration:underline;">
                View in Admin Inbox
             </a>
           </div>
@@ -234,25 +235,16 @@ export async function sendCommunicationEmail(recipient: string, subject: string,
   if (!process.env.RESEND_API_KEY) return;
 
   try {
-    await resend.emails.send({
+    const logo = await prisma.siteImage.findUnique({ where: { key: 'logo' } });
+    const template = renderCommunicationEmail(content, process.env.NEXT_PUBLIC_SITE_URL, logo?.url);
+    const result = await resend.emails.send({
       from: 'Kindline Care <info@kindlinecare.org>',
       to: recipient,
       subject: subject,
-      html: `
-        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-          <div style="margin-bottom: 20px;">
-            <img src="${process.env.NEXT_PUBLIC_SITE_URL || 'https://kindlinecare.org'}/logo.png" alt="Kindline Care" style="height: 40px;">
-          </div>
-          <div style="font-size: 16px; line-height: 1.6; color: #333;">
-            ${content}
-          </div>
-          <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
-          <p style="font-size: 14px; color: #666; text-align: center;">
-            Kindline Care Organization | Lusaka, Zambia
-          </p>
-        </div>
-      `
+      html: template.html,
+      text: template.text,
     });
+    if (result.error) throw new Error('Email provider rejected the message');
     return { success: true };
   } catch (error) {
     console.error('[Email] Error sending communication email:', error);
@@ -264,8 +256,8 @@ export async function sendVolunteerInvitation(email: string, message?: string) {
   if (!process.env.RESEND_API_KEY) return;
 
   const html = `
-    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-      <h1 style="color: #8B438E;">Join Kindline Care as a Volunteer!</h1>
+    <div style="${EMAIL_PANEL_STYLE}">
+      <h1 style="color: #005a9c;">Join Kindline Care as a Volunteer!</h1>
       <p style="font-size: 16px; line-height: 1.6; color: #333;">
         We would love to have you join our team of dedicated volunteers working to transform lives in Zambia.
       </p>
@@ -275,7 +267,7 @@ export async function sendVolunteerInvitation(email: string, message?: string) {
       </p>
       <div style="text-align: center; margin: 30px 0;">
         <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://kindlinecare.org'}/signup?role=volunteer"
-           style="background-color: #00A651; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+           style="display:inline-block;background-color:#0071bc;color:#ffffff;padding:12px 24px;text-decoration:underline;border-radius:5px;font-weight:bold;">
            Start Volunteering
         </a>
       </div>

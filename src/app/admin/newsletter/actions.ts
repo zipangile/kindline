@@ -4,7 +4,8 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
 import { Resend } from 'resend';
-import { isValidEmail, sanitizeContent } from '@/lib/security';
+import { isValidEmail } from '@/lib/security';
+import { renderCommunicationEmail } from '@/lib/email-template';
 
 const resend = new Resend(process.env.RESEND_API_KEY || 're_placeholder');
 
@@ -37,12 +38,11 @@ export async function sendNewsletter(formData: FormData) {
   const rawContent = formData.get('content') as string;
 
   // Security: Basic sanitization and length limits
-  if (rawSubject.length > 200) {
+  if (!rawSubject?.trim() || rawSubject.length > 200) {
     throw new Error('Subject is too long');
   }
 
-  // Remove <script> tags to prevent basic XSS in email clients that might execute them
-  const content = sanitizeContent(rawContent);
+  const content = rawContent;
   const subject = rawSubject;
 
   const subscribers = await prisma.subscriber.findMany({
@@ -53,16 +53,22 @@ export async function sendNewsletter(formData: FormData) {
   const emails = subscribers.map(s => s.email);
 
   if (emails.length === 0) return;
+  const logo = await prisma.siteImage.findUnique({ where: { key: 'logo' } });
+  const template = renderCommunicationEmail(content, process.env.NEXT_PUBLIC_SITE_URL, logo?.url);
 
   try {
-    await resend.emails.send({
+    const result = await resend.emails.send({
       from: 'Kindline Care <updates@kindlinecare.org>',
-      to: emails,
+      to: 'Kindline Care <updates@kindlinecare.org>',
+      bcc: emails,
       subject: subject,
-      html: content,
+      html: template.html,
+      text: template.text,
     });
+    if (result.error) throw new Error('Email provider rejected the newsletter');
   } catch (error) {
     console.error('Email sending error:', error);
+    throw new Error('Newsletter could not be sent. Check the provider status before retrying.');
   }
 }
 

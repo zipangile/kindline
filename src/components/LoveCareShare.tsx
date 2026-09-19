@@ -4,7 +4,7 @@ import { Heart, Calendar, MessageSquare } from 'lucide-react';
 
 const LoveCareShare = () => {
   return (
-    <section className="py-24 bg-brand-blue/5">
+    <section className="py-24 bg-brand-blue/5 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
@@ -14,7 +14,7 @@ const LoveCareShare = () => {
               Love Care Share is Kindline Care Foundation&apos;s giving community for individuals, families, faith-Based and organizations who commit to support widows, orphans, and vulnerable children through monthly, quarterly, or annual giving.
             </p>
             <div className="flex flex-col sm:flex-row gap-5 mb-14">
-              <Button size="lg" className="bg-brand-blue hover:bg-brand-blue/90 text-white rounded-full px-10 h-14 text-lg font-bold shadow-lg" asChild>
+              <Button size="lg" className="bg-brand-blue hover:bg-brand-orange text-white rounded-full px-10 min-h-14 text-lg font-bold shadow-lg" asChild>
                 <Link href="/get-involved">Join Our Community</Link>
               </Button>
             </div>
@@ -55,7 +55,7 @@ const LoveCareShare = () => {
                <div className="absolute inset-0 flex items-center justify-center p-12 text-center text-white">
                  <div className="relative z-20">
                     <h4 className="text-4xl font-extrabold mb-6 leading-tight">Be the backbone of our work</h4>
-                    <p className="text-white/90 text-xl font-medium">Your recurring support creates lasting change and transforms lives.</p>
+                    <p className="text-white text-xl font-medium">Your recurring support creates lasting change and transforms lives.</p>
                  </div>
                </div>
             </div>

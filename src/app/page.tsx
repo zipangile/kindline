@@ -10,6 +10,8 @@ import { Button } from '@/components/ui/Button';
 import prisma from '@/lib/prisma';
 import { subscribe } from '@/app/admin/newsletter/actions';
 import { SiteImage, ImpactStat, ImpactStory } from '@prisma/client';
+import { resolveSiteImage, partnerLogos } from '@/lib/site-images';
+import PartnerLogos from '@/components/PartnerLogos';
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +22,7 @@ export default async function Home(props: {
   await props.params;
   await props.searchParams;
 
-  let images: SiteImage[] = [];
+  let images: SiteImage[] | null = null;
   let stats: ImpactStat[] = [];
   let stories: ImpactStory[] = [];
 
@@ -34,13 +36,14 @@ export default async function Home(props: {
     console.error('[Home] Error fetching data:', error);
   }
 
-  const getImage = (key: string) => images.find(img => img.key === key)?.url;
+  const getImage = (key: string) => resolveSiteImage(images, key);
 
   return (
     <div>
-      <Hero imageUrl={getImage('homepage_hero') || '/images/child-development.jpg'} />
+      <Hero imageUrl={getImage('homepage_hero')} />
 
-      <AboutSnapshot imageUrl={getImage('about_snapshot') || '/images/volunteers.jpg'} />
+      <AboutSnapshot imageUrl={getImage('about_snapshot')} />
+      <PartnerLogos partners={partnerLogos(images ?? [])} />
 
       <ProgramsOverview />
 
@@ -62,7 +65,7 @@ export default async function Home(props: {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             <div className="bg-gray-50 p-10 rounded-[2rem] border border-gray-100">
               <h4 className="text-2xl font-bold text-gray-900 mb-4">General Enquiries</h4>
               <p className="text-gray-600 mb-6 font-medium">For questions about our work and programmes.</p>
@@ -72,28 +75,6 @@ export default async function Home(props: {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                   info@kindlinecare.org
-                </a>
-                <p className="flex items-center gap-3 text-gray-700 font-bold">
-                  <svg className="w-5 h-5 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                  +260 958 582 293
-                </p>
-                <p className="flex items-center gap-3 text-gray-700 font-bold ml-8">
-                  +260 762 595 634
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-gray-50 p-10 rounded-[2rem] border border-gray-100">
-              <h4 className="text-2xl font-bold text-gray-900 mb-4">Partnerships & Donations</h4>
-              <p className="text-gray-600 mb-6 font-medium">For organisations, individuals, and supporters who want to contribute or collaborate.</p>
-              <div className="space-y-3">
-                <a href="mailto:partnerships@kindlinecare.org" className="flex items-center gap-3 text-brand-blue font-bold hover:underline">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  partnerships@kindlinecare.org
                 </a>
                 <p className="flex items-center gap-3 text-gray-700 font-bold">
                   <svg className="w-5 h-5 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -123,7 +104,7 @@ export default async function Home(props: {
                 <div>
                   <p className="text-brand-blue font-bold mb-1">Service Area</p>
                   <p className="text-gray-700 font-medium">
-                    10 Miles, Chibombo District, Central Province
+                    Chibombo District, Central Province
                   </p>
                 </div>
               </div>
@@ -141,6 +122,7 @@ export default async function Home(props: {
           <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto" action={subscribe}>
             <input
               name="email"
+              aria-label="Email address for newsletter"
               type="email"
               placeholder="Your email address"
               className="flex-grow px-6 py-3 rounded-full border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-blue bg-white text-gray-900 font-medium"

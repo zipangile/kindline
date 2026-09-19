@@ -1,20 +1,33 @@
 @import "tailwindcss";
 @import "preline/variants.css";
-@source "../node_modules/preline/dist/*.js";
+@source "../../node_modules/preline/dist/*.js";
 @plugin "@tailwindcss/forms";
 
 :root {
+  /* Kindline supports a light interface, including native form controls, in
+     either OS preference. Dark footer/hero/sidebar regions are intentional.
+     Do not add media-based dark utilities without a complete paired theme. */
+  color-scheme: light;
   --background: #ffffff;
   --foreground: #171717;
   --brand-purple: #004d80;
-  --brand-green: #008ccf;
+  --brand-green: #006da3;
   --brand-blue: #0071bc;
   --brand-orange: #005a9c;
+  --control-border: #6b7280;
+  --muted-foreground: #4b5563;
 }
 
 @theme inline {
+  /* Semantic utility tones also serve small status text on tinted panels. */
+  --color-gray-500: #596170;
+  --color-green-600: #15803d;
+  --color-green-500: #15803d;
+  --color-orange-600: #c2410c;
+  --color-red-500: #b91c1c;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
@@ -27,5 +40,67 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  overflow-wrap: anywhere;
+}
+
+/* Base structural constraints, not page-wide clipping: long CMS text and
+   native controls must shrink inside flex/grid tracks. Tables scroll locally. */
+@layer base {
+  :where(.flex, .grid) > * { min-width: 0; }
+  :where(input, select, textarea) { min-width: 0; max-width: 100%; }
+  :where(button, summary, [role="button"]) { min-height: 44px; }
+  :where(button, a[title], a[aria-label]) { min-width: 44px; }
+  :where(button, a, summary, input, select, textarea):focus-visible {
+    outline: 3px solid #0071bc;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 3px #fff;
+  }
+}
+
+/* Explicit form palette beats the forms plugin and per-page pale border
+   utilities. Checkboxes/radios retain their native checked-state treatment. */
+:is(input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]), select, textarea) {
+  color: #171717;
+  background-color: #fff;
+  border-color: var(--control-border);
+  min-height: 44px;
+}
+:is(input, textarea)::placeholder { color: #4b5563; opacity: 1; }
+:is(input[type="checkbox"], input[type="radio"]) { border-color: var(--control-border); }
+option { color: #171717; background: #fff; }
+:is(input, select, textarea):focus { border-color: #0071bc; }
+:is(button, a, summary, input, select, textarea):focus-visible {
+  outline: 3px solid #0071bc;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px #fff;
+}
+:is(button, input, select, textarea):disabled {
+  opacity: 1;
+  color: #4b5563;
+  background-color: #e5e7eb;
+  border-color: #6b7280;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.table-scroll { max-width: 100%; overflow-x: auto; }
+.table-scroll:focus-visible { outline: 3px solid #0071bc; outline-offset: 2px; }
+.table-scroll table { min-width: 640px; }
+.table-scroll :is(th, td) { min-width: 128px; overflow-wrap: normal; }
+.table-scroll td:first-child { min-width: 240px; overflow-wrap: anywhere; }
+.table-scroll th { white-space: nowrap; }
+.kindline-footer a:hover { color: #bfdbfe; }
+.kindline-footer a.bg-brand-blue:hover { color: #fff; background: #005a9c; }
+.kindline-footer a:focus-visible { outline-color: #bfdbfe; box-shadow: 0 0 0 3px #111827; }
+.kindline-admin-nav a:focus-visible, .kindline-admin-nav button:focus-visible {
+  outline-color: #bfdbfe; box-shadow: 0 0 0 3px #1e293b;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -1,15 +1,17 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
+import { imageBackgroundStyle } from '@/lib/image-validation';
 
 const Hero = ({ imageUrl }: { imageUrl?: string }) => {
+  const backgroundImage = imageBackgroundStyle(imageUrl);
   return (
     <section className="relative bg-brand-blue text-white py-24 lg:py-32 overflow-hidden min-h-[600px] flex items-center">
-      {imageUrl ? (
+      {backgroundImage ? (
         <div
           className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
-          style={{ backgroundImage: `url(${imageUrl})` }}
+          style={{ backgroundImage }}
         >
-           <div className="absolute inset-0 bg-black/50"></div>
+           <div className="absolute inset-0 bg-black/70"></div>
         </div>
       ) : (
         <div className="absolute inset-0 bg-black/40"></div>
@@ -21,7 +23,7 @@ const Hero = ({ imageUrl }: { imageUrl?: string }) => {
             Restoring Dignity. <br />
             Creating Opportunity.
           </h1>
-          <p className="text-xl md:text-2xl text-white/90 mb-12 leading-relaxed max-w-2xl font-medium">
+          <p className="text-xl md:text-2xl text-white mb-12 leading-relaxed max-w-2xl font-medium">
             Transforming children, widows, and communities in Zambia through education, skills, and sustainable support.
           </p>
           <div className="flex flex-col sm:flex-row gap-5">

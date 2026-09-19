@@ -46,16 +46,16 @@ const Header = ({ logoUrl }: HeaderProps) => {
   };
 
   return (
-    <header className="sticky top-0 inset-x-0 flex flex-wrap lg:justify-start lg:flex-nowrap z-50 w-full bg-white border-b border-gray-200 text-sm py-3 lg:py-0">
-      <nav className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 lg:flex lg:items-center lg:justify-between" aria-label="Global">
+    <header className="sticky top-0 inset-x-0 flex flex-wrap xl:justify-start xl:flex-nowrap z-50 w-full bg-white text-gray-900 border-b border-gray-200 text-sm py-3 xl:py-0">
+      <nav className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 xl:flex xl:items-center xl:justify-between" aria-label="Global">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex-none relative h-24 w-56" aria-label="Kindline Care">
-            <Image src={logoUrl || "/logo.png"} alt="Kindline Care Foundation" fill className="object-contain" />
+          <Link href="/" className="flex-none relative h-20 w-48 xl:h-24 xl:w-56" aria-label="Kindline Care">
+            {logoUrl === '' ? <span className="font-bold">Kindline Care Foundation</span> : <Image src={logoUrl ?? "/logo.png"} alt="Kindline Care Foundation" fill className="object-contain" />}
           </Link>
-          <div className="lg:hidden">
+          <div className="xl:hidden">
             <button
               type="button"
-              className="hs-collapse-toggle p-2 inline-flex justify-center items-center gap-2 rounded-lg border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm"
+              className="hs-collapse-toggle p-2 inline-flex justify-center items-center gap-2 rounded-lg border border-gray-500 font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm"
               data-hs-collapse="#navbar-collapse-with-animation"
               aria-controls="navbar-collapse-with-animation"
               aria-label="Toggle navigation"
@@ -69,15 +69,15 @@ const Header = ({ logoUrl }: HeaderProps) => {
             </button>
           </div>
         </div>
-        <div id="navbar-collapse-with-animation" className="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow lg:block">
-          <div className="flex flex-col gap-y-4 gap-x-0 mt-5 lg:flex-row lg:items-center lg:justify-end lg:gap-y-0 lg:gap-x-7 lg:mt-0 lg:ps-7">
+        <div id="navbar-collapse-with-animation" className="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow xl:block">
+          <div className="flex flex-col gap-y-2 gap-x-0 mt-5 xl:flex-row xl:items-center xl:justify-end xl:gap-y-0 xl:gap-x-4 xl:mt-0 xl:ps-4">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
                 className={`font-semibold ${
                   pathname === link.href ? 'text-brand-blue' : 'text-gray-700 hover:text-brand-blue'
-                } lg:py-6 transition-colors`}
+                } flex items-center min-h-11 xl:py-6 transition-colors`}
                 aria-current={pathname === link.href ? 'page' : undefined}
               >
                 {link.name}
@@ -85,13 +85,13 @@ const Header = ({ logoUrl }: HeaderProps) => {
             ))}
 
             {!user ? (
-              <div className="flex flex-col lg:flex-row lg:items-center gap-y-4 lg:gap-y-0 lg:gap-x-3 mt-4 lg:mt-0">
-                <Link href="/login" className="text-gray-700 hover:text-brand-blue font-semibold transition-colors">Log in</Link>
-                <Link href="/signup" className="text-white bg-brand-blue hover:bg-blue-700 px-6 py-2 rounded-full font-bold transition-all text-center">Sign up</Link>
+              <div className="flex flex-col xl:flex-row xl:items-center gap-y-2 xl:gap-y-0 xl:gap-x-3 mt-4 xl:mt-0">
+                <Link href="/login" className="flex items-center min-h-11 text-gray-700 hover:text-brand-blue font-semibold transition-colors">Log in</Link>
+                <Link href="/signup" className="inline-flex items-center justify-center min-h-11 text-white bg-brand-blue hover:bg-blue-700 px-5 py-2 rounded-full font-bold transition-all text-center">Sign up</Link>
               </div>
             ) : (
-              <div className="flex flex-col lg:flex-row lg:items-center gap-y-4 lg:gap-y-0 lg:gap-x-4 mt-4 lg:mt-0">
-                <Link href="/dashboard" className="text-gray-700 hover:text-brand-blue font-semibold transition-colors">Dashboard</Link>
+              <div className="flex flex-col xl:flex-row xl:items-center gap-y-2 xl:gap-y-0 xl:gap-x-4 mt-4 xl:mt-0">
+                <Link href="/dashboard" className="flex items-center min-h-11 text-gray-700 hover:text-brand-blue font-semibold transition-colors">Dashboard</Link>
                 <button
                   onClick={handleSignOut}
                   className="text-gray-700 hover:text-brand-blue font-semibold transition-colors text-left"

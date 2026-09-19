@@ -1,142 +1,87 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
-import { updateSiteImage, uploadImage } from './actions';
-import { Loader2 } from 'lucide-react';
+import { updateSiteImage, removeSiteImage, uploadImage } from './actions';
+import { SITE_IMAGE_SLOTS, PARTNER_KEY, resolveSiteImage } from '@/lib/site-images';
+import { IMAGE_ACCEPT } from '@/lib/image-validation';
 import Image from 'next/image';
 
-interface SiteImage {
-  id: string;
-  key: string;
-  url: string;
-  alt: string | null;
-}
+interface SiteImage { id: string; key: string; url: string; alt: string | null }
 
-interface ImageCardProps {
-  item: { key: string; label: string };
-  existing: SiteImage | undefined;
-  uploading: boolean;
-  onUpload: (key: string, file: File, alt: string) => Promise<void>;
-}
-
-function ImageCard({ item, existing, uploading, onUpload }: ImageCardProps) {
-  const [alt, setAlt] = useState(existing?.alt || '');
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-lg">{item.label}</CardTitle>
-        <code className="text-xs text-gray-400 font-mono">{item.key}</code>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Upload New Image</label>
-            <div className="flex items-center gap-4">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={async (e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    await onUpload(item.key, file, alt);
-                  }
-                }}
-                disabled={uploading}
-                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
-              />
-              {uploading && <Loader2 className="animate-spin text-blue-600" size={20} />}
-            </div>
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Alt Text</label>
-            <input
-              value={alt}
-              onChange={(e) => setAlt(e.target.value)}
-              placeholder="Description for accessibility"
-              className="w-full p-2 border rounded mt-1"
-            />
-          </div>
+function ImageCard({ item, images, busy, save, remove }: {
+  item: { key: string; label: string }; images: SiteImage[]; busy: boolean;
+  save: (key: string, file: File | undefined, alt: string) => Promise<boolean>;
+  remove: (key: string) => Promise<boolean>;
+}) {
+  const saved = images.find(image => image.key === item.key);
+  const [alt, setAlt] = useState(saved?.alt ?? '');
+  const [file, setFile] = useState<File>();
+  const fileInput = useRef<HTMLInputElement>(null);
+  const clearFile = () => {
+    setFile(undefined);
+    if (fileInput.current) fileInput.current.value = '';
+  };
+  const url = resolveSiteImage(images, item.key);
+  const partner = PARTNER_KEY.test(item.key);
+  return <Card>
+    <CardHeader><CardTitle className="text-lg">{item.label}</CardTitle></CardHeader>
+    <CardContent>
+      <form className="space-y-4" onSubmit={async e => { e.preventDefault(); if (await save(item.key, file, alt)) clearFile(); }}>
+        <label className="block text-sm font-medium" htmlFor={`${item.key}-file`}>Choose image (non-animated JPG, PNG, WEBP or GIF; up to 5 MB, 8192 pixels per side, 24 megapixels)</label>
+        <input ref={fileInput} id={`${item.key}-file`} type="file" accept={IMAGE_ACCEPT} disabled={busy} onChange={e => setFile(e.target.files?.[0])} className="block w-full text-sm" />
+        <label className="block text-sm font-medium" htmlFor={`${item.key}-alt`}>{partner ? 'Partner name (public)' : 'Image description'}</label>
+        <input id={`${item.key}-alt`} required={partner} maxLength={500} value={alt} onChange={e => setAlt(e.target.value)} className="w-full rounded border p-2" />
+        {url ? <div className="relative h-48 rounded-lg border bg-gray-50"><Image src={url} alt={saved?.alt ?? item.label} fill sizes="(max-width: 768px) 90vw, 480px" className={partner ? 'object-contain p-4' : 'object-cover'} /></div> : <p className="text-sm text-gray-500">No image displayed.</p>}
+        {file && <p className="break-words text-sm">Selected: {file.name}. Save to upload and publish this image.</p>}
+        <div className="flex flex-wrap gap-3">
+          <button type="submit" disabled={busy || (!file && !url)} className="rounded bg-blue-700 px-4 py-2 text-white disabled:opacity-50">{busy ? 'Saving…' : 'Save image & description'}</button>
+          <button type="button" disabled={busy || (!url && !partner)} onClick={async () => { if (confirm('Remove this image from the website? The stored file will not be deleted.') && await remove(item.key)) clearFile(); }} className="rounded border px-4 py-2 text-red-700 disabled:opacity-50">{partner && !url ? 'Discard partner' : 'Remove image'}</button>
         </div>
-
-        {existing?.url && (
-          <div className="mt-4 aspect-video relative bg-gray-100 rounded-lg overflow-hidden border group">
-            <Image
-              src={existing.url}
-              alt={existing.alt || ''}
-              fill
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-               <p className="text-white text-xs font-mono truncate px-4">{existing.url}</p>
-            </div>
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
+      </form>
+    </CardContent>
+  </Card>;
 }
 
 export default function ImageManager({ initialImages }: { initialImages: SiteImage[] }) {
-  const [images, setImages] = useState<SiteImage[]>(initialImages);
-  const [uploading, setUploading] = useState<string | null>(null);
-
-  const imageKeys = [
-    { key: 'logo', label: 'Organization Logo' },
-    { key: 'homepage_hero', label: 'Homepage Hero Image' },
-    { key: 'about_snapshot', label: 'About Section Image' },
-    { key: 'donation_hero', label: 'Donation Page Hero' },
-    { key: 'child_development', label: 'Child Development Section' },
-    { key: 'wesap_group', label: 'WESAP Group Photo' },
-    { key: 'volunteers_action', label: 'Volunteers in Action' },
-    { key: 'volunteer_action', label: 'Volunteer Page Feature Image' },
-  ];
-
-  const handleUpload = async (key: string, file: File, alt: string) => {
+  const [images, setImages] = useState(initialImages);
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState('');
+  const [draftKeys, setDraftKeys] = useState<string[]>([]);
+  const partnerKeys = [...new Set([...images.filter(image => PARTNER_KEY.test(image.key) && image.url).map(image => image.key), ...draftKeys])];
+  const save = async (key: string, file: File | undefined, alt: string) => {
+    setBusy(true); setMessage('');
     try {
-      setUploading(key);
-      const formData = new FormData();
-      formData.append('file', file);
-
-      const publicUrl = await uploadImage(formData);
-      await updateSiteImage(key, publicUrl, alt);
-
-      // Update local state
-      setImages(prev => {
-        const filtered = prev.filter(img => img.key !== key);
-        return [...filtered, { id: Date.now().toString(), key, url: publicUrl, alt }];
-      });
-
-      alert('Image updated successfully!');
-    } catch (error) {
-      console.error(error);
-      if (error instanceof Error) {
-        alert(error.message);
-      } else {
-        alert('Failed to update image.');
-      }
-    } finally {
-      setUploading(null);
-    }
+      let url = resolveSiteImage(images, key);
+      if (file) { const data = new FormData(); data.set('file', file); url = await uploadImage(data); }
+      await updateSiteImage(key, url, alt);
+      setImages(previous => [...previous.filter(image => image.key !== key), { id: key, key, url, alt }]);
+      setMessage('Saved. The website now uses this image.');
+      return true;
+    } catch (error) { setMessage(error instanceof Error ? error.message : 'Image could not be saved.'); return false; }
+    finally { setBusy(false); }
   };
-
-  return (
-    <div className="space-y-8">
-      <h1 className="text-2xl font-bold text-gray-900">Manage Website Images</h1>
-      <p className="text-gray-600">Upload images directly to Supabase storage to be used across the site.</p>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {imageKeys.map((item) => (
-          <ImageCard
-            key={item.key}
-            item={item}
-            existing={images.find(img => img.key === item.key)}
-            uploading={uploading === item.key}
-            onUpload={handleUpload}
-          />
-        ))}
-      </div>
-    </div>
-  );
+  const remove = async (key: string) => {
+    setBusy(true); setMessage('');
+    try {
+      await removeSiteImage(key);
+      setImages(previous => [...previous.filter(image => image.key !== key), { id: key, key, url: '', alt: null }]);
+      setDraftKeys(previous => previous.filter(value => value !== key));
+      setMessage('Removed from the website. No stored media files were deleted.');
+      return true;
+    } catch (error) { setMessage(error instanceof Error ? error.message : 'Image could not be removed.'); return false; }
+    finally { setBusy(false); }
+  };
+  return <div className="space-y-8">
+    <h1 className="text-2xl font-bold">Manage Website Images</h1>
+    <p>Choose a file, then save. Remove hides the photo without restoring the default or deleting the stored file.</p>
+    <p role="status" className="font-medium">{message}</p>
+    <div className="grid grid-cols-1 gap-8 md:grid-cols-2">{SITE_IMAGE_SLOTS.map(item => <ImageCard key={item.key} item={item} images={images} busy={busy} save={save} remove={remove} />)}</div>
+    <section id="partners" className="space-y-6">
+      <h2 className="text-2xl font-bold">Partner logos</h2>
+      <p>Add only partners whose name and logo you are authorised to publish. Saved logos appear on the homepage; no partners are added automatically.</p>
+      <button type="button" disabled={busy} onClick={() => setDraftKeys(previous => [...previous, `partner_${crypto.randomUUID()}`])} className="rounded bg-blue-700 px-4 py-2 text-white">Add partner logo</button>
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">{partnerKeys.map(key => <ImageCard key={key} item={{ key, label: 'Partner logo' }} images={images} busy={busy} save={save} remove={remove} />)}</div>
+    </section>
+  </div>;
 }

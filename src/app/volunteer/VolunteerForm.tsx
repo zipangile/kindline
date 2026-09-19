@@ -26,13 +26,9 @@ export default function VolunteerForm() {
         <div className="text-center p-6 border-2 border-dashed border-gray-200 rounded-xl">
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Sign in to Volunteer</h3>
           <p className="text-gray-600 mb-4">To track your application and access the volunteer dashboard, please create an account or sign in.</p>
-          <div className="flex justify-center gap-4">
-            <Link href="/login">
-              <Button variant="outline">Sign In</Button>
-            </Link>
-            <Link href="/signup?role=volunteer">
-              <Button className="bg-blue-800 hover:bg-blue-900">Create Account</Button>
-            </Link>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Button variant="outline" asChild><Link href="/login">Sign In</Link></Button>
+            <Button className="bg-blue-800 hover:bg-blue-900" asChild><Link href="/signup?role=volunteer">Create Account</Link></Button>
           </div>
         </div>
       ) : (
@@ -78,7 +74,7 @@ export default function VolunteerForm() {
         <label className="block text-sm font-medium text-gray-700">Why do you want to volunteer? / Relevant Interests</label>
         <textarea name="interests" rows={3} required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"></textarea>
       </div>
-          <Button type="submit" className="w-full bg-brand-blue hover:bg-brand-blue/90">Submit Application</Button>
+          <Button type="submit" className="w-full bg-brand-blue hover:bg-brand-orange">Submit Application</Button>
         </form>
       )}
     </div>

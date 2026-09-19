@@ -5,6 +5,18 @@ import { revalidatePath } from 'next/cache';
 import { checkAdmin } from '@/lib/auth-utils';
 import { redirect } from 'next/navigation';
 import { sanitizeContent } from '@/lib/security';
+import { validateImageUrl } from '@/lib/image-validation';
+
+export async function updateNewsImage(id: string, image: string) {
+  await checkAdmin('CONTENT_EDITOR');
+  const url = validateImageUrl(image);
+  const post = await prisma.newsPost.update({ where: { id }, data: { image: url || null } });
+  revalidatePath('/news');
+  revalidatePath(`/news/${post.slug}`);
+  revalidatePath('/admin/news');
+  revalidatePath(`/admin/news/edit/${id}`);
+  return { image: post.image };
+}
 
 export async function createNewsPost(data: {
   title: string;
@@ -31,6 +43,7 @@ export async function createNewsPost(data: {
   await prisma.newsPost.create({
     data: {
       ...data,
+      image: validateImageUrl(data.image ?? '') || null,
       content,
       excerpt,
       publishedAt: data.published ? new Date() : null,
@@ -78,6 +91,7 @@ export async function updateNewsPost(id: string, data: {
     where: { id },
     data: {
       ...data,
+      image: validateImageUrl(data.image ?? '') || null,
       content,
       excerpt,
       publishedAt,

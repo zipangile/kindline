@@ -59,15 +59,15 @@ export default function AdminManagement({ initialAdmins }: { initialAdmins: Mana
 
   return (
     <div className="space-y-8">
-      <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+      <div className="bg-white p-4 sm:p-8 rounded-2xl shadow-sm border border-gray-100">
         <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
           <UserPlus size={20} className="text-blue-600" />
           Add New Admin
         </h2>
         <form onSubmit={handleAdd} className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <input name="name" placeholder="Full Name" required className="p-3 border rounded-xl" />
-          <input name="email" type="email" placeholder="Email Address" required className="p-3 border rounded-xl" />
-          <select name="role" className="p-3 border rounded-xl">
+          <input name="name" aria-label="Full Name" placeholder="Full Name" required className="p-3 border rounded-xl" />
+          <input name="email" aria-label="Email Address" type="email" placeholder="Email Address" required className="p-3 border rounded-xl" />
+          <select name="role" aria-label="Admin role" className="p-3 border rounded-xl">
             <option value="CONTENT_EDITOR">Content Editor</option>
             <option value="FINANCIAL_ADMIN">Financial Admin</option>
             <option value="VOLUNTEER_COORD">Volunteer Coordinator</option>
@@ -79,7 +79,7 @@ export default function AdminManagement({ initialAdmins }: { initialAdmins: Mana
         </form>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="table-scroll bg-white rounded-2xl shadow-sm border border-gray-100" role="region" aria-label="Administrators table" tabIndex={0}>
         <table className="w-full text-left">
           <thead className="bg-gray-50 border-b border-gray-100">
             <tr>
@@ -99,6 +99,7 @@ export default function AdminManagement({ initialAdmins }: { initialAdmins: Mana
                 </td>
                 <td className="px-6 py-4">
                   <select
+                    aria-label={`Role for ${admin.name}`}
                     value={admin.role}
                     onChange={(e) => handleRoleUpdate(admin.id, e.target.value as AdminRole)}
                     disabled={loading === admin.id}
@@ -112,6 +113,7 @@ export default function AdminManagement({ initialAdmins }: { initialAdmins: Mana
                 </td>
                 <td className="px-6 py-4 text-right">
                   <Button
+                    aria-label={`Remove ${admin.name}`}
                     variant="outline"
                     size="sm"
                     onClick={() => handleRemove(admin.id)}

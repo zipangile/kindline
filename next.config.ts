@@ -2,6 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  experimental: {
+    serverActions: {
+      // Allow multipart overhead above the application's validated 5 MiB cap.
+      bodySizeLimit: '6mb',
+    },
+  },
   images: {
     remotePatterns: [
       {

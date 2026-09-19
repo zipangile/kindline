@@ -7,6 +7,7 @@ import { Send, History, Trash2, User, Mail, Calendar, UserPlus } from 'lucide-re
 import { checkAdmin } from '@/lib/auth-utils';
 import { ConfirmButton } from '@/components/ConfirmButton';
 import { Communication } from '@prisma/client';
+import EmailContentField from '@/components/EmailContentField';
 
 export default async function AdminCommunicationsPage() {
   await checkAdmin('CONTENT_EDITOR');
@@ -44,10 +45,7 @@ export default async function AdminCommunicationsPage() {
                         <label className="block text-sm font-medium">Subject</label>
                         <input name="subject" required className="w-full p-2 border rounded mt-1" placeholder="Kindline Care Update" />
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium">Message (HTML supported)</label>
-                        <textarea name="content" required className="w-full p-2 border rounded mt-1 h-32" placeholder="Hello..." />
-                    </div>
+                     <EmailContentField />
                     <Button type="submit" className="w-full">Send Email</Button>
                     </form>
                 </CardContent>
@@ -103,7 +101,7 @@ export default async function AdminCommunicationsPage() {
                   <form action={deleteCommunication.bind(null, comm.id)}>
                     <ConfirmButton
                         type="submit"
-                        className="p-1 text-gray-400 hover:text-red-600 rounded transition-colors"
+                        className="p-1 text-gray-600 hover:text-red-700 rounded transition-colors"
                         title="Delete Record"
                         confirmMessage="Delete this communication record?"
                     >

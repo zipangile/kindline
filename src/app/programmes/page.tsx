@@ -128,7 +128,7 @@ export default async function ProgramsPage(props: {
                   )}
                 </div>
 
-                <div className={`flex-1 relative rounded-2xl h-80 w-full flex items-center justify-center overflow-hidden shadow-sm border border-gray-100 ${getBgColor(programme.category)}`}>
+                <div className={`flex-none lg:flex-1 relative rounded-2xl h-80 w-full flex items-center justify-center overflow-hidden shadow-sm border border-gray-100 ${getBgColor(programme.category)}`}>
                    {programme.image ? (
                       <Image src={programme.image} alt={programme.title} fill className="object-cover" />
                    ) : (

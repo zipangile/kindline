@@ -60,7 +60,7 @@ const AboutSnapshot = ({ imageUrl }: { imageUrl?: string }) => {
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full -ml-32 -mb-32"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className={`grid grid-cols-1 ${imageUrl ? 'lg:grid-cols-2' : ''} gap-16 items-center`}>
             <div>
               <h1 className="text-4xl md:text-6xl text-white/80 font-bold uppercase tracking-widest mb-4">Who We Serve</h1>
               <h2 className="text-3xl md:text-5xl font-extrabold mb-8 leading-tight">
@@ -89,17 +89,17 @@ const AboutSnapshot = ({ imageUrl }: { imageUrl?: string }) => {
                 </p>
               </div>
             </div>
-            <div className="relative">
+            {imageUrl && <div className="relative">
               <div className="rounded-[3rem] h-[500px] overflow-hidden shadow-2xl border-8 border-white/10">
                 {imageUrl ? (
                   <Image src={imageUrl} alt="Who We Serve" fill className="object-cover" />
                 ) : (
                   <div className="bg-white/5 h-full w-full flex items-center justify-center">
-                    <p className="text-white/40 italic">Impact Image</p>
+                    <p className="text-white italic">Impact Image</p>
                   </div>
                 )}
               </div>
-            </div>
+            </div>}
           </div>
         </div>
       </section>

@@ -13,7 +13,7 @@ export default async function SignupPage({
   const isVolunteer = p.role === 'volunteer';
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 p-10 bg-white rounded-xl shadow-lg border border-gray-100">
+      <div className="max-w-md w-full space-y-8 p-6 sm:p-10 bg-white rounded-xl shadow-lg border border-gray-100">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Create your account
@@ -78,7 +78,7 @@ export default async function SignupPage({
           </div>
 
           <div>
-            <button formAction={signup} className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-brand-blue hover:bg-brand-blue/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-blue">
+            <button formAction={signup} className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-brand-blue hover:bg-brand-orange focus:ring-2 focus:ring-offset-2 focus:ring-brand-blue">
               Sign up
             </button>
           </div>
@@ -86,7 +86,7 @@ export default async function SignupPage({
           <div className="text-center">
             <p className="text-sm text-gray-600">
               Already have an account?{' '}
-              <Link href="/login" className="font-medium text-brand-blue hover:text-brand-blue/80">
+              <Link href="/login" className="font-medium text-brand-blue hover:text-brand-purple hover:underline">
                 Log in
               </Link>
             </p>

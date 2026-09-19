@@ -7,6 +7,7 @@ import { Send, Users, Trash2 } from 'lucide-react';
 import { checkAdmin } from '@/lib/auth-utils';
 import { Subscriber } from '@prisma/client';
 import { ConfirmButton } from '@/components/ConfirmButton';
+import EmailContentField from '@/components/EmailContentField';
 
 export default async function AdminNewsletterPage(props: {
   params: Promise<Record<string, string | string[] | undefined>>;
@@ -55,10 +56,7 @@ export default async function AdminNewsletterPage(props: {
                         <label className="block text-sm font-medium">Subject</label>
                         <input name="subject" required className="w-full p-2 border rounded mt-1" placeholder="Latest from Kindline Care" />
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium">Content (HTML allowed)</label>
-                        <textarea name="content" required className="w-full p-2 border rounded mt-1 h-48" placeholder="<h1>Hello!</h1><p>Here is what we have been up to...</p>" />
-                    </div>
+                    <EmailContentField />
                     <Button type="submit" className="w-full">Send to {activeCount} Subscribers</Button>
                 </form>
             </CardContent>
@@ -70,7 +68,7 @@ export default async function AdminNewsletterPage(props: {
           <CardTitle>Recent Subscribers</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
+          <div className="table-scroll" role="region" aria-label="Subscribers table" tabIndex={0}>
             <table className="w-full text-left text-sm">
               <thead>
                 <tr className="border-b">

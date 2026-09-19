@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Heart } from "lucide-react";
 import { createClient } from '@/utils/supabase/client';
+import { DONATION_SUGGESTIONS, donationAmountLabel, isPositiveDonationAmount } from '@/lib/donation-options';
 
 interface LencoPayResponse {
   status: string;
@@ -30,7 +31,7 @@ declare global {
 
 export default function DonationForm({ settings }: { settings: { lencoPublic?: string; lencoBaseUrl?: string; lencoName?: string; flutterwavePublic?: string; flutterwavePlanZMW?: string; flutterwavePlanUSD?: string } }) {
   const [userId, setUserId] = useState<string | null>(null);
-  const [amount, setAmount] = useState('500');
+  const [amount, setAmount] = useState('10');
   const [currency, setCurrency] = useState('ZMW');
   const [method, setMethod] = useState('flutterwave');
   const [frequency, setFrequency] = useState('one-time');
@@ -48,6 +49,7 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
   }, [supabase.auth]);
 
   const handleLenco = () => {
+    if (!isPositiveDonationAmount(amount)) return;
     const publicKey = settings?.lencoPublic;
 
     if (!publicKey) {
@@ -114,6 +116,7 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
   };
 
   const handleFlutterwave = () => {
+    if (!isPositiveDonationAmount(amount)) return;
     const publicKey = settings?.flutterwavePublic || process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY;
 
     if (!publicKey) {
@@ -181,132 +184,136 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
   };
 
   return (
-    <Card className="border-2 border-brand-blue/10 shadow-2xl overflow-hidden rounded-[2rem] dark:bg-gray-900 dark:border-gray-800">
-      <div className="bg-brand-blue text-white p-10 text-center relative overflow-hidden">
+    <Card className="border-2 border-brand-blue/10 shadow-2xl overflow-hidden rounded-[2rem]">
+      <div className="bg-brand-blue text-white p-6 sm:p-10 text-center relative overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
         <h2 className="text-3xl font-extrabold mb-2 relative z-10">Make an Impact</h2>
-        <p className="text-white/90 font-medium relative z-10">Your support helps us provide sustainable care.</p>
+        <p className="text-white font-medium relative z-10">Your support helps us provide sustainable care.</p>
       </div>
-      <CardContent className="p-8 md:p-10">
+      <CardContent className="p-4 sm:p-8 md:p-10">
         <div className="space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="donorName" className="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-2 uppercase tracking-wide">Full Name</label>
+              <label htmlFor="donorName" className="block text-sm font-bold text-gray-900 mb-2 uppercase tracking-wide">Full Name</label>
               <input
                 id="donorName"
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Your Name"
-                className="block w-full rounded-xl border-2 border-gray-100 dark:border-gray-700 shadow-sm focus:border-brand-blue focus:ring-brand-blue p-4 text-gray-900 dark:text-white font-medium transition-colors bg-gray-50/50 dark:bg-gray-800/50"
+                className="block w-full rounded-xl border-2 border-gray-500 shadow-sm focus:border-brand-blue focus:ring-brand-blue p-4 text-gray-900 font-medium transition-colors bg-white"
               />
             </div>
             <div>
-              <label htmlFor="donorEmail" className="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-2 uppercase tracking-wide">Email Address</label>
+              <label htmlFor="donorEmail" className="block text-sm font-bold text-gray-900 mb-2 uppercase tracking-wide">Email Address</label>
               <input
                 id="donorEmail"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
-                className="block w-full rounded-xl border-2 border-gray-100 dark:border-gray-700 shadow-sm focus:border-brand-blue focus:ring-brand-blue p-4 text-gray-900 dark:text-white font-medium transition-colors bg-gray-50/50 dark:bg-gray-800/50"
+                className="block w-full rounded-xl border-2 border-gray-500 shadow-sm focus:border-brand-blue focus:ring-brand-blue p-4 text-gray-900 font-medium transition-colors bg-white"
               />
             </div>
           </div>
 
           <div>
-            <label htmlFor="donorPhone" className="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-2 uppercase tracking-wide">Phone Number (Required for Mobile Money)</label>
+            <label htmlFor="donorPhone" className="block text-sm font-bold text-gray-900 mb-2 uppercase tracking-wide">Phone Number (Required for Mobile Money)</label>
             <input
               id="donorPhone"
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="e.g. 0970000000"
-              className="block w-full rounded-xl border-2 border-gray-100 dark:border-gray-700 shadow-sm focus:border-brand-blue focus:ring-brand-blue p-4 text-gray-900 dark:text-white font-medium transition-colors bg-gray-50/50 dark:bg-gray-800/50"
+              className="block w-full rounded-xl border-2 border-gray-500 shadow-sm focus:border-brand-blue focus:ring-brand-blue p-4 text-gray-900 font-medium transition-colors bg-white"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-4 uppercase tracking-wide">Donation Amount</label>
+            <label className="block text-sm font-bold text-gray-900 mb-4 uppercase tracking-wide">Donation Amount</label>
             <div className="flex gap-3 flex-wrap">
-              {(currency === 'ZMW' ? ['500', '1000', '1500'] : ['25', '50', '80']).map((val) => (
+              {DONATION_SUGGESTIONS.map((val) => (
                 <button
+                  type="button"
+                  aria-pressed={amount === val}
                   key={val}
                   onClick={() => setAmount(val)}
-                  className={`px-6 py-3 rounded-xl border-2 font-bold transition-all ${amount === val ? 'bg-brand-blue text-white border-brand-blue shadow-lg scale-105' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border-gray-100 dark:border-gray-700 hover:border-brand-blue/30'}`}
+                  className={`px-3 sm:px-6 py-3 rounded-xl border-2 font-bold transition-all ${amount === val ? 'bg-brand-blue text-white border-brand-blue shadow-lg' : 'bg-white text-gray-700 border-gray-500 hover:border-brand-blue'}`}
                 >
-                  {currency} {val}
+                  {donationAmountLabel(currency, val)}
                 </button>
               ))}
               <div className="relative flex-grow min-w-[120px]">
+                <label htmlFor="donation-amount" className="block text-sm font-medium mb-2">Your amount ({currency})</label>
                 <input
+                  id="donation-amount"
                   type="number"
+                  step="0.01"
+                  inputMode="decimal"
+                  aria-describedby="donation-amount-help"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  placeholder="Other"
-                  className="w-full rounded-xl border-2 border-gray-100 dark:border-gray-700 shadow-sm focus:border-brand-blue focus:ring-brand-blue p-3 text-gray-900 dark:text-white font-bold bg-gray-50/50 dark:bg-gray-800/50"
+                  placeholder="Enter another amount"
+                  className="w-full rounded-xl border-2 border-gray-500 shadow-sm focus:border-brand-blue focus:ring-brand-blue p-3 text-gray-900 font-bold bg-white"
                 />
               </div>
             </div>
+            <p id="donation-amount-help" className="mt-3 text-sm text-gray-600">{donationAmountLabel(currency, '10')}, {donationAmountLabel(currency, '20')} and {donationAmountLabel(currency, '30')} are suggestions, not fixed donation levels. You can type another amount in {currency}. Payment availability and any limits are confirmed by the selected gateway.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-                <label htmlFor="currency" className="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-2 uppercase tracking-wide">Currency</label>
+                <label htmlFor="currency" className="block text-sm font-bold text-gray-900 mb-2 uppercase tracking-wide">Currency</label>
                 <select
                 id="currency"
                 value={currency}
                 onChange={(e) => {
                     const newCurrency = e.target.value;
                     setCurrency(newCurrency);
-                    if (newCurrency === 'ZMW') {
-                      setAmount('500');
-                    } else {
-                      setAmount('25');
-                    }
+                    setAmount('10');
                     if (newCurrency !== 'ZMW' && newCurrency !== 'USD') setMethod('flutterwave');
                 }}
-                className="block w-full rounded-xl border-2 border-gray-100 dark:border-gray-700 shadow-sm focus:border-brand-blue focus:ring-brand-blue p-4 text-gray-900 dark:text-white font-bold bg-gray-50/50 dark:bg-gray-800/50"
+                className="block w-full rounded-xl border-2 border-gray-500 shadow-sm focus:border-brand-blue focus:ring-brand-blue p-4 text-gray-900 font-bold bg-white"
                 >
-                <option value="ZMW" className="dark:bg-gray-800">ZMW (Zambian Kwacha)</option>
-                <option value="USD" className="dark:bg-gray-800">USD (US Dollar)</option>
-                <option value="GBP" className="dark:bg-gray-800">GBP (British Pound)</option>
-                <option value="CAD" className="dark:bg-gray-800">CAD (Canadian Dollar)</option>
-                <option value="EUR" className="dark:bg-gray-800">EUR (Euro)</option>
+                <option value="ZMW">ZMW (Zambian Kwacha)</option>
+                <option value="USD">USD (US Dollar)</option>
+                <option value="GBP">GBP (British Pound)</option>
+                <option value="CAD">CAD (Canadian Dollar)</option>
+                <option value="EUR">EUR (Euro)</option>
                 </select>
             </div>
             <div>
-                <label htmlFor="paymentMethod" className="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-2 uppercase tracking-wide">Payment Gateway</label>
+                <label htmlFor="paymentMethod" className="block text-sm font-bold text-gray-900 mb-2 uppercase tracking-wide">Payment Gateway</label>
                 <select
                 id="paymentMethod"
                 value={method}
                 onChange={(e) => setMethod(e.target.value)}
                 disabled={currency !== 'ZMW' && currency !== 'USD'}
-                className="block w-full rounded-xl border-2 border-gray-100 dark:border-gray-700 shadow-sm focus:border-brand-blue focus:ring-brand-blue p-4 text-gray-900 dark:text-white font-bold bg-gray-50/50 dark:bg-gray-800/50 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed"
+                className="block w-full rounded-xl border-2 border-gray-500 shadow-sm focus:border-brand-blue focus:ring-brand-blue p-4 text-gray-900 font-bold bg-white disabled:cursor-not-allowed"
                 >
-                <option value="flutterwave" className="dark:bg-gray-800">Flutterwave (Universal)</option>
-                {(currency === 'ZMW' || currency === 'USD') && <option value="lenco" className="dark:bg-gray-800">Lenco Pay (Cards & MM)</option>}
+                <option value="flutterwave">Flutterwave (Universal)</option>
+                {(currency === 'ZMW' || currency === 'USD') && <option value="lenco">Lenco Pay (Cards & MM)</option>}
                 </select>
             </div>
           </div>
 
-          <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-2xl border border-gray-100 dark:border-gray-700">
-            <label className="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-4 uppercase tracking-wide">Donation Frequency</label>
+          <div className="bg-gray-50 p-6 rounded-2xl border border-gray-200">
+            <label className="block text-sm font-bold text-gray-900 mb-4 uppercase tracking-wide">Donation Frequency</label>
             <div className="flex gap-8">
               <label className="flex items-center gap-3 cursor-pointer group">
                 <div className="relative flex items-center">
-                  <input type="radio" name="frequency" checked={frequency === 'one-time'} onChange={() => setFrequency('one-time')} className="w-5 h-5 text-brand-blue border-2 border-gray-300 dark:border-gray-600 focus:ring-brand-blue" />
+                  <input type="radio" name="frequency" checked={frequency === 'one-time'} onChange={() => setFrequency('one-time')} className="w-5 h-5 text-brand-blue border-2 border-gray-500 focus:ring-brand-blue" />
                 </div>
-                <span className="text-lg font-bold text-gray-900 dark:text-gray-100 group-hover:text-brand-blue transition-colors">One-time</span>
+                <span className="text-lg font-bold text-gray-900 group-hover:text-brand-blue transition-colors">One-time</span>
               </label>
               <label className="flex items-center gap-3 cursor-pointer group">
                 <div className="relative flex items-center">
                   <input type="radio" name="frequency" checked={frequency === 'monthly'} onChange={() => {
                       setFrequency('monthly');
                       setMethod('flutterwave');
-                  }} className="w-5 h-5 text-brand-blue border-2 border-gray-300 dark:border-gray-600 focus:ring-brand-blue" />
+                  }} className="w-5 h-5 text-brand-blue border-2 border-gray-500 focus:ring-brand-blue" />
                 </div>
-                <span className="text-lg font-bold text-gray-900 dark:text-gray-100 group-hover:text-brand-blue transition-colors">Monthly</span>
+                <span className="text-lg font-bold text-gray-900 group-hover:text-brand-blue transition-colors">Monthly</span>
               </label>
             </div>
             {frequency === 'monthly' && (
@@ -319,13 +326,13 @@ export default function DonationForm({ settings }: { settings: { lencoPublic?: s
 
           <Button
             onClick={method === 'flutterwave' ? handleFlutterwave : handleLenco}
-            disabled={!email || !amount || !name}
+            disabled={!email || !isPositiveDonationAmount(amount) || !name}
             className="w-full bg-brand-orange hover:bg-brand-orange/90 h-16 text-xl font-extrabold rounded-xl shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
             <Heart className="mr-2 h-6 w-6" /> {frequency === 'monthly' ? 'Subscribe' : 'Donate'} {currency} {amount}
           </Button>
 
-          <p className="text-center text-sm text-gray-500 dark:text-gray-400 font-medium">
+          <p className="text-center text-sm text-gray-600 font-medium">
             Secure payment powered by <span className="text-brand-blue font-bold">{method === 'flutterwave' ? 'Flutterwave' : 'Lenco'}</span>
           </p>
         </div>

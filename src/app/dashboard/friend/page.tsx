@@ -76,7 +76,7 @@ export default async function FriendDashboard(props: {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
             <div className="lg:col-span-2">
               <h2 className="text-xl font-bold text-gray-900 mb-6">Donation History</h2>
-              <div className="overflow-x-auto -mx-4 sm:mx-0">
+              <div className="table-scroll" role="region" aria-label="Donation history" tabIndex={0}>
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>

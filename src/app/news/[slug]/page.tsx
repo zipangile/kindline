@@ -51,9 +51,9 @@ export default async function NewsPostDetailPage({
         </Button>
 
         <header className="mb-12">
-          <div className="flex items-center text-blue-600 font-bold uppercase tracking-wide mb-4 text-sm">
+          <div className="flex flex-wrap gap-y-2 items-center text-blue-700 font-bold uppercase tracking-wide mb-4 text-sm">
             <span>{post?.category}</span>
-            <span className="mx-3 text-gray-300">•</span>
+            <span aria-hidden="true" className="mx-3 text-gray-600">•</span>
             <span className="flex items-center">
               <Calendar className="h-4 w-4 mr-1" />
               {post?.publishedAt ? new Date(post.publishedAt).toLocaleDateString() : 'Draft'}

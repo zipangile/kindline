@@ -2,6 +2,7 @@ import { Heart, Shield, Users, Star, HandHeart } from "lucide-react";
 import prisma from '@/lib/prisma';
 import AboutSnapshot from '@/components/AboutSnapshot';
 import { SiteImage } from '@prisma/client';
+import { resolveSiteImage } from '@/lib/site-images';
 
 export default async function AboutPage(props: {
   params: Promise<Record<string, string | string[] | undefined>>;
@@ -10,14 +11,14 @@ export default async function AboutPage(props: {
   await props.params;
   await props.searchParams;
 
-  let images: SiteImage[] = [];
+  let images: SiteImage[] | null = null;
   try {
     images = await prisma.siteImage.findMany();
   } catch (error) {
     console.error('[AboutPage] Error fetching images:', error);
   }
 
-  const getImage = (key: string) => images.find(img => img.key === key)?.url;
+  const getImage = (key: string) => resolveSiteImage(images, key);
 
   const values = [
     { name: "Integrity", description: "Upholding honesty, accountability, and transparency in all we do.", icon: <Shield className="h-6 w-6" /> },
@@ -61,7 +62,7 @@ export default async function AboutPage(props: {
         </div>
       </section>
 
-      <AboutSnapshot imageUrl={getImage('about_snapshot') || '/images/volunteers.jpg'} />
+      <AboutSnapshot imageUrl={getImage('about_snapshot')} />
 
       {/* Vision & Mission */}
       <section className="py-20 bg-gray-50">

@@ -1,15 +1,13 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useActionState } from "react";
 import { Mail, Phone, MapPin, Send, CheckCircle, AlertCircle } from "lucide-react";
 import { submitContactForm } from "./actions";
 
 export default function ContactPage() {
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
-
   async function handleSubmit(formData: FormData) {
-    setStatus('loading');
     const result = await submitContactForm(formData);
 
     if (result.success) {
@@ -20,13 +18,21 @@ export default function ContactPage() {
     }
   }
 
+  const [, formAction, isPending] = useActionState(
+    async (_previous: null, formData: FormData) => {
+      await handleSubmit(formData);
+      return null;
+    },
+    null
+  );
+
   return (
     <div className="bg-white min-h-screen">
       {/* Header */}
       <section className="bg-brand-blue text-white py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-extrabold mb-6">Get in Touch</h1>
-          <p className="text-xl text-white/90 max-w-3xl mx-auto font-medium">
+          <p className="text-xl text-white max-w-3xl mx-auto font-medium">
             We&apos;d love to hear from you. Whether you want to donate, partner, volunteer, or learn more about our work, every message helps us move closer to transforming lives in Zambia.
           </p>
         </div>
@@ -49,10 +55,6 @@ export default function ContactPage() {
                       <div>
                         <p className="text-sm font-bold text-brand-blue uppercase tracking-wider mb-1">General Enquiries</p>
                         <p className="text-gray-700 font-medium">info@kindlinecare.org</p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-bold text-brand-blue uppercase tracking-wider mb-1">Partnerships & Donations</p>
-                        <p className="text-gray-700 font-medium">partnerships@kindlinecare.org</p>
                       </div>
                     </div>
                   </div>
@@ -77,7 +79,7 @@ export default function ContactPage() {
                     <h3 className="text-xl font-bold text-gray-900 mb-2">Our Location</h3>
                     <div className="space-y-2 text-gray-700 font-medium">
                       <p>Mtendere, Lusaka, Zambia</p>
-                      <p className="text-sm text-gray-500 italic">Service Area: 10 Miles, Chibombo District, Central Province</p>
+                      <p className="text-sm text-gray-500 italic">Service Area: Chibombo District, Central Province</p>
                     </div>
                   </div>
                 </div>
@@ -127,33 +129,33 @@ export default function ContactPage() {
                     Send us a message
                   </h2>
 
-                  <form action={handleSubmit}>
+                  <form action={formAction} aria-busy={isPending}>
                     <div className="grid gap-4 lg:gap-6">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
                         <div>
                           <label htmlFor="firstName" className="block mb-2 text-sm text-gray-700 font-medium">First Name</label>
-                          <input type="text" name="firstName" id="firstName" className="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-brand-blue focus:ring-brand-blue disabled:opacity-50" placeholder="First Name" disabled={status === 'loading'} />
+                          <input type="text" name="firstName" id="firstName" className="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-brand-blue focus:ring-brand-blue disabled:opacity-50" placeholder="First Name" disabled={isPending} />
                         </div>
 
                         <div>
                           <label htmlFor="lastName" className="block mb-2 text-sm text-gray-700 font-medium">Last Name</label>
-                          <input type="text" name="lastName" id="lastName" className="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-brand-blue focus:ring-brand-blue disabled:opacity-50" placeholder="Last Name" disabled={status === 'loading'} />
+                          <input type="text" name="lastName" id="lastName" className="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-brand-blue focus:ring-brand-blue disabled:opacity-50" placeholder="Last Name" disabled={isPending} />
                         </div>
                       </div>
 
                       <div>
                         <label htmlFor="email" className="block mb-2 text-sm text-gray-700 font-medium">Email</label>
-                        <input type="email" name="email" id="email" autoComplete="email" className="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-brand-blue focus:ring-brand-blue disabled:opacity-50" placeholder="your@email.com" required disabled={status === 'loading'} />
+                        <input type="email" name="email" id="email" autoComplete="email" className="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-brand-blue focus:ring-brand-blue disabled:opacity-50" placeholder="your@email.com" required disabled={isPending} />
                       </div>
 
                       <div>
                         <label htmlFor="message" className="block mb-2 text-sm text-gray-700 font-medium">Details</label>
-                        <textarea id="message" name="message" rows={4} className="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-brand-blue focus:ring-brand-blue disabled:opacity-50" placeholder="How can we help you?" required disabled={status === 'loading'}></textarea>
+                        <textarea id="message" name="message" rows={4} className="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-brand-blue focus:ring-brand-blue disabled:opacity-50" placeholder="How can we help you?" required disabled={isPending}></textarea>
                       </div>
                     </div>
 
-                    {status === 'error' && (
-                      <div className="mt-4 flex items-center gap-2 text-red-600 bg-red-50 p-3 rounded-lg text-sm">
+                    {status === 'error' && !isPending && (
+                      <div role="alert" className="mt-4 flex items-center gap-2 text-red-700 bg-red-50 p-3 rounded-lg text-sm">
                         <AlertCircle className="h-4 w-4" />
                         {errorMessage}
                       </div>
@@ -162,10 +164,10 @@ export default function ContactPage() {
                     <div className="mt-6 grid">
                       <button
                         type="submit"
-                        disabled={status === 'loading'}
-                        className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-brand-blue text-white hover:bg-brand-blue/90 disabled:opacity-50"
+                        disabled={isPending}
+                        className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-brand-blue text-white hover:bg-brand-orange"
                       >
-                        {status === 'loading' ? 'Sending...' : 'Send Message'} <Send className="h-4 w-4" />
+                        {isPending ? 'Sending...' : 'Send Message'} <Send className="h-4 w-4" />
                       </button>
                     </div>
 

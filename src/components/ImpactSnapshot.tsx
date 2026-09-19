@@ -36,7 +36,7 @@ const ImpactSnapshot = ({ stats, stories }: { stats: Stat[], stories: Story[] })
             const iconKey = stat.icon as keyof typeof LucideIcons;
             const Icon = (stat.icon && LucideIcons[iconKey]) ? (LucideIcons[iconKey] as LucideIcons.LucideIcon) : LucideIcons.BarChart;
             return (
-              <Card key={stat.id} className="text-center border-none bg-brand-blue/5 shadow-none hover:bg-brand-blue/10 transition-colors group p-8 rounded-[2rem]">
+              <Card key={stat.id} className="text-center border-none bg-brand-blue/5 shadow-none hover:bg-brand-blue/10 transition-colors group p-2 rounded-[2rem]">
                 <CardHeader className="flex flex-col items-center">
                   <div className="mb-6 p-4 bg-white rounded-2xl shadow-sm group-hover:scale-110 transition-transform">
                     <Icon className="h-10 w-10 text-brand-blue" />
@@ -83,7 +83,7 @@ const ImpactSnapshot = ({ stats, stories }: { stats: Stat[], stories: Story[] })
                 </div>
               ))
             ) : (
-              <div className="col-span-full p-12 border-2 border-dashed rounded-3xl text-center text-gray-400 font-medium">
+              <div className="col-span-full p-6 sm:p-12 border-2 border-dashed rounded-3xl text-center text-gray-600 font-medium">
                 Real testimonials will appear here once added in the dashboard.
               </div>
             )}

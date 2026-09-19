@@ -52,6 +52,7 @@ export default async function AdminVolunteersPage({
             <input
               type="text"
               name="search"
+              aria-label="Search volunteers by name or email"
               defaultValue={search}
               placeholder="Search by name or email..."
               className="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-brand-blue focus:border-brand-blue"
@@ -61,6 +62,7 @@ export default async function AdminVolunteersPage({
             <input
               type="text"
               name="skill"
+              aria-label="Filter volunteers by skill"
               defaultValue={skill}
               placeholder="Filter by skill..."
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-brand-blue focus:border-brand-blue"
@@ -68,7 +70,7 @@ export default async function AdminVolunteersPage({
           </div>
           <button
             type="submit"
-            className="bg-brand-blue text-white px-6 py-2 rounded-lg hover:bg-brand-blue/90 transition-colors"
+            className="bg-brand-blue text-white px-6 py-2 rounded-lg hover:bg-brand-orange transition-colors"
           >
             Filter
           </button>
@@ -84,7 +86,7 @@ export default async function AdminVolunteersPage({
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="overflow-x-auto">
+        <div className="table-scroll" role="region" aria-label="Volunteer applications table" tabIndex={0}>
           <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -101,8 +103,8 @@ export default async function AdminVolunteersPage({
                 <td className="px-6 py-4">
                   <div className="text-sm font-medium text-gray-900">{v.name}</div>
                   <div className="text-sm text-gray-500">{v.email}</div>
-                  {v.phone && <div className="text-xs text-gray-400">{v.phone}</div>}
-                  <div className="text-xs text-gray-400 mt-1">{v.location || 'No location'}</div>
+                  {v.phone && <div className="text-xs text-gray-600">{v.phone}</div>}
+                  <div className="text-xs text-gray-600 mt-1">{v.location || 'No location'}</div>
                 </td>
                 <td className="px-6 py-4">
                   <div className="text-sm text-gray-900 capitalize"><span className="font-medium">Availability:</span> {v.availability || 'N/A'}</div>
@@ -135,7 +137,7 @@ export default async function AdminVolunteersPage({
             ))}
             {volunteers.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-6 py-10 text-center text-gray-500 italic">No volunteer applications yet.</td>
+                <td colSpan={5} className="px-6 py-10 text-center text-gray-500 italic">No volunteer applications yet.</td>
               </tr>
             )}
           </tbody>

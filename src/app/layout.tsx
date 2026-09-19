@@ -28,7 +28,7 @@ export default async function RootLayout(props: {
   const { children, params } = props;
   await params;
 
-  let logoUrl: string | undefined;
+  let logoUrl: string | undefined = '';
   try {
     const logoImage = await prisma.siteImage.findUnique({
       where: { key: 'logo' }

@@ -9,7 +9,7 @@ export default function ErrorPage() {
         <div className="flex justify-center">
             <button
                 onClick={() => window.location.href = '/login'}
-                className="py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-brand-blue hover:bg-brand-blue/90"
+                className="py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-brand-blue hover:bg-brand-orange"
             >
                 Back to Login
             </button>

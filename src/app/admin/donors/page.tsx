@@ -26,7 +26,7 @@ export default async function AdminDonorsPage(props: {
       <h1 className="text-2xl font-bold text-gray-900">Friends of Kindline (Donors)</h1>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="overflow-x-auto">
+        <div className="table-scroll" role="region" aria-label="Donations table" tabIndex={0}>
           <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -47,7 +47,7 @@ export default async function AdminDonorsPage(props: {
                 </td>
                 <td className="px-6 py-4">
                   <div className="text-sm font-bold text-gray-900">{d.currency} {d.amount.toLocaleString()}</div>
-                  <div className="text-xs text-gray-400 capitalize">{d.gateway}</div>
+          <div className="text-xs text-gray-600 capitalize">{d.gateway}</div>
                 </td>
                 <td className="px-6 py-4">
                   <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
@@ -81,7 +81,7 @@ export default async function AdminDonorsPage(props: {
             ))}
             {donations.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-6 py-10 text-center text-gray-500 italic">No donations recorded yet.</td>
+                <td colSpan={6} className="px-6 py-10 text-center text-gray-500 italic">No donations recorded yet.</td>
               </tr>
             )}
           </tbody>

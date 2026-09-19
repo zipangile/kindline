@@ -5,3 +5,14 @@ build
 *.db
 *.tar.gz
 flyctl
+.env
+.env.*
+!.env.example
+*.tsbuildinfo
+.github
+data
+private
+_private
+screenshots
+evidence
+tests

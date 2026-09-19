@@ -80,7 +80,7 @@ export default async function AdminImpactPage(props: {
                       <p className="text-sm text-gray-500">{stat.description}</p>
                     </div>
                     <form action={deleteImpactStat.bind(null, stat.id)}>
-                      <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700">
+                      <Button variant="ghost" size="sm" aria-label={`Delete statistic ${stat.label}`} className="text-red-700 hover:text-red-800">
                         <Trash2 size={16} />
                       </Button>
                     </form>
@@ -138,7 +138,7 @@ export default async function AdminImpactPage(props: {
                       <p className="mt-2 text-gray-700 italic">&quot;{story.content.substring(0, 150)}...&quot;</p>
                     </div>
                     <form action={deleteImpactStory.bind(null, story.id)}>
-                      <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700">
+                      <Button variant="ghost" size="sm" aria-label={`Delete story ${story.title}`} className="text-red-700 hover:text-red-800">
                         <Trash2 size={16} />
                       </Button>
                     </form>

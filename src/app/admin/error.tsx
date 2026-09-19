@@ -32,7 +32,7 @@ export default function AdminError({
             </span>
           )}
           {error.digest && (
-            <span className="block mt-1 text-xs text-gray-400">
+            <span className="block mt-1 text-xs text-gray-600">
               Error Digest: {error.digest}
             </span>
           )}

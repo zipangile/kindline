@@ -36,9 +36,9 @@ export default async function AdminLayout({
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Sidebar Desktop */}
-      <aside className="hidden lg:flex w-64 bg-[#1e293b] text-white flex-shrink-0 flex-col shadow-xl">
+      <aside className="kindline-admin-nav hidden lg:flex w-64 bg-[#1e293b] text-white flex-shrink-0 flex-col shadow-xl">
         <div className="p-6 border-b border-gray-700/50">
-          <h1 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-green-400 bg-clip-text text-transparent">
+          <h1 className="text-xl font-bold text-blue-200">
             Kindline Admin
           </h1>
         </div>
@@ -49,9 +49,9 @@ export default async function AdminLayout({
       </aside>
 
       {/* Sidebar Mobile */}
-      <div id="application-sidebar" className="hs-overlay hs-overlay-open:translate-x-0 -translate-x-full fixed top-0 start-0 transition-all duration-300 transform h-full max-w-xs w-full z-[60] bg-[#1e293b] border-e border-gray-700 lg:hidden hidden">
+      <div id="application-sidebar" className="kindline-admin-nav hs-overlay hs-overlay-open:translate-x-0 -translate-x-full fixed top-0 start-0 transition-all duration-300 transform h-full max-w-xs w-full z-[60] bg-[#1e293b] text-white border-e border-gray-700 lg:hidden hidden">
         <div className="p-6 border-b border-gray-700/50 flex items-center justify-between">
-          <h1 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-green-400 bg-clip-text text-transparent">
+          <h1 className="text-xl font-bold text-blue-200">
             Kindline Admin
           </h1>
           <button type="button" className="text-gray-400 hover:text-white" data-hs-overlay="#application-sidebar">
@@ -74,7 +74,7 @@ export default async function AdminLayout({
 
             <div className="w-full flex items-center justify-end ms-auto sm:justify-between sm:gap-x-3 sm:order-3">
               <div className="flex flex-row items-center justify-end gap-2">
-                <button type="button" className="p-2.5 inline-flex justify-center items-center gap-x-2 rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none" data-hs-overlay="#application-sidebar" aria-controls="application-sidebar" aria-label="Toggle navigation">
+                <button type="button" className="p-2.5 inline-flex justify-center items-center gap-x-2 rounded-lg border border-gray-500 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:pointer-events-none" data-hs-overlay="#application-sidebar" aria-controls="application-sidebar" aria-label="Toggle navigation">
                   <svg className="flex-shrink-0 w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" x2="21" y1="6" y2="6"/><line x1="3" x2="21" y1="12" y2="12"/><line x1="3" x2="21" y1="18" y2="18"/></svg>
                 </button>
               </div>
@@ -99,7 +99,7 @@ function SidebarContent({ hasAccess }: { hasAccess: (required: PermissionLevel[]
         <span className="font-medium">Overview</span>
       </Link>
 
-      <div className="pt-4 pb-2 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+      <div className="pt-4 pb-2 px-4 text-xs font-semibold text-gray-300 uppercase tracking-wider">
         Management
       </div>
 
@@ -113,7 +113,7 @@ function SidebarContent({ hasAccess }: { hasAccess: (required: PermissionLevel[]
       {hasAccess(['SUPER_ADMIN', 'VOLUNTEER_COORD']) && (
         <Link href="/admin/volunteers" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
           <Users size={20} className="text-blue-400 group-hover:scale-110 transition-transform" />
-          <span className="font-medium">Partners</span>
+          <span className="font-medium">Volunteers</span>
         </Link>
       )}
 
@@ -124,7 +124,7 @@ function SidebarContent({ hasAccess }: { hasAccess: (required: PermissionLevel[]
         </Link>
       )}
 
-      <div className="pt-4 pb-2 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+      <div className="pt-4 pb-2 px-4 text-xs font-semibold text-gray-300 uppercase tracking-wider">
         Content
       </div>
 
@@ -137,7 +137,7 @@ function SidebarContent({ hasAccess }: { hasAccess: (required: PermissionLevel[]
 
           <Link href="/admin/images" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
             <ImageIcon size={20} className="text-green-400 group-hover:scale-110 transition-transform" />
-            <span className="font-medium">Site Images</span>
+            <span className="font-medium">Site Images & Partner Logos</span>
           </Link>
 
           <Link href="/admin/news" className="flex items-center gap-3 py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-all text-gray-300 hover:text-white group">
@@ -166,7 +166,7 @@ function SidebarContent({ hasAccess }: { hasAccess: (required: PermissionLevel[]
         </>
       )}
 
-      <div className="pt-4 pb-2 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+      <div className="pt-4 pb-2 px-4 text-xs font-semibold text-gray-300 uppercase tracking-wider">
         System
       </div>
 

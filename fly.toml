@@ -10,7 +10,7 @@ primary_region = 'jnb'
 
 [deploy]
   strategy = 'immediate'
-  release_command = 'npx prisma@5.22.0 db push --accept-data-loss --skip-generate'
+  # Image-only release: production schema remains unchanged; no db push or seed.
 
 [env]
   PORT = '3000'

@@ -24,20 +24,12 @@ ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
 ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
 ENV NEXT_TELEMETRY_DISABLED 1
 
-# During build, we use a temporary SQLite database to satisfy Next.js prerendering
-# of pages that fetch data from Prisma. This ensures static generation succeeds.
-# Since we now use PostgreSQL in schema.prisma, we must override the provider
-# during build to use SQLite for this temporary step.
-RUN export DATABASE_URL="file:./build.db" && \
-    export DIRECT_URL="file:./build.db" && \
-    cp prisma/schema.prisma prisma/schema.prisma.original && \
-    sed -i 's/provider = "postgresql"/provider = "sqlite"/' prisma/schema.prisma && \
-    sed -i '/directUrl = env("DIRECT_URL")/d' prisma/schema.prisma && \
+# Build the unchanged PostgreSQL client without connecting to a live database.
+# Prerendering uses existing unavailable-data fallbacks; no schema push or seed.
+RUN export DATABASE_URL="postgresql://synthetic:synthetic@127.0.0.1:9/kindline_build?connect_timeout=1" && \
+    export DIRECT_URL="$DATABASE_URL" && \
     npx prisma generate && \
-    npx prisma db push --accept-data-loss && \
     npm run build && \
-    cp prisma/schema.prisma.original prisma/schema.prisma && \
-    npx prisma generate && \
     mkdir -p .next/standalone/prisma && \
     cp prisma/schema.prisma .next/standalone/prisma/schema.prisma && \
     mkdir -p .next/standalone/node_modules/.prisma/client && \
@@ -65,6 +57,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 USER nextjs
+
+# Verify the shipped client/provider and native upload decoder without opening a DB.
+RUN node -e "const fs=require('fs'); const s=fs.readFileSync('node_modules/.prisma/client/schema.prisma','utf8'); if(!/provider\\s*=\\s*\"postgresql\"/.test(s)) throw Error('PRISMA_PROVIDER_MISMATCH'); const sharp=require('sharp'); console.log(JSON.stringify({provider:'postgresql',sharp:sharp.versions.sharp,vips:sharp.versions.vips}));"
 
 EXPOSE 3000
 

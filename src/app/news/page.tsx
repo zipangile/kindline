@@ -54,7 +54,7 @@ export default async function NewsPage(props: {
                     )}
                   </div>
                   <CardHeader>
-                    <div className="flex items-center text-xs text-blue-600 font-bold uppercase tracking-wide mb-3">
+                    <div className="flex flex-wrap gap-y-2 items-center text-xs text-blue-700 font-bold uppercase tracking-wide mb-3">
                       <span className="bg-white px-2 py-1 rounded border border-blue-200">{post.category}</span>
                       <span className="mx-2">•</span>
                       <span className="flex items-center">
