@@ -6,6 +6,9 @@ import Footer from "@/components/Footer";
 import PrelineScript from "@/components/PrelineScript";
 import prisma from "@/lib/prisma";
 
+// The logo is live CMS state. Never bake a build-time DB failure into static pages.
+export const dynamic = 'force-dynamic';
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

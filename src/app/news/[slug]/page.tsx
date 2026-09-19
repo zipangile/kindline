@@ -4,6 +4,7 @@ import { Calendar, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
+import { newsSlugFromParam } from '@/lib/news-path';
 
 export const dynamic = "force-dynamic";
 
@@ -15,29 +16,21 @@ export default async function NewsPostDetailPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { slug: rawSlug } = await params;
-  const slug = rawSlug.trim();
+  const slug = newsSlugFromParam(rawSlug);
   await searchParams;
-
-  console.log(`[NewsPostDetailPage] Fetching post with slug: ${slug}`);
+  if (slug === null) notFound();
 
   const post = await prisma.newsPost.findFirst({
     where: {
+      published: true,
       slug: {
         equals: slug,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         mode: 'insensitive'
       }
     },
   });
 
   if (!post) {
-    console.log(`[NewsPostDetailPage] Post not found for slug: ${slug}`);
-    notFound();
-  }
-
-  if (!post.published && process.env.NODE_ENV === 'production') {
-    console.log(`[NewsPostDetailPage] Post not published: ${slug}`);
     notFound();
   }
 

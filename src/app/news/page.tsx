@@ -5,6 +5,7 @@ import { Calendar, ChevronRight } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { NewsletterSubscribeForm } from "@/components/NewsletterSubscribeForm";
+import { newsPostPath } from '@/lib/news-path';
 
 export const dynamic = "force-dynamic";
 
@@ -63,7 +64,7 @@ export default async function NewsPage(props: {
                       </span>
                     </div>
                     <CardTitle className="text-xl leading-tight hover:text-blue-800 cursor-pointer transition-colors">
-                      <Link href={`/news/${post.slug}`}>{post.title}</Link>
+                      <Link href={newsPostPath(post.slug)}>{post.title}</Link>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -73,7 +74,7 @@ export default async function NewsPage(props: {
                   </CardContent>
                   <CardFooter className="mt-auto pt-0">
                     <Button variant="link" className="px-0 flex items-center text-blue-600" asChild>
-                      <Link href={`/news/${post.slug}`}>Read more <ChevronRight className="h-4 w-4 ml-1" /></Link>
+                      <Link href={newsPostPath(post.slug)}>Read more <ChevronRight className="h-4 w-4 ml-1" /></Link>
                     </Button>
                   </CardFooter>
                 </Card>

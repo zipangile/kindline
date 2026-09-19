@@ -6,13 +6,14 @@ import { checkAdmin } from '@/lib/auth-utils';
 import { redirect } from 'next/navigation';
 import { sanitizeContent } from '@/lib/security';
 import { validateImageUrl } from '@/lib/image-validation';
+import { newsPostPath } from '@/lib/news-path';
 
 export async function updateNewsImage(id: string, image: string) {
   await checkAdmin('CONTENT_EDITOR');
   const url = validateImageUrl(image);
   const post = await prisma.newsPost.update({ where: { id }, data: { image: url || null } });
   revalidatePath('/news');
-  revalidatePath(`/news/${post.slug}`);
+  revalidatePath(newsPostPath(post.slug));
   revalidatePath('/admin/news');
   revalidatePath(`/admin/news/edit/${id}`);
   return { image: post.image };
@@ -51,7 +52,7 @@ export async function createNewsPost(data: {
   });
 
   revalidatePath('/news');
-  revalidatePath(`/news/${data.slug}`);
+  revalidatePath(newsPostPath(data.slug));
   revalidatePath('/admin/news');
   redirect('/admin/news');
 }
@@ -99,9 +100,9 @@ export async function updateNewsPost(id: string, data: {
   });
 
   revalidatePath('/news');
-  revalidatePath(`/news/${data.slug}`);
+  revalidatePath(newsPostPath(data.slug));
   if (existing && existing.slug !== data.slug) {
-    revalidatePath(`/news/${existing.slug}`);
+    revalidatePath(newsPostPath(existing.slug));
   }
   revalidatePath('/admin/news');
   redirect('/admin/news');
@@ -118,7 +119,7 @@ export async function deleteNewsPost(id: string) {
 
   revalidatePath('/news');
   if (post) {
-    revalidatePath(`/news/${post.slug}`);
+    revalidatePath(newsPostPath(post.slug));
   }
   revalidatePath('/admin/news');
 }

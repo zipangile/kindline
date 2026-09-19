@@ -38,6 +38,63 @@ function load(relative, mocks = {}, cache = new Map()) {
 const render = (Component, props = {}) => renderToStaticMarkup(React.createElement(Component, props));
 const pageProps = () => ({ params: Promise.resolve({}), searchParams: Promise.resolve({}) });
 
+test('Next 16 encoded params round-trip public legacy news slugs once and never disclose drafts', async () => {
+  const { getDynamicParam } = externalRequire('next/dist/shared/lib/router/utils/get-dynamic-param.js');
+  const { getRouteMatcher } = externalRequire('next/dist/shared/lib/router/utils/route-matcher.js');
+  const { getRouteRegex } = externalRequire('next/dist/shared/lib/router/utils/route-regex.js');
+  const { newsPostPath } = load('src/lib/news-path.ts');
+  let stored; let published = true; const queries = [];
+  const Detail = load('src/app/news/[slug]/page.tsx', {
+    '@/lib/prisma': { newsPost: { findFirst: async query => { queries.push(query); return published && query.where.published === true && query.where.slug.equals === stored ? { title: 'Synthetic article', category: 'Event', content: 'Synthetic public body', published: true, image: null } : null; } } },
+    'next/navigation': { notFound: () => { throw new Error('NOT_FOUND'); } },
+  }).default;
+  const slugs = ['Example Programme (WESAP) INTRODUCED', 'plain-slug', 'Café & school #1?', 'literal%20value', '100% support', 'a/b', ' padded '];
+  for (const slug of slugs) {
+    stored = slug;
+    const matched = getRouteMatcher(getRouteRegex('/news/[slug]'))(newsPostPath(slug));
+    const actual = getDynamicParam(matched, 'slug', 'd', null, null).value;
+    assert.equal(actual, encodeURIComponent(slug));
+    if (slug.includes(' ')) assert.notEqual(actual.trim(), stored, 'old page queried encoded bytes rather than stored slug');
+    const output = renderToStaticMarkup(await Detail({ params: Promise.resolve({ slug: actual }), searchParams: Promise.resolve({}) }));
+    assert.match(output, /Synthetic public body/);
+    assert.equal(queries.at(-1).where.slug.equals, slug);
+  }
+  published = false;
+  await assert.rejects(Detail({ params: Promise.resolve({ slug: encodeURIComponent(stored) }), searchParams: Promise.resolve({}) }), /NOT_FOUND/);
+  const before = queries.length;
+  for (const slug of ['%ZZ', '%00', '', 'x'.repeat(201)]) await assert.rejects(Detail({ params: Promise.resolve({ slug }), searchParams: Promise.resolve({}) }), /NOT_FOUND/);
+  assert.equal(queries.length, before);
+});
+
+test('actual News links and image-update invalidation encode the same single slug segment', async () => {
+  const slug = 'Example event & support #1?';
+  const expected = `/news/${encodeURIComponent(slug)}`;
+  const News = load('src/app/news/page.tsx', { '@/lib/prisma': { newsPost: { findMany: async () => [{ id: 'synthetic', slug, title: 'Example', content: 'Example', category: 'Event', image: null, publishedAt: null }] } }, '@/components/NewsletterSubscribeForm': { NewsletterSubscribeForm: () => null } }).default;
+  const html = renderToStaticMarkup(await News(pageProps()));
+  assert.equal(html.split(`href="${expected}"`).length - 1, 2);
+  const paths = [];
+  const actions = load('src/app/admin/news/actions.ts', { '@/lib/auth-utils': { checkAdmin: async () => {} }, '@/lib/prisma': { newsPost: { update: async () => ({ slug, image: '/logo.png' }) } }, 'next/cache': { revalidatePath: value => paths.push(value) }, 'next/navigation': { redirect() {} } });
+  await actions.updateNewsImage('synthetic', '/logo.png'); assert.ok(paths.includes(expected));
+});
+
+test('database-backed root layout stays dynamic and distinguishes absent, removed, saved and failed logo reads', async () => {
+  let record; let failure = false; let reads = 0;
+  const layout = load('src/app/layout.tsx', {
+    './globals.css': {}, 'next/font/google': { Geist: () => ({ variable: 'sans' }), Geist_Mono: () => ({ variable: 'mono' }) },
+    '@/components/Header': props => React.createElement('header', { 'data-logo': props.logoUrl ?? 'default' }),
+    '@/components/Footer': () => null, '@/components/PrelineScript': () => null,
+    '@/lib/prisma': { siteImage: { findUnique: async () => { reads++; if (failure) throw new Error('Synthetic unavailable database'); return record; } } },
+  });
+  assert.equal(layout.dynamic, 'force-dynamic');
+  const show = async () => renderToStaticMarkup(await layout.default({ children: null, params: Promise.resolve({}) }));
+  record = null; assert.match(await show(), /data-logo="default"/);
+  record = { url: '' }; assert.match(await show(), /data-logo=""/);
+  record = { url: '/logo.png' }; assert.match(await show(), /data-logo="\/logo.png"/);
+  failure = true; assert.match(await show(), /data-logo=""/);
+  failure = false; record = null; assert.match(await show(), /data-logo="default"/);
+  assert.equal(reads, 5);
+});
+
 test('image defaults, tombstones and unavailable reads remain distinct', () => {
   const lib = load('src/lib/site-images.ts');
   assert.equal(lib.resolveSiteImage([], 'about_snapshot'), '/images/volunteers.jpg');
