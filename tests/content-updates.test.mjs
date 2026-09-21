@@ -32,7 +32,7 @@ function load(relative, mocks = {}, cache = new Map()) {
     }
     throw new Error(`Unmocked service import: ${name}`);
   };
-  vm.runInNewContext(js, { module: loaded, exports: loaded.exports, require: localRequire, console: { log() {}, warn() {}, error() {} }, URL, File, FormData, Uint8Array, crypto: globalThis.crypto, confirm: () => true, process: { env: { ADMIN_EMAIL: 'operator@example.test', NEXT_PUBLIC_SITE_URL: 'https://kindlinecare.org', NEXT_PUBLIC_SUPABASE_URL: 'https://ellswjqkvfcgiaqjuvkn.supabase.co', SUPABASE_SERVICE_ROLE_KEY: 'synthetic-only', RESEND_API_KEY: 'synthetic-only' } } }, { filename });
+  vm.runInNewContext(js, { module: loaded, exports: loaded.exports, require: localRequire, console: { log() {}, warn() {}, error() {} }, URL, Buffer, File, FormData, Uint8Array, crypto: globalThis.crypto, confirm: () => true, process: { env: { ADMIN_EMAIL: 'operator@example.test', NEXT_PUBLIC_SITE_URL: 'https://kindlinecare.org', NEXT_PUBLIC_SUPABASE_URL: 'https://ellswjqkvfcgiaqjuvkn.supabase.co', SUPABASE_SERVICE_ROLE_KEY: 'sb_secret_synthetic_only', RESEND_API_KEY: 'synthetic-only' } } }, { filename });
   return loaded.exports;
 }
 const render = (Component, props = {}) => renderToStaticMarkup(React.createElement(Component, props));
@@ -187,7 +187,13 @@ function uploader() {
       getPublicUrl: name => ({ data: { publicUrl: `https://ellswjqkvfcgiaqjuvkn.supabase.co/storage/v1/object/public/images/${name}` } }),
     }; } } }) },
   });
-  return { uploads, deny: () => { denied = true; }, send: (bytes, type) => { const form = new FormData(); form.set('file', new File([bytes], 'synthetic.html', { type })); return actions.uploadImage(form); } };
+  return { uploads, deny: () => { denied = true; }, send: async (bytes, type) => {
+    const form = new FormData(); form.set('file', new File([bytes], 'synthetic.html', { type }));
+    const result = await actions.uploadImage(form);
+    assert.equal(typeof result.ok, 'boolean');
+    if (!result.ok) { assert.equal(typeof result.code, 'string'); assert.equal(typeof result.message, 'string'); throw new Error(result.message); }
+    return result.url;
+  } };
 }
 
 test('KL-S02 real PNG/JPEG/GIF/WebP pixels decode/re-encode before immutable typed storage upload', async () => {
@@ -375,7 +381,7 @@ function elements(tree, predicate, out = []) {
 
 test('KL-F01/QA-01 successful Save/Remove clears file state/input; failures preserve retry selection', async () => {
   const parent = hooks(); const child = hooks(); let uploads = 0; let failSave = false; let failRemove = false; const updates = [];
-  const Manager = load('src/app/admin/images/ImageManager.tsx', { react: parent.react, './actions': { uploadImage: async () => `/images/upload-${++uploads}.png`, updateSiteImage: async (...args) => { if (failSave) throw new Error('Synthetic save failure'); updates.push(args); }, removeSiteImage: async () => { if (failRemove) throw new Error('Synthetic remove failure'); } } }).default;
+  const Manager = load('src/app/admin/images/ImageManager.tsx', { react: parent.react, './actions': { uploadImage: async () => ({ ok: true, url: `/images/upload-${++uploads}.png` }), updateSiteImage: async (...args) => { if (failSave) throw new Error('Synthetic save failure'); updates.push(args); }, removeSiteImage: async () => { if (failRemove) throw new Error('Synthetic remove failure'); } } }).default;
   const childModule = load('src/app/admin/images/ImageManager.tsx', { react: child.react, './actions': {} });
   const Card = elements(child.render(childModule.default, { initialImages: [] }), el => el.props?.item?.key === 'about_snapshot')[0].type; child.reset();
   let card; let rendered;

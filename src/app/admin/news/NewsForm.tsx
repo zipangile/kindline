@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { createNewsPost, updateNewsPost, updateNewsImage } from './actions';
 import { uploadImage } from '../images/actions';
@@ -25,33 +25,38 @@ export default function NewsForm({ post }: { post?: NewsPost }) {
   const [image, setImage] = useState(post?.image || '');
   const [slug, setSlug] = useState(post?.slug || '');
   const [imageStatus, setImageStatus] = useState('');
+  const [selectedFile, setSelectedFile] = useState<File>();
+  const fileInput = useRef<HTMLInputElement>(null);
+  const uploadBusy = useRef(false);
+  const clearFile = () => { setSelectedFile(undefined); if (fileInput.current) fileInput.current.value = ''; };
 
   const handleImageUpload = async (file: File) => {
+    if (uploadBusy.current || loading) return;
+    uploadBusy.current = true;
+    let uploaded = false;
     try {
       setUploading(true);
       setImageStatus('Uploading…');
       const formData = new FormData();
       formData.append('file', file);
-      const url = await uploadImage(formData);
+      const result = await uploadImage(formData);
+      if (!result.ok) { setImageStatus(result.message); return; }
+      const url = result.url; uploaded = true;
       if (post?.id) await updateNewsImage(post.id, url);
       setImage(url);
+      clearFile();
       setImageStatus(post?.id ? 'Photo saved to this post. The news card and article are updated.' : 'Photo uploaded. Create Post to publish it with this article.');
-    } catch (error) {
-      console.error(error);
-      setImageStatus('Photo was not saved. Please try again.');
-      if (error instanceof Error) {
-        alert(error.message);
-      } else {
-        alert('Failed to upload image');
-      }
+    } catch {
+      setImageStatus(uploaded ? 'The file uploaded, but saving it to this post could not be confirmed. Contact the site administrator before retrying.' : 'The upload could not be confirmed. Check your sign-in and contact the site administrator before retrying.');
     } finally {
       setUploading(false);
+      uploadBusy.current = false;
     }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (loading || uploading) return;
+    if (loading || uploadBusy.current) return;
     setLoading(true);
     const formData = new FormData(e.currentTarget);
 
@@ -169,18 +174,22 @@ export default function NewsForm({ post }: { post?: NewsPost }) {
         <div className="flex items-center gap-4">
           <input
             type="file"
+            ref={fileInput}
             id="news-image"
             accept={IMAGE_ACCEPT}
             disabled={loading || uploading}
+            aria-describedby="news-image-status"
             onChange={(e) => {
               const file = e.target.files?.[0];
+              setSelectedFile(file);
               if (file) handleImageUpload(file);
             }}
             className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
           />
           {uploading && <Loader2 className="animate-spin text-blue-600" size={20} />}
         </div>
-        <p role="status" className="mt-2 text-sm text-gray-600">{imageStatus}</p>
+        <p id="news-image-status" role="status" className="mt-2 text-sm text-gray-600">{imageStatus}</p>
+        {selectedFile && !uploading && <Button type="button" variant="outline" disabled={loading} onClick={() => handleImageUpload(selectedFile)}>Retry selected image</Button>}
         <p className="mt-2 text-sm text-gray-500">Non-animated JPG, PNG, WEBP or GIF; up to 5 MB, 8192 pixels per side and 24 megapixels. Photos on existing posts save immediately; other edits use Update Post.</p>
         {image && (
           <div className="mt-4 h-48 w-full max-w-md relative rounded-xl overflow-hidden border">
@@ -192,8 +201,9 @@ export default function NewsForm({ post }: { post?: NewsPost }) {
                 if (!confirm('Remove this post’s featured photo? The stored file will not be deleted.')) return;
                 setUploading(true);
                 try {
-                  if (post?.id) await updateNewsImage(post.id, '');
-                  setImage('');
+                   if (post?.id) await updateNewsImage(post.id, '');
+                   setImage('');
+                   clearFile();
                   setImageStatus(post?.id ? 'Photo removed from this post.' : 'Photo removed from this draft.');
                 } catch { setImageStatus('Photo could not be removed.'); }
                 finally { setUploading(false); }
